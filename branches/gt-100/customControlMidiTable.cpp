@@ -57,9 +57,9 @@ customControlMidiTable::customControlMidiTable(QWidget *parent,
         this->setLayout(labelLayout);
         this->setFixedHeight(28);
     }
-     else
+    else
     {
-      setComboBox();
+        setComboBox();
     };
 }
 
@@ -106,40 +106,35 @@ void customControlMidiTable::setComboBox()
 
     QObject::connect(this, SIGNAL( updateSignal() ), this->parent(), SIGNAL( updateSignal() ));
 
-    QObject::connect(this->controlMidiComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(valueChanged(int)));
-
     QObject::connect(this->controlMidiComboBox, SIGNAL(currentIndexChanged(int)), this, SIGNAL(currentIndexChanged(int)));
 
-    QObject::connect(this->controlMidiComboBox, SIGNAL(highlighted(int)), this, SLOT(valueChanged(int)));
-
     QObject::connect(this->controlMidiComboBox, SIGNAL(highlighted(int)), this, SIGNAL(currentIndexChanged(int)));
+
+    if(text != "GT-100 Patch") {
+      QObject::connect(this->controlMidiComboBox, SIGNAL(currentIndexChanged(int)), this->parent(), SLOT(changedIndex(int)));
+
+      QObject::connect(this->controlMidiComboBox, SIGNAL(highlighted(int)), this->parent(), SLOT(changedIndex(int)));
+        } else {
+      QObject::connect(this->controlMidiComboBox, SIGNAL(currentIndexChanged(int)), this->parent(), SLOT(valueChanged(int)));
+
+      QObject::connect(this->controlMidiComboBox, SIGNAL(highlighted(int)), this->parent(), SLOT(valueChanged(int)));
+     };
 }
 
 void customControlMidiTable::valueChanged(int index)
 {
-    QString valueHex = QString::number(index, 16).toUpper();
-    if(valueHex.length() < 2) valueHex.prepend("0");
 
-    SysxIO *sysxIO = SysxIO::Instance();
-    bool ok;
-    int maxRange = QString("7F").toInt(&ok, 16) + 1;
-    int value = valueHex.toInt(&ok, 16);
-    int dif = value/maxRange;
-    QString valueHex1 = QString::number(dif, 16).toUpper();
-    if(valueHex1.length() < 2) valueHex1.prepend("0");
-    QString valueHex2 = QString::number(value - (dif * maxRange), 16).toUpper();
-    if(valueHex2.length() < 2) valueHex2.prepend("0");
-
-    sysxIO->setFileSource("System", hex1, hex2, hex3, valueHex1, valueHex2);
-    emit updateSignal();
 }
 
 void customControlMidiTable::dialogUpdateSignal()
 {
-    SysxIO *sysxIO = SysxIO::Instance();
-    int index = sysxIO->getSourceValue("MidiT", hex1, hex2, hex3);
-    this->controlMidiComboBox->setCurrentIndex(index);
-    this->valueChanged(index);
+    if(text == "GT-100 Patch")
+    {
+        SysxIO *sysxIO = SysxIO::Instance();
+        int index = sysxIO->getSourceValue("MidiT", hex1, hex2, hex3);
+        this->controlMidiComboBox->setCurrentIndex(index);
+        this->valueChanged(index);
+    };
 }
 
 

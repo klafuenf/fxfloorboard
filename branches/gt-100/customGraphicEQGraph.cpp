@@ -211,7 +211,7 @@ unsigned short customGraphicEQGraph::Level (void) const
 void customGraphicEQGraph::paintEvent ( QPaintEvent *pPaintEvent )
 {
     QPixmap image = QPixmap(":images/EQ_graph.png");
-    QRectF target(0.0, 0.0, image.width()*85/100, image.height()*43/100);
+    QRectF target(0.0, 0.0, image.width()*90/100, image.height()*43/100);
     QRectF source(0.0, 0.0, image.width(), image.height());
 
     QPainter painter(this);
@@ -257,11 +257,11 @@ void customGraphicEQGraph::paintEvent ( QPaintEvent *pPaintEvent )
     path.moveTo(poly.at(0));
     path.addPolygon(poly);
 
-    painter.setPen(Qt::yellow);
+    painter.setPen(Qt::gray);
     painter.setBrush(grad);
     painter.drawPath((path));
 
-    painter.setBrush(Qt::red);
+    painter.setBrush(Qt::blue);
     painter.drawRect(nodeRect(1));
     painter.drawRect(nodeRect(2));
     painter.drawRect(nodeRect(3));
@@ -314,7 +314,7 @@ void customGraphicEQGraph::mouseReleaseEvent ( QMouseEvent *pMouseEvent )
 QRect customGraphicEQGraph::nodeRect ( int iNode ) const
 {
     const QPoint& pos = poly.at(iNode);
-    return QRect(pos.x() - 10, pos.y() - 4, 20, 8);
+    return QRect(pos.x() - 4, pos.y() - 4, 8, 8);
 }
 
 

@@ -202,45 +202,61 @@ void bulkSaveDialog::updatePatch(QString replyMsg)
 	QObject::disconnect(sysxIO, SIGNAL(sysxReply(QString)), this, SLOT(updatePatch(QString)));		
 	sysxIO->setDeviceReady(true); // Free the device after finishing interaction.
 	
-	replyMsg = replyMsg.remove(" ").toUpper();       // TRANSLATE SYSX MESSAGE FORMAT to 128 byte data blocks 
-		if (replyMsg.size()/2 == patchReplySize){
-    QString header = "F0410000006012";
-	QString footer ="00F7";
-	QString addressMsb = replyMsg.mid(14,4);
-	QString part1 = replyMsg.mid(22, 256); 
-  part1.prepend("0000").prepend(addressMsb).prepend(header).append(footer);    
-	QString part2 = replyMsg.mid(278, 228);
-	QString part2B = replyMsg.mid(532, 28);
-	part2.prepend("0100").prepend(addressMsb).prepend(header).append(part2B).append(footer); 
-	QString part3 = replyMsg.mid(560, 256);
-	part3.prepend("0200").prepend(addressMsb).prepend(header).append(footer);
-	QString part4 = replyMsg.mid(816, 200);
-	QString part4B = replyMsg.mid(1042, 56);
-	part4.prepend("0300").prepend(addressMsb).prepend(header).append(part4B).append(footer); 
-	QString part5 = replyMsg.mid(1098, 256);
-	part5.prepend("0400").prepend(addressMsb).prepend(header).append(footer);   
-	QString part6 = replyMsg.mid(1354, 172);   //
-	part6.prepend("0500").prepend(addressMsb).prepend(header).append(footer);   
-	QString part7 = replyMsg.mid(1552, 256);   // 0x308+128
-	part7.prepend("0600").prepend(addressMsb).prepend(header).append(footer);   
-	QString part8 = replyMsg.mid(1808, 228);  // 0x388+114
-	QString part8B = replyMsg.mid(2062, 28);   // 
-	part8.prepend("0700").prepend(addressMsb).prepend(header).append(part8B).append(footer); 
-	QString part9 = replyMsg.mid(2090, 256);
-	part9.prepend("0800").prepend(addressMsb).prepend(header).append(footer);
-	QString part10 = replyMsg.mid(2346,200);    //
-	part10.prepend("0900").prepend(addressMsb).prepend(header).append(footer);
-	QString part11 = replyMsg.mid(2572, 256);
-	part11.prepend("0A00").prepend(addressMsb).prepend(header).append(footer);
-	QString part12 = replyMsg.mid(2828, 226);   //
-	QString part12B = replyMsg.mid(3080, 30); 
-	part12.prepend("0B00").prepend(addressMsb).prepend(header).append(part12B).append(footer);
-	QString part13 = replyMsg.mid(3110, 256);
-	part13.prepend("0C00").prepend(addressMsb).prepend(header).append(footer);
-	
-	replyMsg = "";
-	replyMsg.append(part1).append(part2).append(part3).append(part4).append(part5).append(part6)
-  .append(part7).append(part8).append(part9).append(part10).append(part11).append(part12).append(part13);
+    replyMsg = replyMsg.remove(" ").toUpper();       /* TRANSLATE SYSX MESSAGE FORMAT to 128 byte data blocks */
+    if (replyMsg.size()/2 == patchReplySize){
+        QString header = "F0410000006012";
+        QString footer ="00F7";
+        QString addressMsb = replyMsg.mid(14,4);
+        QString part1 = replyMsg.mid(22, 256); //y
+        part1.prepend("0000").prepend(addressMsb).prepend(header).append(footer);
+        QString part2 = replyMsg.mid(278, 228); //y
+        QString part2B = replyMsg.mid(532, 28); //y
+        part2.prepend("0100").prepend(addressMsb).prepend(header).append(part2B).append(footer);
+        QString part3 = replyMsg.mid(560, 256); //y
+        part3.prepend("0200").prepend(addressMsb).prepend(header).append(footer);
+        QString part4 = replyMsg.mid(816, 200); //y
+        QString part4B = replyMsg.mid(1042, 56); //y
+        part4.prepend("0300").prepend(addressMsb).prepend(header).append(part4B).append(footer);
+        QString part5 = replyMsg.mid(1098, 256); //y
+        part5.prepend("0400").prepend(addressMsb).prepend(header).append(footer);
+        QString part6 = replyMsg.mid(1354, 172); //y
+        QString part6B = replyMsg.mid(1552, 84); //y
+        part6.prepend("0500").prepend(addressMsb).prepend(header).append(part6B).append(footer);
+        QString part7 = replyMsg.mid(1636, 256); //y
+        part7.prepend("0600").prepend(addressMsb).prepend(header).append(footer);
+        QString part8 = replyMsg.mid(1892, 144);  //y
+        QString part8B = replyMsg.mid(2072, 16); //spacer
+        QString part8C = replyMsg.mid(2062, 96); //y
+        part8.prepend("0700").prepend(addressMsb).prepend(header).append(part8B).append(part8C).append(footer);
+        QString part9 = replyMsg.mid(2158, 256); //y
+        part9.prepend("0800").prepend(addressMsb).prepend(header).append(footer);
+        QString part10 = replyMsg.mid(2414,132); //y
+        QString part10B = replyMsg.mid(2072, 14); //spacer added twice
+        QString part10C = replyMsg.mid(2572,96); //y
+        part10.prepend("0900").prepend(addressMsb).prepend(header).append(part10B).append(part10B).append(part10C).append(footer);
+        QString part11 = replyMsg.mid(2668, 256); //y
+        part11.prepend("0A00").prepend(addressMsb).prepend(header).append(footer);
+        QString part12 = replyMsg.mid(2924, 132); //y
+        QString part12B = replyMsg.mid(3082, 124);//y
+        part12.prepend("0B00").prepend(addressMsb).prepend(header).append(part12B).append(footer);
+        QString part13 = replyMsg.mid(3206, 256); //y
+        part13.prepend("0C00").prepend(addressMsb).prepend(header).append(footer);
+        QString part14 = replyMsg.mid(3462, 104); //y
+        QString part14B = replyMsg.mid(3592, 152);//y
+        part14.prepend("0D00").prepend(addressMsb).prepend(header).append(part14B).append(footer);
+        QString part15 = replyMsg.mid(3744, 256); //y
+        part15.prepend("0E00").prepend(addressMsb).prepend(header).append(footer);
+        QString part16 = replyMsg.mid(4000, 48); //y
+        part16.prepend("0F00").prepend(addressMsb).prepend(header).append(footer);
+
+        QString QFX = "false";
+        if (replyMsg.contains("F041000000601230") || replyMsg.contains("F041000000601240")) // if a QFX patch
+        {QFX = "true"; };                                                     // update the temp buffer
+
+        replyMsg = "";
+        replyMsg.append(part1).append(part2).append(part3).append(part4).append(part5).append(part6)
+                .append(part7).append(part8).append(part9).append(part10).append(part11).append(part12)
+                .append(part13).append(part14).append(part15).append(part16);
   /*QByteArray data;
   QFile file(":default.syx");   // Read the default GT-100 sysx file so we don't start empty handed.
     if (file.open(QIODevice::ReadOnly))

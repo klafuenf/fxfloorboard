@@ -235,6 +235,8 @@ editWindow::editWindow(QWidget *parent)
 
     QObject::connect(this->pageComboBox, SIGNAL(activated(int)), this->pagesWidget, SLOT(setCurrentIndex(int)));
 
+    QObject::connect(this->pageComboBox, SIGNAL(highlighted(int)), this->pagesWidget, SLOT(setCurrentIndex(int)));
+
     QObject::connect(this->bulkEdit_Button, SIGNAL(mouseReleased()), this, SLOT(bulkEdit()));
     QObject::connect(this->swap_Button, SIGNAL(mouseReleased()), this, SLOT(swap_pre()));
     QObject::connect(this->temp1_Button, SIGNAL(mouseReleased()), this, SLOT(temp1()));
