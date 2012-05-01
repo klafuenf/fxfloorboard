@@ -580,23 +580,32 @@ void bankTreeList::updatePatch(QString replyMsg)
         QString part6 = replyMsg.mid(1354, 172); //y
         QString part6B = replyMsg.mid(1552, 84); //y
         part6.prepend("0500").prepend(addressMsb).prepend(header).append(part6B).append(footer);
-        QString part7 = replyMsg.mid(1720, 256); //y
+        QString part7 = replyMsg.mid(1636, 256); //y
         part7.prepend("0600").prepend(addressMsb).prepend(header).append(footer);
-        QString part8 = replyMsg.mid(1976, 60);  //y
-        QString part8B = replyMsg.mid(2062, 196); //y
-        part8.prepend("0700").prepend(addressMsb).prepend(header).append(part8B).append(footer);
-        QString part9 = replyMsg.mid(2258, 256); //y
+        QString part8 = replyMsg.mid(1892, 144);  //y
+        QString part8B = replyMsg.mid(2072, 16); //spacer
+        QString part8C = replyMsg.mid(2062, 96); //y
+        part8.prepend("0700").prepend(addressMsb).prepend(header).append(part8B).append(part8C).append(footer);
+        QString part9 = replyMsg.mid(2158, 256); //y
         part9.prepend("0800").prepend(addressMsb).prepend(header).append(footer);
-        QString part10 = replyMsg.mid(2514,32); //y
-        QString part10B = replyMsg.mid(2572,224); //y
-        part10.prepend("0900").prepend(addressMsb).prepend(header).append(part10B).append(footer);
-        QString part11 = replyMsg.mid(2796, 256); //y
+        QString part10 = replyMsg.mid(2414,132); //y
+        QString part10B = replyMsg.mid(2072, 14); //spacer added twice
+        QString part10C = replyMsg.mid(2572,96); //y
+        part10.prepend("0900").prepend(addressMsb).prepend(header).append(part10B).append(part10B).append(part10C).append(footer);
+        QString part11 = replyMsg.mid(2668, 256); //y
         part11.prepend("0A00").prepend(addressMsb).prepend(header).append(footer);
-        QString part12 = replyMsg.mid(2828, 226); //
-        QString part12B = replyMsg.mid(3080, 30);
+        QString part12 = replyMsg.mid(2924, 132); //y
+        QString part12B = replyMsg.mid(3082, 124);//y
         part12.prepend("0B00").prepend(addressMsb).prepend(header).append(part12B).append(footer);
-        QString part13 = replyMsg.mid(3110, 256);
+        QString part13 = replyMsg.mid(3206, 256); //y
         part13.prepend("0C00").prepend(addressMsb).prepend(header).append(footer);
+        QString part14 = replyMsg.mid(3462, 104); //y
+        QString part14B = replyMsg.mid(3592, 152);//y
+        part14.prepend("0D00").prepend(addressMsb).prepend(header).append(part14B).append(footer);
+        QString part15 = replyMsg.mid(3744, 256); //y
+        part15.prepend("0E00").prepend(addressMsb).prepend(header).append(footer);
+        QString part16 = replyMsg.mid(4000, 48); //y
+        part16.prepend("0F00").prepend(addressMsb).prepend(header).append(footer);
 
         QString QFX = "false";
         if (replyMsg.contains("F041000000601230") || replyMsg.contains("F041000000601240")) // if a QFX patch
@@ -604,7 +613,8 @@ void bankTreeList::updatePatch(QString replyMsg)
 
         replyMsg = "";
         replyMsg.append(part1).append(part2).append(part3).append(part4).append(part5).append(part6)
-                .append(part7).append(part8).append(part9).append(part10).append(part11).append(part12).append(part13);
+                .append(part7).append(part8).append(part9).append(part10).append(part11).append(part12)
+                .append(part13).append(part14).append(part15).append(part16);
 
         QString reBuild = "";       /* Add correct checksum to patch strings */
         QString sysxEOF = "";
@@ -685,25 +695,25 @@ void bankTreeList::updatePatch(QString replyMsg)
         msgBox->exec();
         /* END WARNING */
     };
-    /*
-        Preferences *preferences = Preferences::Instance(); // Load the preferences.
+
+     /*   Preferences *preferences = Preferences::Instance(); // Load the preferences.
         if(preferences->getPreferences("Midi", "DBug", "bool")=="true")
         {
         if (replyMsg.size() > 0){
                 QString snork;
-                        snork.append("<font size='-1'>");
-                        snork.append(tr("{ size="));
-                        snork.append(QString::number(replyMsg.size()/2, 10));
-                        snork.append("}");
-                        snork.append(tr("<br> midi data received"));
+                        //snork.append("<font size='-1'>");
+                        //snork.append(tr("{ size="));
+                        //snork.append(QString::number(replyMsg.size()/2, 10));
+                        //snork.append("}");
+                        //snork.append(tr("<br> midi data received"));
                         for(int i=0;i<replyMsg.size();++i)
                         {
                                 snork.append(replyMsg.mid(i, 2));
                                 snork.append(" ");
                                 i++;
                         };
-                        snork.replace("F7", "F7 } <br>");
-                        snork.replace("F0", "{ F0");
+                        snork.replace("F7", "F7<br>");
+                        //snork.replace("F0", "{ F0");
 
 
                         QMessageBox *msgBox = new QMessageBox();
@@ -713,7 +723,7 @@ void bankTreeList::updatePatch(QString replyMsg)
                         msgBox->setStandardButtons(QMessageBox::Ok);
                         msgBox->exec();
                         };
-                };	*/
+                };*/
 };
 
 /********************************** connectedSignal() ****************************

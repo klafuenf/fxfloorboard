@@ -67,8 +67,6 @@ private:
     int comboWidth;
     QStringList comboList;
     QString list;
-    //int itemcount;
-
 };
 
 #endif // CUSTOMCONTROLMIDITABLE_H

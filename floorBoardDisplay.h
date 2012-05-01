@@ -29,7 +29,6 @@
 #include <QTimer>
 #include "customButton.h"
 #include "customPanelButton.h"
-#include "customPanelButton.h"
 #include "customControlListMenu.h"
 #include "customDisplay.h"
 #include "customLabelDisplay.h"

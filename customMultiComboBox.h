@@ -49,6 +49,7 @@ protected:
 public slots:
     void valueChanged(int index);
     void dialogUpdateSignal();
+    void changedIndex(int index);
 
 signals:
     void updateSignal();
@@ -67,28 +68,6 @@ private:
     customControlMidiTable* display_08;
     customControlMidiTable* display_09;
     customControlMidiTable* display_10;
-   /* customControlMidiTable* display_11;
-    customControlMidiTable* display_12;
-    customControlMidiTable* display_13;
-    customControlMidiTable* display_14;
-    customControlMidiTable* display_15;
-    customControlMidiTable* display_16;
-    customControlMidiTable* display_17;
-    customControlMidiTable* display_18;
-    customControlMidiTable* display_19;
-    customControlMidiTable* display_20;
-    customControlMidiTable* display_21;
-    customControlMidiTable* display_22;
-    customControlMidiTable* display_23;
-    customControlMidiTable* display_24;
-    customControlMidiTable* display_25;
-    customControlMidiTable* display_26;
-    customControlMidiTable* display_27;
-    customControlMidiTable* display_28;
-    customControlMidiTable* display_29;
-    customControlMidiTable* display_30;
-    customControlMidiTable* display_31;
-    customControlMidiTable* display_32;*/
 
     QString hex1;
     QString hex2;
@@ -97,6 +76,8 @@ private:
     QString direction;
     QString comboList;
     int itemcount;
+    int pc_index;
+    QString text;
 };
 
 #endif // CUSTOMMULTICOMBOBOX_H

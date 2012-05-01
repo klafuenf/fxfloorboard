@@ -59,6 +59,7 @@ floorBoardDisplay::floorBoardDisplay(QWidget *parent, QPoint pos)
     int bottomOffset = 635;
     int horizontalOffset = 3;
     this->patchNumDisplay = new customDisplay(QRect(10, patchDisplayRowOffset, 50, 34), this);
+    this->patchNumDisplay->setObjectName("banklist");
     this->patchNumDisplay->setLabelPosition(true);
     this->patchNumDisplay->setMainObjectName("bankMain");
     this->patchNumDisplay->setSubObjectName("bankSub");
@@ -323,7 +324,7 @@ floorBoardDisplay::floorBoardDisplay(QWidget *parent, QPoint pos)
         msgText.append(tr("Select the GT-100 or a midi adapter from the Preferences USB/Midi menu and press the 'Connect' button"));
         msgBox->setText(msgText);
         msgBox->setStandardButtons(QMessageBox::Ok);
-        //msgBox->exec();
+        msgBox->exec();
     };
 }
 

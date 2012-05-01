@@ -65,13 +65,10 @@ void customDisplay::paintEvent(QPaintEvent *)
 	border.setWidth(1);
 	border.setColor(QColor(150,150,150));
 
-	QPainter painter(this);
-	painter.setRenderHint(QPainter::Antialiasing);
-	painter.setPen(border);
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setPen(border);
     painter.setBrush(QColor(34,24,25));
-	//painter.drawRoundRect(QRectF(0.0, 0.0, geometry.width()-1, geometry.height()-1), 8, 8);
-	//painter.drawRect(QRect(0.0, 0.0, geometry.width()-1, geometry.height()-1));
-
 
 	/* Draw a custom path. This to have a constant border 
 	   radius independant of the rectangle size. */

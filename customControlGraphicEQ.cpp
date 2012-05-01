@@ -38,13 +38,6 @@ customControlGraphicEQ::customControlGraphicEQ(QWidget *parent,
     int addr = hex1.toInt(&ok, 16);
     int x = hex3.toInt(&ok, 16);
 
-    this->hex_11 = QString::number(x, 16).toUpper();
-    if(hex_11.length() < 2) hex_11.prepend("0");
-    this->addr_11 = QString::number(addr, 16).toUpper();   /**** set EQ address range for hex1 ****/
-    if(addr_11.length() < 2) addr_11.prepend("0");
-
-    x=x+1;
-    if(x>127) {x=x-128; addr=addr+1; };
     this->hex_1 = QString::number(x, 16).toUpper();   /**** set EQ address range from hex3 (band_1 address) ****/
     if(hex_1.length() < 2) hex_1.prepend("0");
     this->addr_1 = QString::number(addr, 16).toUpper();   /**** set EQ address range for hex1 ****/
@@ -113,7 +106,12 @@ customControlGraphicEQ::customControlGraphicEQ(QWidget *parent,
     this->addr_10 = QString::number(addr, 16).toUpper();   /**** set EQ address range for hex1 ****/
     if(addr_10.length() < 2) addr_10.prepend("0");
 
-
+    x=x+1;
+    if(x>127) {x=x-128; addr=addr+1; };
+    this->hex_11 = QString::number(x, 16).toUpper();
+    if(hex_11.length() < 2) hex_11.prepend("0");
+    this->addr_11 = QString::number(addr, 16).toUpper();   /**** set EQ address range for hex1 ****/
+    if(addr_11.length() < 2) addr_11.prepend("0");
 
     MidiTable *midiTable = MidiTable::Instance();
     if (this->area != "System") {this->area = "Structure";};
@@ -127,7 +125,7 @@ customControlGraphicEQ::customControlGraphicEQ(QWidget *parent,
     this->display_1 = new QLineEdit(this);
     this->display_1->setObjectName("editdisplay");
     this->display_1->setFixedWidth(lenght);
-    this->display_1->setFixedHeight(13);
+    this->display_1->setFixedHeight(15);
     this->display_1->setAlignment(Qt::AlignCenter);
     this->display_1->setDisabled(true);
     this->display_1->setFixedWidth(lenght);
@@ -149,7 +147,7 @@ customControlGraphicEQ::customControlGraphicEQ(QWidget *parent,
     this->display_2 = new QLineEdit(this);
     this->display_2->setObjectName("editdisplay");
     this->display_2->setFixedWidth(lenght);
-    this->display_2->setFixedHeight(13);
+    this->display_2->setFixedHeight(15);
     this->display_2->setAlignment(Qt::AlignCenter);
     this->display_2->setDisabled(true);
     this->display_2->setFixedWidth(lenght);
@@ -171,7 +169,7 @@ customControlGraphicEQ::customControlGraphicEQ(QWidget *parent,
     this->display_3 = new QLineEdit(this);
     this->display_3->setObjectName("editdisplay");
     this->display_3->setFixedWidth(lenght);
-    this->display_3->setFixedHeight(13);
+    this->display_3->setFixedHeight(15);
     this->display_3->setAlignment(Qt::AlignCenter);
     this->display_3->setDisabled(true);
     this->display_3->setFixedWidth(lenght);
@@ -193,7 +191,7 @@ customControlGraphicEQ::customControlGraphicEQ(QWidget *parent,
     this->display_4 = new QLineEdit(this);
     this->display_4->setObjectName("editdisplay");
     this->display_4->setFixedWidth(lenght);
-    this->display_4->setFixedHeight(13);
+    this->display_4->setFixedHeight(15);
     this->display_4->setAlignment(Qt::AlignCenter);
     this->display_4->setDisabled(true);
     this->display_4->setFixedWidth(lenght);
@@ -215,7 +213,7 @@ customControlGraphicEQ::customControlGraphicEQ(QWidget *parent,
     this->display_5 = new QLineEdit(this);
     this->display_5->setObjectName("editdisplay");
     this->display_5->setFixedWidth(lenght);
-    this->display_5->setFixedHeight(13);
+    this->display_5->setFixedHeight(15);
     this->display_5->setAlignment(Qt::AlignCenter);
     this->display_5->setDisabled(true);
     this->display_5->setFixedWidth(lenght);
@@ -237,7 +235,7 @@ customControlGraphicEQ::customControlGraphicEQ(QWidget *parent,
     this->display_6 = new QLineEdit(this);
     this->display_6->setObjectName("editdisplay");
     this->display_6->setFixedWidth(lenght);
-    this->display_6->setFixedHeight(13);
+    this->display_6->setFixedHeight(15);
     this->display_6->setAlignment(Qt::AlignCenter);
     this->display_6->setDisabled(true);
     this->display_6->setFixedWidth(lenght);
@@ -259,7 +257,7 @@ customControlGraphicEQ::customControlGraphicEQ(QWidget *parent,
     this->display_7 = new QLineEdit(this);
     this->display_7->setObjectName("editdisplay");
     this->display_7->setFixedWidth(lenght);
-    this->display_7->setFixedHeight(13);
+    this->display_7->setFixedHeight(15);
     this->display_7->setAlignment(Qt::AlignCenter);
     this->display_7->setDisabled(true);
     this->display_7->setFixedWidth(lenght);
@@ -281,7 +279,7 @@ customControlGraphicEQ::customControlGraphicEQ(QWidget *parent,
     this->display_8 = new QLineEdit(this);
     this->display_8->setObjectName("editdisplay");
     this->display_8->setFixedWidth(lenght);
-    this->display_8->setFixedHeight(13);
+    this->display_8->setFixedHeight(15);
     this->display_8->setAlignment(Qt::AlignCenter);
     this->display_8->setDisabled(true);
     this->display_8->setFixedWidth(lenght);
@@ -303,7 +301,7 @@ customControlGraphicEQ::customControlGraphicEQ(QWidget *parent,
     this->display_9 = new QLineEdit(this);
     this->display_9->setObjectName("editdisplay");
     this->display_9->setFixedWidth(lenght);
-    this->display_9->setFixedHeight(13);
+    this->display_9->setFixedHeight(15);
     this->display_9->setAlignment(Qt::AlignCenter);
     this->display_9->setDisabled(true);
     this->display_9->setFixedWidth(lenght);
@@ -325,7 +323,7 @@ customControlGraphicEQ::customControlGraphicEQ(QWidget *parent,
     this->display_10 = new QLineEdit(this);
     this->display_10->setObjectName("editdisplay");
     this->display_10->setFixedWidth(lenght);
-    this->display_10->setFixedHeight(13);
+    this->display_10->setFixedHeight(15);
     this->display_10->setAlignment(Qt::AlignCenter);
     this->display_10->setDisabled(true);
     this->display_10->setFixedWidth(lenght);
@@ -347,7 +345,7 @@ customControlGraphicEQ::customControlGraphicEQ(QWidget *parent,
     this->display_11 = new QLineEdit(this);
     this->display_11->setObjectName("editdisplay");
     this->display_11->setFixedWidth(lenght);
-    this->display_11->setFixedHeight(13);
+    this->display_11->setFixedHeight(15);
     this->display_11->setAlignment(Qt::AlignCenter);
     this->display_11->setDisabled(true);
     this->display_11->setFixedWidth(lenght);
