@@ -27,7 +27,7 @@ menuPage_assign1::menuPage_assign1(QWidget *parent)
     : menuPage(parent)
 {
     setLSB("08", "30");
-    editDetails()->patchPos(3048, 32, "08", "30");
+    editDetails()->patchPos(2374, 32, "08", "30");
     setEditPages();
 };
 

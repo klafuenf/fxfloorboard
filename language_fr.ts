@@ -656,8 +656,8 @@ If correction was inpossible then some settings might have been reset to zero.</
     </message>
     <message>
         <location filename="bulkLoadDialog.cpp" line="169"/>
-        <source>GT100 Bulk Data File (*.gxg *.syx *.mid)</source>
-        <translation>Fichier des données GT100 bulk (*.gxg *.syx *.mid)</translation>
+        <source>GT100 Bulk Data File (*.gcl *.syx *.mid)</source>
+        <translation>Fichier des données GT100 bulk (*.gcl *.syx *.mid)</translation>
     </message>
     <message>
         <location filename="bulkLoadDialog.cpp" line="227"/>
@@ -705,8 +705,8 @@ If correction was inpossible then some settings might have been reset to zero.</
     </message>
     <message>
         <location filename="bulkSaveDialog.cpp" line="49"/>
-        <source>*.gxg Librarian file</source>
-        <translation>Fichier Librairian *.gxg</translation>
+        <source>*.gcl Librarian file</source>
+        <translation>Fichier Librairian *.gcl</translation>
     </message>
     <message>
         <location filename="bulkSaveDialog.cpp" line="50"/>
@@ -807,8 +807,8 @@ If correction was inpossible then some settings might have been reset to zero.</
     </message>
     <message>
         <location filename="bulkSaveDialog.cpp" line="362"/>
-        <source>Librarian Backup File (*.gxg)</source>
-        <translation>Fichier de backup Librarian(*.gxg)</translation>
+        <source>Librarian Backup File (*.gcl)</source>
+        <translation>Fichier de backup Librarian(*.gcl)</translation>
     </message>
     <message>
         <location filename="bulkSaveDialog.cpp" line="444"/>
@@ -1298,8 +1298,8 @@ If correction was inpossible then some settings might have been reset to zero.</
     <name>mainWindow</name>
     <message>
         <location filename="mainWindow.cpp" line="150"/>
-        <source>&amp;Load Patch File... (*.syx, *.mid, *.gxg *.gxb)</source>
-        <translation>&amp;Charger un fichier de patch… (*.syx, *.mid, *.gxg *.gxb)</translation>
+        <source>&amp;Load Patch File... (*.syx, *.mid, *.gcl *.gxb)</source>
+        <translation>&amp;Charger un fichier de patch… (*.syx, *.mid, *.gcl *.gxb)</translation>
     </message>
     <message>
         <location filename="mainWindow.cpp" line="151"/>
@@ -1373,8 +1373,8 @@ If correction was inpossible then some settings might have been reset to zero.</
     </message>
     <message>
         <location filename="mainWindow.cpp" line="175"/>
-        <source>&amp;Open GXG... (*.gxg *.gxb)</source>
-        <translation>&amp;Ouvrez GXG… (*.gxg *.gxb)</translation>
+        <source>&amp;Open GCL... (*.gcl *.gxb)</source>
+        <translation>&amp;Ouvrez GCL… (*.gcl *.gxb)</translation>
     </message>
     <message>
         <location filename="mainWindow.cpp" line="176"/>
@@ -1388,8 +1388,8 @@ If correction was inpossible then some settings might have been reset to zero.</
     </message>
     <message>
         <location filename="mainWindow.cpp" line="180"/>
-        <source>Save As GXG Patch... (*.gxg)</source>
-        <translation>Sauf comme lun patch de GXG… (*.gxg)</translation>
+        <source>Save As GCL Patch... (*.gcl)</source>
+        <translation>Sauf comme lun patch de GCL… (*.gcl)</translation>
     </message>
     <message>
         <location filename="mainWindow.cpp" line="181"/>
@@ -1601,8 +1601,8 @@ If correction was inpossible then some settings might have been reset to zero.</
     </message>
     <message>
         <location filename="mainWindow.cpp" line="324"/>
-        <source>for GT-100, GT-100B, or GT-8   (*.syx *.mid *.gxg *.gxb)</source>
-        <translation>pour GT-100, GT-100B, ou GT-8 (*.syx *.mid *.gxg *.gxb)</translation>
+        <source>for GT-100, GT-100B, or GT-8   (*.syx *.mid *.gcl *.gxb)</source>
+        <translation>pour GT-100, GT-100B, ou GT-8 (*.syx *.mid *.gcl *.gxb)</translation>
     </message>
     <message>
         <location filename="mainWindow.cpp" line="356"/>
@@ -1629,18 +1629,18 @@ If correction was inpossible then some settings might have been reset to zero.</
     </message>
     <message>
         <location filename="mainWindow.cpp" line="485"/>
-        <source>Boss Librarian File (*.gxg *.gxb)</source>
-        <translation>Fichier Boss Librarian  (*.gxg *.gxb)</translation>
+        <source>Boss Librarian File (*.gcl *.gxb)</source>
+        <translation>Fichier Boss Librarian  (*.gcl *.gxb)</translation>
     </message>
     <message>
         <location filename="mainWindow.cpp" line="513"/>
-        <source>Export GXG</source>
-        <translation>Exportation GXG</translation>
+        <source>Export GCL</source>
+        <translation>Exportation GCL</translation>
     </message>
     <message>
         <location filename="mainWindow.cpp" line="515"/>
-        <source>Boss Librarian File (*.gxg)</source>
-        <translation>Fichier Boss Librarian (*.gxg)</translation>
+        <source>Boss Librarian File (*.gcl)</source>
+        <translation>Fichier Boss Librarian (*.gcl)</translation>
     </message>
     <message>
         <location filename="mainWindow.cpp" line="549"/>

@@ -62,7 +62,7 @@ private:
   QPushButton *startButton;
   QPushButton *cancelButton; 
   QPushButton *completedButton;
-  QRadioButton *gxgButton;
+  QRadioButton *gclButton;
   QRadioButton *syxButton;
   QRadioButton *midButton;
   int bankStart;
@@ -75,7 +75,7 @@ private:
 	int patch;
 	int bank;
 	QString fileName;
-	void writeGXG();
+	void writeGCL();
 	void writeSYX();
 	void writeSMF();
 };

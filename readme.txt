@@ -22,9 +22,9 @@ you can email patches and custom system settings saved files to the above addres
  *Text Dialog for Printing or Saving to File complete patch settings list.
  *New Framework with better Windows 7 and Mac Snow Leopard support, auto temp buffer request on connect. 
  *Multi Language support for French, German, and Chinese. 
- *Bulk File save/restore in 3 formats *.gxg, *.mid & *.syx so your Boss Librarian can use the Bulk files 
+ *Bulk File save/restore in 3 formats *.gcl, *.mid & *.syx so your Boss Librarian can use the Bulk files 
         and the FxFloorBoard can load in Bulk backups of patches, system and Global data. 
- *The editor now supports using Boss Librarian *.gxg files.
+ *The editor now supports using Boss Librarian *.gcl files.
  *ClipBoard buttons have been added to the main page selectin bar (below) and can copy up to
         5 opened patches for quick comparison. 
  *The editpages have 5 patch pertial paste buttons added, where the single effect part only part is copyed from
@@ -63,7 +63,7 @@ GT100-FxFloorBoard:
 NOTE: THIS IS AN UNPAID PROJECT, SO FAR INVESTING OVER 7000 HOURS OF MY TIME OVER 5 YEARS, 
 also I WILL NOT ACCEPT LIABILITY FOR ANY DATA LOSS, even though TO THE BEST OF MY KNOWLEDGE EVERYTHING SHOULD WORK CORRECTLY. 
 
-files can be saved/loaded as syx or mid (SMF) or gxg (Librarian) formats.
+files can be saved/loaded as syx or mid (SMF) or gcl (Librarian) formats.
 the GT-100FxFloorBoard will also open GT100B *.gxb & *.mid files, and translate GT-8 patch files (*.syx single patch type).
 
 layout increased, which may be a problem for low screen resolutions. (i use 1280 X 800 minimum)

@@ -167,13 +167,13 @@ bulkLoadDialog::bulkLoadDialog()
     if (file.open(QIODevice::ReadOnly))
 	{
 		this->data = file.readAll();     // read the pre-selected file, copy to 'data'
-		QByteArray GXG_default;
+		QByteArray GCL_default;
         QFile file(":default.syx");           // Read the default GT-100 sysx file .
     if (file.open(QIODevice::ReadOnly))
 	  {	default_data = file.readAll(); };
-      QFile GXGfile(":default.gcl");           // Read the default GT-100 GCL file .
-    if (GXGfile.open(QIODevice::ReadOnly))
-	  {	GXG_default = GXGfile.readAll(); };
+      QFile GCLfile(":default.gcl");           // Read the default GT-100 GCL file .
+    if (GCLfile.open(QIODevice::ReadOnly))
+	  {	GCL_default = GCLfile.readAll(); };
 	  QFile hexfile(":HexLookupTable.hex");           // Read the HexLookupTable for the SMF header file .
     if (hexfile.open(QIODevice::ReadOnly))
 	  {	this->hextable = hexfile.readAll(); };
@@ -189,7 +189,7 @@ bulkLoadDialog::bulkLoadDialog()
 	   */
 	  QByteArray default_header = default_data.mid(0, 7);           // copy header from default.syx
 	  QByteArray file_header = data.mid(0, 7);                      // copy header from read file.syx
-	  QByteArray GXG_header = GXG_default.mid(3, 20);                // copy header from default.gxg
+	  QByteArray GCL_header = GCL_default.mid(3, 20);                // copy header from default.gcl
 	  QByteArray SMF_header = hextable.mid(288,18);
 	  QByteArray SMF_file = data.mid(0, 18);
 	  unsigned char r = (char)data[7];     // find patch number in file (msb))
@@ -205,13 +205,13 @@ bulkLoadDialog::bulkLoadDialog()
 	  QByteArray GTM_file = data.mid(1764, 5);
 	  bool isGTM = false;
 	  if (GTM_bit == GTM_file) {isGTM = true;};
-	  bool isGXG = false;
-	  if (data.contains(GXG_header)){isGXG = true; };             // see if file is a GXG type and set isGXG flag.
+	  bool isGCL = false;
+	  if (data.contains(GCL_header)){isGCL = true; };             // see if file is a GCL type and set isGCL flag.
 	  bool isSMF = false;
 	  if (data.contains(SMF_header)) {isSMF = true; };
 	  failed = false;
 	  if (isHeader == true && isPatch == true) {loadSYX(); setStatusMessage("is a *.syx file type");  }
-	  else if (isGXG == true) { loadGXG(); setStatusMessage("is a *.gxg file type"); }
+	  else if (isGCL == true) { loadGCL(); setStatusMessage("is a *.gcl file type"); }
 	  else if (isSMF == true) { loadSMF(); setStatusMessage("is a *.mid file type"); }
 	    else 
      {
@@ -463,7 +463,7 @@ void bulkLoadDialog::bulkStatusProgress(int value)
   this->progressBar->setValue(value);
 };
 
-void bulkLoadDialog::loadGXG()         // ************************************ GXG File Format***************************
+void bulkLoadDialog::loadGCL()         // ************************************ GCL File Format***************************
 {	
   unsigned char msb = (char)data[34];     // find patch count msb bit in GCL file at byte 34
   unsigned char lsb = (char)data[35];     // find patch count lsb bit in GCL file at byte 35

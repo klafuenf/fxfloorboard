@@ -174,7 +174,7 @@ void SysxIO::setFileSource(QString area, QByteArray data)
 		msgBox->setInformativeText(tr("Be aware of possible inconsistencies in this patch!"));
 		msgBox->setDetailedText(errorList);
 		msgBox->setStandardButtons(QMessageBox::Ok);
-		msgBox->exec();
+        //msgBox->exec();
 	};
 };
 

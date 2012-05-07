@@ -30,7 +30,7 @@ stompbox_fx3::stompbox_fx3(QWidget *parent)
     setImage(":/images/fx3.png");
     setLSB("06", "00");
     setComboBox("06", "00", "70", QRect(8, 31, 79, 13));
-    editDetails()->patchPos(1630, 1046, "06", "70");
+    editDetails()->patchPos(1938, 82, "06", "70");
     setEditPages();
 };
 

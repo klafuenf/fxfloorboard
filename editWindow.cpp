@@ -335,7 +335,7 @@ void editWindow::addPage(QString hex1, QString hex2, QString hex3, QString hex4,
         this->swap_Button->hide();
     };
 
-    if ((this->temp_hex1 != "08" && this->temp_hex1 != "09" && this->temp_hex1 != "0A") || this->position < 3048 || this->position > 3298)
+    if ((this->temp_hex1 != "08" && this->temp_hex1 != "09" && this->temp_hex1 != "0A") || this->position < 2374 || this->position > 2874)
     {
         this->assign1_Button->hide();
         this->assign2_Button->hide();
@@ -346,14 +346,14 @@ void editWindow::addPage(QString hex1, QString hex2, QString hex3, QString hex4,
         this->assign7_Button->hide();
         this->assign8_Button->hide();
     };
-    if(this->position == 3048) {this->assign1_Button->hide(); };
-    if(this->position == 3080) {this->assign2_Button->hide(); };
-    if(this->position == 3112) {this->assign3_Button->hide(); };
-    if(this->position == 3144) {this->assign4_Button->hide(); };
-    if(this->position == 3176) {this->assign5_Button->hide(); };
-    if(this->position == 3208) {this->assign6_Button->hide(); };
-    if(this->position == 3266) {this->assign7_Button->hide(); };
-    if(this->position == 3298) {this->assign8_Button->hide(); };
+    if(this->position == 2374) {this->assign1_Button->hide(); };
+    if(this->position == 2438) {this->assign2_Button->hide(); };
+    if(this->position == 2502) {this->assign3_Button->hide(); };
+    if(this->position == 2592) {this->assign4_Button->hide(); };
+    if(this->position == 2656) {this->assign5_Button->hide(); };
+    if(this->position == 2720) {this->assign6_Button->hide(); };
+    if(this->position == 2784) {this->assign7_Button->hide(); };
+    if(this->position == 2874) {this->assign8_Button->hide(); };
 
     if(hex1 != "void" && hex2 != "void" && hex3 != "void")
     {
@@ -716,50 +716,50 @@ void editWindow::patchPos(int pos, int len, QString t_hex1, QString t_hex3)
 
 void editWindow::assign1_paste()
 {
-    start_int = 3048; length_int = 32;
+    start_int = 2374; length_int = 32;
     assign_paste();
 };
 
 void editWindow::assign2_paste()
 
 {
-    start_int = 3080; length_int = 32;
+    start_int = 2438; length_int = 32;
     assign_paste();
 };
 
 void editWindow::assign3_paste()
 {
-    start_int = 3112; length_int = 32;
+    start_int = 2502; length_int = 32;
     assign_paste();
 };
 
 void editWindow::assign4_paste()
 {
-    start_int = 3144; length_int = 32;
+    start_int = 2592; length_int = 32;
     assign_paste();
 };
 
 void editWindow::assign5_paste()
 {
-    start_int = 3176; length_int = 32;
+    start_int = 2656; length_int = 32;
     assign_paste();
 };
 
 void editWindow::assign6_paste()
 {
-    start_int = 3208; length_int = 32;
+    start_int = 2720; length_int = 32;
     assign_paste();
 };
 
 void editWindow::assign7_paste()
 {
-    start_int = 3266; length_int = 32;
+    start_int = 2784; length_int = 32;
     assign_paste();
 };
 
 void editWindow::assign8_paste()
 {
-    start_int = 3298; length_int = 32;
+    start_int = 2874; length_int = 32;
     assign_paste();
 };
 

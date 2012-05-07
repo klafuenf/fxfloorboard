@@ -30,7 +30,7 @@ stompbox_cn_m::stompbox_cn_m(QWidget *parent)
     this->setImage(":/images/cn_m.png");
     setLSB("06", "00");
     setComboBox("06", "00", "50", QRect(8, 78, 79, 13));
-    editDetails()->patchPos(100, 3, "06", "50");
+    editDetails()->patchPos(1874, 6, "06", "50");
     setEditPages();
 };
 

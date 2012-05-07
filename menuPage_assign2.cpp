@@ -27,7 +27,7 @@ menuPage_assign2::menuPage_assign2(QWidget *parent)
     : menuPage(parent)
 {
     setLSB("08", "50");
-    editDetails()->patchPos(3080, 32, "08", "50");    //192 sysx file offset and data length of chorus parameters x2,
+    editDetails()->patchPos(2438, 32, "08", "50");    //192 sysx file offset and data length of chorus parameters x2,
     setEditPages();
 };
 
