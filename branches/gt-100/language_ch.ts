@@ -658,8 +658,8 @@ If correction was inpossible then some settings might have been reset to zero.</
     </message>
     <message>
         <location filename="bulkLoadDialog.cpp" line="169"/>
-        <source>GT100 Bulk Data File (*.gxg *.syx *.mid)</source>
-        <translation>GT100大块数据文件(*.gxg *.syx *.mid)</translation>
+        <source>GT100 Bulk Data File (*.gcl *.syx *.mid)</source>
+        <translation>GT100大块数据文件(*.gcl *.syx *.mid)</translation>
     </message>
     <message>
         <location filename="bulkLoadDialog.cpp" line="227"/>
@@ -707,8 +707,8 @@ If correction was inpossible then some settings might have been reset to zero.</
     </message>
     <message>
         <location filename="bulkSaveDialog.cpp" line="49"/>
-        <source>*.gxg Librarian file</source>
-        <translation>*.gxg图书管理员文件</translation>
+        <source>*.gcl Librarian file</source>
+        <translation>*.gcl图书管理员文件</translation>
     </message>
     <message>
         <location filename="bulkSaveDialog.cpp" line="50"/>
@@ -809,8 +809,8 @@ If correction was inpossible then some settings might have been reset to zero.</
     </message>
     <message>
         <location filename="bulkSaveDialog.cpp" line="362"/>
-        <source>Librarian Backup File (*.gxg)</source>
-        <translation>图书管理员备用文件(*.gxg)</translation>
+        <source>Librarian Backup File (*.gcl)</source>
+        <translation>图书管理员备用文件(*.gcl)</translation>
     </message>
     <message>
         <location filename="bulkSaveDialog.cpp" line="444"/>
@@ -1300,8 +1300,8 @@ If correction was inpossible then some settings might have been reset to zero.</
     <name>mainWindow</name>
     <message>
         <location filename="mainWindow.cpp" line="150"/>
-        <source>&amp;Load Patch File... (*.syx, *.mid, *.gxg *.gxb)</source>
-        <translation>&amp;装载补丁文件… (*.syx、*.mid， *.gxg *.gxb)</translation>
+        <source>&amp;Load Patch File... (*.syx, *.mid, *.gcl *.gxb)</source>
+        <translation>&amp;装载补丁文件… (*.syx、*.mid， *.gcl *.gxb)</translation>
     </message>
     <message>
         <location filename="mainWindow.cpp" line="151"/>
@@ -1375,8 +1375,8 @@ If correction was inpossible then some settings might have been reset to zero.</
     </message>
     <message>
         <location filename="mainWindow.cpp" line="175"/>
-        <source>&amp;Open GXG... (*.gxg *.gxb)</source>
-        <translation>&amp; 打开GXG… (*.gxg *.gxb)</translation>
+        <source>&amp;Open GCL... (*.gcl *.gxb)</source>
+        <translation>&amp; 打开GCL… (*.gcl *.gxb)</translation>
     </message>
     <message>
         <location filename="mainWindow.cpp" line="176"/>
@@ -1390,8 +1390,8 @@ If correction was inpossible then some settings might have been reset to zero.</
     </message>
     <message>
         <location filename="mainWindow.cpp" line="180"/>
-        <source>Save As GXG Patch... (*.gxg)</source>
-        <translation>除当GXG补丁之外… (*.gxg)</translation>
+        <source>Save As GCL Patch... (*.gcl)</source>
+        <translation>除当GCL补丁之外… (*.gcl)</translation>
     </message>
     <message>
         <location filename="mainWindow.cpp" line="181"/>
@@ -1603,8 +1603,8 @@ If correction was inpossible then some settings might have been reset to zero.</
     </message>
     <message>
         <location filename="mainWindow.cpp" line="324"/>
-        <source>for GT-100, GT-100B, or GT-8   (*.syx *.mid *.gxg *.gxb)</source>
-        <translation>为GT-100、GT-100B或者GT-8 (*.syx *.mid *.gxg *.gxb)</translation>
+        <source>for GT-100, GT-100B, or GT-8   (*.syx *.mid *.gcl *.gxb)</source>
+        <translation>为GT-100、GT-100B或者GT-8 (*.syx *.mid *.gcl *.gxb)</translation>
     </message>
     <message>
         <location filename="mainWindow.cpp" line="356"/>
@@ -1631,18 +1631,18 @@ If correction was inpossible then some settings might have been reset to zero.</
     </message>
     <message>
         <location filename="mainWindow.cpp" line="485"/>
-        <source>Boss Librarian File (*.gxg *.gxb)</source>
-        <translation>上司图书管理员文件(*.gxg *.gxb)</translation>
+        <source>Boss Librarian File (*.gcl *.gxb)</source>
+        <translation>上司图书管理员文件(*.gcl *.gxb)</translation>
     </message>
     <message>
         <location filename="mainWindow.cpp" line="513"/>
-        <source>Export GXG</source>
-        <translation>出口GXG</translation>
+        <source>Export GCL</source>
+        <translation>出口GCL</translation>
     </message>
     <message>
         <location filename="mainWindow.cpp" line="515"/>
-        <source>Boss Librarian File (*.gxg)</source>
-        <translation>上司图书管理员文件(*.gxg)</translation>
+        <source>Boss Librarian File (*.gcl)</source>
+        <translation>上司图书管理员文件(*.gcl)</translation>
     </message>
     <message>
         <location filename="mainWindow.cpp" line="549"/>

@@ -37,7 +37,7 @@ fileDialog::fileDialog(QString fileName, QList<QString> patchList, QByteArray fi
   QComboBox *patchCombo = new QComboBox;
   patchCombo->setMaxVisibleItems(200);
   patchCombo->addItems(patchList);
-  patchCombo->setWhatsThis(tr("To auditon a multi-patch *.gxg file, hover the mouse cursor over a patch and the patch data will be loaded into the GT temporary buffer"
+  patchCombo->setWhatsThis(tr("To auditon a multi-patch *.gcl file, hover the mouse cursor over a patch and the patch data will be loaded into the GT temporary buffer"
                               "<br>a click on the patch will load it into the editor."));
 
 
@@ -91,7 +91,7 @@ void fileDialog::highlighted(int value)
 {
 
 
- if (file_format == "gxg")
+ if (file_format == "gcl")
     {
     QByteArray marker = fileData.mid(170, 2);      //copy marker key to find "06A5" which marks the start of each patch block
     unsigned int a = fileData.indexOf(marker, 0); // locate patch start position from the start of the file

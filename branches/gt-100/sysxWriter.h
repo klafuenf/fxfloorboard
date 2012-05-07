@@ -32,27 +32,32 @@ class sysxWriter
 {
 
 public:
-	sysxWriter();
-	~sysxWriter();
-	void setFile(QString fileName);
-	bool readFile();
-	SysxData getFileSource();
-	SysxData getSystemSource();
-	void writeFile(QString fileName);
-	void writeSystemFile(QString fileName);
-	void writeSMF(QString fileName);
-	void writeGXG(QString fileName);
-	QString getFileName();
-	QList<QString> patchList;	
-  int index;
-	
+    sysxWriter();
+    ~sysxWriter();
+    void setFile(QString fileName);
+    bool readFile();
+    SysxData getFileSource();
+    SysxData getSystemSource();
+    void writeFile(QString fileName);
+    void writeSystemFile(QString fileName);
+    void writeSMF(QString fileName);
+    void writeGCL(QString fileName);
+    QString getFileName();
+    QList<QString> patchList;
+    int index;
+
 public slots:
-  void patchIndex(int listIndex);
-	
+    void patchIndex(int listIndex);
+
 private:
-	QString fileName;
-	SysxData fileSource;
-	SysxData systemSource;
+    QString fileName;
+    SysxData fileSource;
+    SysxData systemSource;
+    QByteArray data;
+    void convertFromGT10();
+    void convertFromGT8();
+    void translate10to100();
+    QString headerType;
 };
 
 #endif // SYSXWRITER_H

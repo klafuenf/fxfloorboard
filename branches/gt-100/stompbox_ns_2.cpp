@@ -32,7 +32,7 @@ stompbox_ns_2::stompbox_ns_2(QWidget *parent)
     setKnob1("06", "00", "69");
     setKnob2("06", "00", "6A");
     setButton("06", "00", "68");
-    editDetails()->patchPos(2936, 8, "06", "68");
+    editDetails()->patchPos(1922, 8, "06", "68");
     setEditPages();
 };
 

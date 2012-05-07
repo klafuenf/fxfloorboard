@@ -35,7 +35,7 @@ stompbox_eq::stompbox_eq(QWidget *parent)
     setSlider4("01", "00", "39");
     setSlider5("01", "00", "3B");
     setButton("01", "00", "30");
-    editDetails()->patchPos(530, 24, "01", "30");
+    editDetails()->patchPos(400, 24, "01", "30");
     setEditPages();
 };
 

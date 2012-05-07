@@ -85,7 +85,7 @@ private:
 	int steps;
 	int dataSent;
 	QString fileName;
-	void loadGXG();
+	void loadGCL();
 	void loadSYX();
 	void loadSMF();
 	QByteArray data;

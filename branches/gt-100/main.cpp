@@ -204,18 +204,18 @@ int main(int argc, char **argv)
     {
         //PREVIEW WARNING
        QMessageBox *msgBox = new QMessageBox();
-       msgBox->setWindowTitle(QObject::tr("               GT-100FxFloorBoard preview version!"));
+       msgBox->setWindowTitle(QObject::tr("               GT-100FxFloorBoard unregistered version!"));
        msgBox->setIcon(QMessageBox::Warning);
        msgBox->setTextFormat(Qt::RichText);
        QString msgText;
        msgText.append("<font size='+1'><b>");
-       msgText.append(QObject::tr("This software is currently under development!<br>"));
+       msgText.append(QObject::tr("This software is currently under construction!<br>"));
        msgText.append("<b></font><br>");
        msgText.append(QObject::tr("Ensure you make regular backups of your GT-100 with the Boss Librarian.<br><br>"));
-       msgText.append(QObject::tr("This is a preview only and still in design & build stage,<br><br>"));
-       msgText.append(QObject::tr(" features displayed may be incorrect since a I don't have access to a GT-100 yet."));
-       msgText.append(QObject::tr("<br><br> Realtime editing of most patch parameters with a GT-100 may be possible now"));
-       msgText.append(QObject::tr("<br><br> File load/save features are currently disabled until a GT-100 comes my way for testing"));
+       msgText.append(QObject::tr("This is a preview only and still under construction,<br><br>"));
+       msgText.append(QObject::tr(" so some features displayed may be incorrect due to this project being incomplete."));
+       msgText.append(QObject::tr("<br><br> For Help assistance - press [F1] and highlight with mouse cursor on any object"));
+       msgText.append(QObject::tr("<br><br> File load/save features are currently disabled."));
        msgBox->setText(msgText);
        msgBox->setStandardButtons(QMessageBox::Ok);
        msgBox->exec();

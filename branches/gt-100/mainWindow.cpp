@@ -99,7 +99,7 @@ mainWindow::~mainWindow()
                 preferences->getPreferences("Window", "Collapsed", "bool")=="true")
         {
             width = QString::number(this->geometry().width(), 10);
-            posx = QString::number(this->geometry().x(), 10);
+            posx = QString::number(this->geometry().x()-3, 10);
         }
         else
         {
@@ -108,7 +108,7 @@ mainWindow::~mainWindow()
             posx = QString::number(this->geometry().x()+((this->geometry().width()-width.toInt(&ok,10))/2), 10);
         };
         preferences->setPreferences("Window", "Position", "x", posx);
-        preferences->setPreferences("Window", "Position", "y", QString::number(this->geometry().y(), 10));
+        preferences->setPreferences("Window", "Position", "y", QString::number(this->geometry().y()-25, 10));
         preferences->setPreferences("Window", "Size", "width", width);
         preferences->setPreferences("Window", "Size", "height", QString::number(this->geometry().height(), 10));
     }
@@ -132,7 +132,7 @@ void mainWindow::updateSize(QSize floorSize, QSize oldFloorSize)
 
 void mainWindow::createActions()
 {
-    openAct = new QAction(QIcon(":/images/fileopen.png"), tr("&Load Patch File... (*.syx, *.mid, *.gxg *.gxb)"), this);
+    openAct = new QAction(QIcon(":/images/fileopen.png"), tr("&Load Patch File... (*.syx, *.mid, *.gcl *.gxg *.gxb)"), this);
     openAct->setShortcut(tr("Ctrl+O"));
     openAct->setWhatsThis(tr("Open an existing file"));
     connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
@@ -143,20 +143,20 @@ void mainWindow::createActions()
     saveAct->setWhatsThis(tr("Save the document to disk"));
     connect(saveAct, SIGNAL(triggered()), this, SLOT(save()));
 
-    saveAsAct = new QAction(QIcon(":/images/filesave.png"), tr("Save &As Patch...  (*.syx)"), this);
+    saveGCLAct = new QAction(QIcon(":/images/filesave.png"), tr("Save As Librarian compatable GCL Patch... (*.gcl)"), this);
+    saveGCLAct->setShortcut(tr("Ctrl+Shift+G"));
+    saveGCLAct->setWhatsThis(tr("Export as a Boss Librarian File"));
+    connect(saveGCLAct, SIGNAL(triggered()), this, SLOT(saveGCL()));
+
+    saveAsAct = new QAction(QIcon(":/images/filesave.png"), tr("Export System Exclusive Patch...  (*.syx)"), this);
     saveAsAct->setShortcut(tr("Ctrl+Shift+S"));
     saveAsAct->setWhatsThis(tr("Save the document under a new name"));
     connect(saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
 
-    exportSMFAct = new QAction(QIcon(":/images/filesave.png"), tr("Save As &SMF Patch... (*.mid)"), this);
+    exportSMFAct = new QAction(QIcon(":/images/filesave.png"), tr("Export Standard Midi Format Patch... (*.mid)"), this);
     exportSMFAct->setShortcut(tr("Ctrl+Shift+E"));
     exportSMFAct->setWhatsThis(tr("Export as a Standard Midi File"));
     connect(exportSMFAct, SIGNAL(triggered()), this, SLOT(exportSMF()));
-
-    saveGXGAct = new QAction(QIcon(":/images/filesave.png"), tr("Save As GXG Patch... (*.gxg)"), this);
-    saveGXGAct->setShortcut(tr("Ctrl+Shift+G"));
-    saveGXGAct->setWhatsThis(tr("Export as a Boss Librarian File"));
-    connect(saveGXGAct, SIGNAL(triggered()), this, SLOT(saveGXG()));
 
     systemLoadAct = new QAction(QIcon(":/images/fileopen.png"), tr("&Load System and Global Data..."), this);
     systemLoadAct->setShortcut(tr("Ctrl+L"));
@@ -246,9 +246,9 @@ void mainWindow::createMenus()
     //QMenu *fileMenu = new QMenu(tr("&File"));
     fileMenu->addAction(openAct);
     fileMenu->addSeparator();
+    fileMenu->addAction(saveGCLAct);
     fileMenu->addAction(saveAsAct);
     fileMenu->addAction(exportSMFAct);
-    fileMenu->addAction(saveGXGAct);
     fileMenu->addSeparator();
     fileMenu->addAction(bulkLoadAct);
     fileMenu->addAction(bulkSaveAct);
@@ -311,7 +311,7 @@ void mainWindow::open()
                 this,
                 tr("Choose a file"),
                 dir,
-                tr("for GT-100, GT-10, or GT-10B   (*.syx *.mid *.gxg *.gxb)"));
+                tr("for GT-100, GT-10, or GT-10B   (*.syx *.mid *.gcl *.gxg *.gxb)"));
     if (!fileName.isEmpty())
     {
         file.setFile(fileName);
@@ -469,7 +469,7 @@ void mainWindow::exportSMF()
     };
 }
 
-void mainWindow::openGXG()
+void mainWindow::openGCL()
 {
     Preferences *preferences = Preferences::Instance();
     QString dir = preferences->getPreferences("General", "Files", "dir");
@@ -478,7 +478,7 @@ void mainWindow::openGXG()
                 this,
                 tr("Choose a file"),
                 dir,
-                tr("Boss Librarian File (*.gxg *.gxb)"));
+                tr("Boss Librarian File (*.gcl *.gxg *.gxb)"));
     if (!fileName.isEmpty())
     {
         file.setFile(fileName);
@@ -499,7 +499,7 @@ void mainWindow::openGXG()
     };
 }
 
-void mainWindow::saveGXG()
+void mainWindow::saveGCL()
 {
 
     if(reg == true)
@@ -510,16 +510,16 @@ void mainWindow::saveGXG()
 
         QString fileName = QFileDialog::getSaveFileName(
                     this,
-                    tr("Export GXG"),
+                    tr("Export GCL"),
                     dir,
-                    tr("Boss Librarian File (*.gxg)"));
+                    tr("Boss Librarian File (*.gcl)"));
         if (!fileName.isEmpty())
         {
-            if(!fileName.contains(".gxg"))
+            if(!fileName.contains(".gcl"))
             {
-                fileName.append(".gxg");
+                fileName.append(".gcl");
             };
-            file.writeGXG(fileName);
+            file.writeGCL(fileName);
 
             file.setFile(fileName);
             if(file.readFile())

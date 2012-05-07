@@ -45,10 +45,10 @@ bulkSaveDialog::bulkSaveDialog()
   QLabel *startRangeLabel = new QLabel(tr("Start Bank."));
 	QLabel *finishRangeLabel = new QLabel(tr("Finish Bank."));
 	
-  this->gxgButton = new QRadioButton(tr("*.gcl Librarian file"), this );
+  this->gclButton = new QRadioButton(tr("*.gcl Librarian file"), this );
   this->syxButton = new QRadioButton(tr("*.syx System Exclusive file"), this );
   this->midButton = new QRadioButton(tr("*.mid Standard Midi (SMF) file"), this );
-  this->gxgButton->setChecked(true);
+  this->gclButton->setChecked(true);
     
 	QCheckBox *systemCheckBox = new QCheckBox(tr("Save System Data"));
 	QSpinBox *startRangeSpinBox = new QSpinBox;
@@ -116,7 +116,7 @@ bulkSaveDialog::bulkSaveDialog()
 	QVBoxLayout *fileFormatLayout = new QVBoxLayout;
 	fileFormatLayout->addStretch(1);
 	fileFormatLayout->addSpacing(6);
-	fileFormatLayout->addWidget(gxgButton);
+	fileFormatLayout->addWidget(gclButton);
 	fileFormatLayout->addStretch(1);
 	fileFormatLayout->addSpacing(6);
 	fileFormatLayout->addWidget(syxButton);
@@ -352,7 +352,7 @@ void bulkSaveDialog::updatePatch(QString replyMsg)
   } else {
   setStatusMessage(tr("Ready"));
   sysxIO->bulk = this->bulk;
-  if (this->gxgButton->isChecked() ) { writeGXG(); };                      // format and write bulk patches.
+  if (this->gclButton->isChecked() ) { writeGCL(); };                      // format and write bulk patches.
   if (this->syxButton->isChecked() ) { writeSYX(); };
   if (this->midButton->isChecked() ) { writeSMF(); };
   };  
@@ -366,7 +366,7 @@ void bulkSaveDialog::bulkStatusProgress(int value)
 	this->progressBar->setValue(value);
 };
 
-void bulkSaveDialog::writeGXG()         // ************************************ GXG File Format***************************
+void bulkSaveDialog::writeGCL()         // ************************************ GCL File Format***************************
 {	
   	Preferences *preferences = Preferences::Instance();
 	          QString dir = preferences->getPreferences("General", "Files", "dir");
@@ -375,12 +375,12 @@ void bulkSaveDialog::writeGXG()         // ************************************ 
                     this,
                     tr("Save Bulk Data"),
                     dir,
-                    tr("Librarian Backup File (*.gxg)"));
+                    tr("Librarian Backup File (*.gcl)"));
 	             if (!fileName.isEmpty())	
                 	{
-	                  if(!fileName.contains(".gxg"))
+	                  if(!fileName.contains(".gcl"))
 	                     	{
-		                    	fileName.append(".gxg");
+		                    	fileName.append(".gcl");
 	                     	};		
 		
 	QFile file(fileName);
@@ -397,58 +397,58 @@ void bulkSaveDialog::writeGXG()         // ************************************ 
 		    ++x;
 		};
 		QByteArray bulkFile;
-		QByteArray GXG_default;
+		QByteArray GCL_default;
 		QByteArray temp;
-		QFile GXGfile(":default.gxg");           // Read the default GT-100B GXG file .
-    if (GXGfile.open(QIODevice::ReadOnly))
-	  {	GXG_default = GXGfile.readAll(); };
-	  bulkFile.append(GXG_default.mid(0, 160));
+		QFile GCLfile(":default.gcl");           // Read the default GT-100B GCL file .
+    if (GCLfile.open(QIODevice::ReadOnly))
+	  {	GCL_default = GCLfile.readAll(); };
+	  bulkFile.append(GCL_default.mid(0, 160));
 	  int b = 0;
 		for (int x=0;x<patchCount;x++)
 		{  
    int a = 172;    
    temp = out.mid(b+11, 128);
-   GXG_default.replace(a, 128, temp);         //address "00" +   
+   GCL_default.replace(a, 128, temp);         //address "00" +   
    temp = out.mid(b+152, 128);
-   GXG_default.replace(a+128, 128, temp);     //address "01" +      
+   GCL_default.replace(a+128, 128, temp);     //address "01" +      
    temp = out.mid(b+293, 128);
-   GXG_default.replace(a+256, 128, temp);     //address "02" +    
+   GCL_default.replace(a+256, 128, temp);     //address "02" +    
    temp = out.mid(b+434, 128);
-   GXG_default.replace(a+384, 128, temp);     //address "03" +        
+   GCL_default.replace(a+384, 128, temp);     //address "03" +        
    temp = out.mid(b+575, 128);
-   GXG_default.replace(a+512, 100, temp);     //address "04" +      no "04"     
+   GCL_default.replace(a+512, 100, temp);     //address "04" +      no "04"     
    temp = out.mid(b+716, 86);
-   GXG_default.replace(a+640, 86, temp);     //address "05" +           
+   GCL_default.replace(a+640, 86, temp);     //address "05" +           
    temp = out.mid(b+815, 128);
-   GXG_default.replace(a+768, 128, temp);     //address "06" +       
+   GCL_default.replace(a+768, 128, temp);     //address "06" +       
    temp = out.mid(b+956, 128);
-   GXG_default.replace(a+896, 128, temp);     //address "07" +      
+   GCL_default.replace(a+896, 128, temp);     //address "07" +      
    temp = out.mid(b+1097, 128);
-   GXG_default.replace(a+1024, 128, temp);     //address "08" +      no "08"   
+   GCL_default.replace(a+1024, 128, temp);     //address "08" +      no "08"   
    temp = out.mid(b+1238, 100);
-   GXG_default.replace(a+1152, 100, temp);    //address "09" +   
+   GCL_default.replace(a+1152, 100, temp);    //address "09" +   
    temp = out.mid(b+1351, 128);
-   GXG_default.replace(a+1280, 128, temp);    //address "0A" +        
+   GCL_default.replace(a+1280, 128, temp);    //address "0A" +        
    temp = out.mid(b+1492, 128);
-   GXG_default.replace(a+1408, 128, temp);    //address "0B" +       
+   GCL_default.replace(a+1408, 128, temp);    //address "0B" +       
    temp = out.mid(b+1633, 128);
-   GXG_default.replace(a+1536, 128, temp);    //address "0C" +
+   GCL_default.replace(a+1536, 128, temp);    //address "0C" +
    temp.clear();
    QString hexStr = "06";
    temp.append((char)(hexStr.toInt(&ok, 16))); 
    hexStr = "B1";
    temp.append((char)(hexStr.toInt(&ok, 16)));   
-   GXG_default.replace(162, 2, temp);     // replace patch size index
+   GCL_default.replace(162, 2, temp);     // replace patch size index
     
    b=b+patchSize;                                  // increment point to next *.syx patch in bulk.
-   bulkFile.append(GXG_default.mid(160, 1713)); // copy most of the patch + index except for 4 text chars on end.
-   bulkFile.append(GXG_default.mid(80, 4));     // copy 4 bytes of "00" from no-where special.
+   bulkFile.append(GCL_default.mid(160, 1713)); // copy most of the patch + index except for 4 text chars on end.
+   bulkFile.append(GCL_default.mid(80, 4));     // copy 4 bytes of "00" from no-where special.
     };
     QString hex = QString::number(patchCount, 16).toUpper();     // convert integer to QString.
 		if (hex.length() < 2) hex.prepend("0");
     QByteArray count;
    count.append( (char)(hex.toInt(&ok, 16)) ); 
-   bulkFile.replace(35, 1, count);     //   insert the correct patch count into the GXG file.
+   bulkFile.replace(35, 1, count);     //   insert the correct patch count into the GCL file.
    file.write(bulkFile); 
 	};
  };
