@@ -712,8 +712,8 @@ void stompbox_fx2::setEditPages()
     editDetails()->page()->newGroupBox("Humanizer");
     editDetails()->page()->addComboBox(0, 0, 1, 1, "05", "00", "3D");
     editDetails()->page()->addComboBox(1, 0, 1, 1, "05", "00", "3E");
-    editDetails()->page()->addKnob(0, 1, 1, 3, "05", "00", "40", "normal","right", 105);
-    editDetails()->page()->addKnob(1, 1, 1, 1, "05", "00", "3F");
+    editDetails()->page()->addKnob(0, 1, 1, 3, "05", "00", "3F", "normal","right", 105);
+    editDetails()->page()->addKnob(1, 1, 1, 1, "05", "00", "40");
     editDetails()->page()->addKnob(1, 2, 1, 1, "05", "00", "41");
     editDetails()->page()->addKnob(1, 3, 1, 1, "05", "00", "42");
     editDetails()->page()->addGroupBox(0, 1, 2, 1);

@@ -322,19 +322,27 @@ QByteArray MidiTable::getArrayValue(QString root, QString hex1, QString hex2, QS
 {
     bool ok;
     QString hex;
+    QString hex_msb;
     char r = hex4.at(0);
-    hex = QString::number(0+r, 16).toUpper();
+    hex = QString::number(r, 16).toUpper();
     if(hex.size()<2){hex.prepend("0"); };
+    if(hex4.size()>1)
+    {   r = hex4.at(1);
+        hex_msb = QString::number(r, 16).toUpper();
+        if(hex_msb.size()<2){hex_msb.prepend("0"); };
+        hex.append(hex_msb);
+    };
+    QString index1;
+    QString index2;
     Midi range = getMidiMap(root, hex1, hex2, hex3);
     QString valueStr;
     if(range.level.last().type.contains("DATA"))
     {
-        int maxRange = QString("7F").toInt(&ok, 16) + 1;
         int value = hex.toInt(&ok, 16);
-        int dif = value/maxRange;
-        QString index1 = QString::number(dif, 16).toUpper();
+        int dif = value/128;
+        index1 = QString::number(dif/2, 16).toUpper();
         if(index1.length() < 2) index1.prepend("0");
-        QString index2 = QString::number(value - (dif * maxRange), 16).toUpper();
+        index2 = QString::number(value - (dif * 128), 16).toUpper();
         if(index2.length() < 2) index2.prepend("0");
 
         Midi dataRange = range.level.at(range.id.indexOf(index1));
@@ -343,24 +351,42 @@ QByteArray MidiTable::getArrayValue(QString root, QString hex1, QString hex2, QS
     else
     {
         valueStr = rangeToValue(range, hex);
+
     };
     if(valueStr == ""){valueStr = rangeToValue(range, hex); };
-    unsigned int n = valueStr.toInt(&ok, 16);
+
     QByteArray value;
-    value[0] = ((char)n);
+    unsigned int n = valueStr.mid(0,2).toInt(&ok, 16);
+    if(hex4.size()>1)
+        {
+        unsigned int b= valueStr.mid(2,2).toInt(&ok, 16);
+            value[0] = ((char)n);
+            value.append((char)b);
+        }
+        else
+        { value[0] = ((char)n); };
 
 /*
+    r = value.at(0);
+    QString val = QString::number(r, 16).toUpper();
+    if(val.size()<2){val.prepend("0"); };
+    if(hex4.size()>1)
+    {   r = value.at(1);
+       QString val_msb = QString::number(r, 16).toUpper();
+        if(val_msb.size()<2){val_msb.prepend("0"); };
+        val.append(val_msb);
+    };
     QMessageBox *msgBox = new QMessageBox();
     msgBox->setWindowTitle(QObject::tr("TEST"));
     msgBox->setIcon(QMessageBox::Warning);
     msgBox->setTextFormat(Qt::RichText);
     QString msgText;
     msgText.append("<font size='+1'><b>");
-    msgText.append(QObject::tr("value = ") + hex + " and " + valueStr);
+    msgText.append("input hex = " + hex + "<br>index1+2 = " + index1 + " and " + index2 + "<br>converted valueStr = " + valueStr + "<br>return value = " + val);
     msgBox->setText(msgText);
     msgBox->setStandardButtons(QMessageBox::Ok);
-    msgBox->exec();*/
-
+    msgBox->exec();
+*/
     return value;
 }
 

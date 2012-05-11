@@ -70,9 +70,11 @@ bool sysxWriter::readFile()
         {SMF_default = smffile.readAll(); };
 
         QByteArray SYX_header = GT10_default.mid(0, 7);             // copy header from default.syx
+        QByteArray other_SYX_header = GT10_default.mid(0, 3);
         QByteArray GCL_header = GCL_default.mid(3, 20);            // copy header from default.gcl
         QByteArray SMF_header = SMF_default.mid(0, 18);            // copy header from default.mid
         QByteArray SYX_file = data.mid(0, 7);                      // copy *.syx identifiable info from loaded patch
+        QByteArray other_SYX_file = data.mid(0, 3);
         QByteArray GCL_file = data.mid(3, 20);
         QByteArray SMF_file = data.mid(0, 18);
 
@@ -80,7 +82,8 @@ bool sysxWriter::readFile()
         if (SYX_file == SYX_header) {headerType = "GT100_SYX";}
         else if (GCL_file == GCL_header && data.mid(2, 1) == "G"){headerType = "GT10_GXG"; }
         else if (GCL_file == GCL_header){headerType = "GT100_GCL"; }
-        else if (SMF_file == SMF_header) {headerType = "GT100_SMF"; };
+        else if (SMF_file == SMF_header) {headerType = "GT100_SMF"; }
+        else if (other_SYX_file == other_SYX_header) {headerType = "other_SYX"; };
 
 
         /***** TEST IF SYSTEM FILE *****************************************/
@@ -103,14 +106,14 @@ bool sysxWriter::readFile()
         /***** TEST IF GT-100 SMF PATCH FILE *****************************************/
         else if (headerType == "GT100_SMF")
         {                                        // file contains a .mid type SMF patch file header from Boss Librarian
-            QByteArray smf_data = data;
+            QByteArray GT100_default;
             QFile file(":default.syx");              // Read the default GT-100 sysx file so we don't start empty handed.
             if (file.open(QIODevice::ReadOnly))
-            {	data = file.readAll(); };
+            {	GT100_default = file.readAll(); };
             QByteArray temp;                         // TRANSLATION of GT-100 SMF PATCHES, data read from smf patch **************
 
-            if ( smf_data.at(37) != data.at(5) ){    // check if a valid GT-100 file
-                QMessageBox *msgBox = new QMessageBox();
+            if ( data.at(37) != GT100_default.at(5) ){    // check if a valid GT-100 file
+               /* QMessageBox *msgBox = new QMessageBox();
                 msgBox->setWindowTitle(QObject::tr("SMF file import"));
                 msgBox->setIcon(QMessageBox::Warning);
                 msgBox->setTextFormat(Qt::RichText);
@@ -122,12 +125,14 @@ bool sysxWriter::readFile()
                 msgText.append(QObject::tr("*Loading this file may have unpredictable results*."));
                 msgBox->setText(msgText);
                 msgBox->setStandardButtons(QMessageBox::Ok);
-                msgBox->exec();
-
+                msgBox->exec();*/
+                headerType = "GT10_SMF";
+                convertFromGT10();
+                return true;
             };
 
             index = 1;
-            int patchCount = (smf_data.size()-32)/2322;
+            int patchCount = (data.size()-32)/2322;
             if (patchCount>1)
             {
                 QString msgText;
@@ -141,7 +146,7 @@ bool sysxWriter::readFile()
                 {
                     for (int b=0;b<16;b++)
                     {
-                        r = (char)smf_data[a+b];
+                        r = (char)data[a+b];
                         patchText.append(r);
                     };
                     patchNumber = QString::number(h+1, 10).toUpper();
@@ -165,51 +170,51 @@ bool sysxWriter::readFile()
                 int q=index-1;      // find start of required patch
                 a = q*2322;
             };
-            temp = smf_data.mid(a+43, 128);            // copy SMF 128 bytes#
-            data.replace(11, 128, temp);             // replace gt100 address "00"#
-            temp = smf_data.mid(a+171, 114);           // copy SMF part1#
-            temp.append(smf_data.mid(a+301,14));       // copy SMF part2#
-            data.replace(152, 128, temp);            // replace gt100 address "01"#
-            temp = smf_data.mid(a+315, 128);           // copy SMF part1#
-            data.replace(293, 128, temp);            // replace gt100 address "02"#
-            temp = smf_data.mid(a+443, 100);           // copy SMF part1#
-            temp.append(smf_data.mid(a+559,28));       // copy SMF part2#
-            data.replace(434, 128, temp);            // replace gt100 address "03"#
-            temp = smf_data.mid(a+587, 128);           // copy SMF part1#
-            data.replace(575, 128, temp);            // replace gt100 address "04"#
-            temp = smf_data.mid(a+715, 86);            // copy SMF part1#
-            temp.append(smf_data.mid(a+817,42));      // copy SMF part2#
-            data.replace(716, 128, temp);             // replace gt100 address "05"#
-            temp = smf_data.mid(a+859, 128);           // copy SMF part1#
-            data.replace(857,128, temp);             // replace gt100 address "06"#
-            temp = smf_data.mid(a+987, 72);            // copy SMF part1#
-            temp.append(smf_data.mid(a+1075,56));      // copy SMF part2#
-            data.replace(998, 128, temp);            // replace gt100 address "07"#
-            temp = smf_data.mid(a+1131, 128);          // copy SMF part1#
-            data.replace(1139,128, temp);            // replace gt100 address "08"#
-            temp = smf_data.mid(a+1259, 58);           // copy SMF part1#
-            temp.append(smf_data.mid(a+1333,70));      // copy SMF part2#
-            data.replace(1280, 128, temp);           // replace gt100 address "09"#
-            temp = smf_data.mid(a+1403, 128);          // copy SMF part1#
-            data.replace(1421,128, temp);            // replace gt100 address "0A"#
-            temp = smf_data.mid(a+1531, 44);           // copy SMF part1#
-            temp.append(smf_data.mid(a+1591,84));      // copy SMF part2#
-            data.replace(1562, 128, temp);           // replace gt100 address "0B"#
-            temp = smf_data.mid(a+1675, 128);          // copy SMF part1#
-            data.replace(1703,128, temp);            // replace gt100 address "0C"#
-            temp = smf_data.mid(a+1803, 30);           // copy SMF part1#
-            temp.append(smf_data.mid(a+1849,98));      // copy SMF part2#
-            data.replace(1844, 128, temp);           // replace gt100 address "0D"#
-            temp = smf_data.mid(a+1947, 128);           // copy SMF part1#
-            data.replace(1985, 128, temp);           // replace gt100 address "0E"#
-            temp = smf_data.mid(a+2075, 16);           // copy SMF part1#
-            temp.append(smf_data.mid(a+2107,8));      // copy SMF part2
-            data.replace(2126, 24, temp);           // replace gt100 address "0F"
+            temp = data.mid(a+43, 128);            // copy SMF 128 bytes#
+            GT100_default.replace(11, 128, temp);             // replace gt100 address "00"#
+            temp = data.mid(a+171, 114);           // copy SMF part1#
+            temp.append(data.mid(a+301,14));       // copy SMF part2#
+            GT100_default.replace(152, 128, temp);            // replace gt100 address "01"#
+            temp = data.mid(a+315, 128);           // copy SMF part1#
+            GT100_default.replace(293, 128, temp);            // replace gt100 address "02"#
+            temp = data.mid(a+443, 100);           // copy SMF part1#
+            temp.append(data.mid(a+559,28));       // copy SMF part2#
+            GT100_default.replace(434, 128, temp);            // replace gt100 address "03"#
+            temp = data.mid(a+587, 128);           // copy SMF part1#
+            GT100_default.replace(575, 128, temp);            // replace gt100 address "04"#
+            temp = data.mid(a+715, 86);            // copy SMF part1#
+            temp.append(data.mid(a+817,42));      // copy SMF part2#
+            GT100_default.replace(716, 128, temp);             // replace gt100 address "05"#
+            temp = data.mid(a+859, 128);           // copy SMF part1#
+            GT100_default.replace(857,128, temp);             // replace gt100 address "06"#
+            temp = data.mid(a+987, 72);            // copy SMF part1#
+            temp.append(data.mid(a+1075,56));      // copy SMF part2#
+            GT100_default.replace(998, 128, temp);            // replace gt100 address "07"#
+            temp = data.mid(a+1131, 128);          // copy SMF part1#
+            GT100_default.replace(1139,128, temp);            // replace gt100 address "08"#
+            temp = data.mid(a+1259, 58);           // copy SMF part1#
+            temp.append(data.mid(a+1333,70));      // copy SMF part2#
+            GT100_default.replace(1280, 128, temp);           // replace gt100 address "09"#
+            temp = data.mid(a+1403, 128);          // copy SMF part1#
+            GT100_default.replace(1421,128, temp);            // replace gt100 address "0A"#
+            temp = data.mid(a+1531, 44);           // copy SMF part1#
+            temp.append(data.mid(a+1591,84));      // copy SMF part2#
+            GT100_default.replace(1562, 128, temp);           // replace gt100 address "0B"#
+            temp = data.mid(a+1675, 128);          // copy SMF part1#
+            GT100_default.replace(1703,128, temp);            // replace gt100 address "0C"#
+            temp = data.mid(a+1803, 30);           // copy SMF part1#
+            temp.append(data.mid(a+1849,98));      // copy SMF part2#
+            GT100_default.replace(1844, 128, temp);           // replace gt100 address "0D"#
+            temp = data.mid(a+1947, 128);           // copy SMF part1#
+            GT100_default.replace(1985, 128, temp);           // replace gt100 address "0E"#
+            temp = data.mid(a+2075, 16);           // copy SMF part1#
+            temp.append(data.mid(a+2107,8));      // copy SMF part2
+            GT100_default.replace(2126, 24, temp);           // replace gt100 address "0F"
             if (index>0)
             {
                 SysxIO *sysxIO = SysxIO::Instance();
                 QString area = "Structure";
-                sysxIO->setFileSource(area, data);
+                sysxIO->setFileSource(area, GT100_default);
                 sysxIO->setFileName(this->fileName);
                 this->fileSource = sysxIO->getFileSource();
                 return true;
@@ -341,6 +346,26 @@ bool sysxWriter::readFile()
         else if (headerType == "GT10_GXG"){
             convertFromGT10();
             return true;
+        }
+        else if(headerType == "other_SYX")
+        {
+          other_SYX_file = data.mid(0, 11);
+          QString header;
+          for(int x=0; x<10; ++x)
+          {
+              char r = other_SYX_file.at(x+1);
+              QString val = QString::number(r, 16).toUpper();
+              if(val.size()<2){val.prepend("0"); };
+              header.append(val);
+          };
+          bool ok;
+          int address = header.mid(12, 2).toInt(&ok, 16);
+          bool isPatch = false;
+          if(address > 9)isPatch = true;
+          if(isPatch && header.contains("00002F") )
+          { headerType = "GT10_SYX";
+             convertFromGT10();
+             return true; };
         }
         else
         {
@@ -678,7 +703,7 @@ void sysxWriter::convertFromGT10()
     if (file.open(QIODevice::ReadOnly))
     {	GT10_default = file.readAll(); };
 
-    if(data.size() == 1862 && headerType == "GT10_SYX"){         // if GT-10 patch file size is an old format <<<<<<<<<<<<<<<<<.
+    if(/*data.size() == 1862 && */headerType == "GT10_SYX"){         // if GT-10 patch file size is an old format <<<<<<<<<<<<<<<<<.
 
         QByteArray temp;
         data.remove(1618, 50);
@@ -696,21 +721,17 @@ void sysxWriter::convertFromGT10()
         standard_data.append(temp);
         data = standard_data;
 
-        SysxIO *sysxIO = SysxIO::Instance();
-        //QString area = "Structure";
-        //sysxIO->setFileSource(area, data);
-        sysxIO->setFileName(this->fileName);
-        //this->fileSource = sysxIO->getFileSource();
+        translate10to100();
     }
     else if (headerType == "GT10_SMF")                      // SMF ******************************************************************
     {                                        // file contains a .mid type SMF patch file header from Boss Librarian
-        QByteArray smf_data = data;
-        QFile file(":default.syx");              // Read the default GT-10 sysx file so we don't start empty handed.
+        QByteArray GT10_default;
+        QFile file(":gt10_default.syx");              // Read the default GT-10 sysx file so we don't start empty handed.
         if (file.open(QIODevice::ReadOnly))
-        {	data = file.readAll(); };
+        {	GT10_default = file.readAll(); };
         QByteArray temp;                         // TRANSLATION of GT-10 SMF PATCHES, data read from smf patch **************
 
-        if ( smf_data.at(37) != data.at(5) ){    // check if a valid GT-10 file
+       /* if ( data.at(37) != GT10_default.at(5) ){    // check if a valid GT-10 file
             QMessageBox *msgBox = new QMessageBox();
             msgBox->setWindowTitle(QObject::tr("SMF file import"));
             msgBox->setIcon(QMessageBox::Warning);
@@ -724,10 +745,10 @@ void sysxWriter::convertFromGT10()
             msgBox->setText(msgText);
             msgBox->setStandardButtons(QMessageBox::Ok);
             msgBox->exec();
-        };
+        };*/
 
         index = 1;
-        int patchCount = (smf_data.size()-32)/1806;
+        int patchCount = (data.size()-32)/1806;
         if (patchCount>1)
         {
             QString msgText;
@@ -741,7 +762,7 @@ void sysxWriter::convertFromGT10()
             {
                 for (int b=0;b<16;b++)
                 {
-                    r = (char)smf_data[a+b];
+                    r = (char)data[a+b];
                     patchText.append(r);
                 };
                 patchNumber = QString::number(h+1, 10).toUpper();
@@ -765,44 +786,41 @@ void sysxWriter::convertFromGT10()
             int q=index-1;      // find start of required patch
             a = q*1806;
         };
-        temp = smf_data.mid(a+43, 128);            // copy SMF 128 bytes
-        data.replace(11, 128, temp);             // replace gt10 address "00"
-        temp = smf_data.mid(a+171, 114);           // copy SMF part1
-        temp.append(smf_data.mid(a+301,14));       // copy SMF part2
-        data.replace(152, 128, temp);            // replace gt10 address "01"
-        temp = smf_data.mid(a+315, 128);           // copy SMF part1
-        data.replace(293, 128, temp);            // replace gt10 address "02"
-        temp = smf_data.mid(a+443, 100);           // copy SMF part1
-        temp.append(smf_data.mid(a+559,28));       // copy SMF part2
-        data.replace(434, 128, temp);            // replace gt10 address "03"
-        temp = smf_data.mid(a+587, 128);           // copy SMF part1
-        data.replace(575, 128, temp);            // replace gt10 address "04"
-        temp = smf_data.mid(a+715, 86);            // copy SMF part1
-        data.replace(716, 86, temp);             // replace gt10 address "05"
-        temp = smf_data.mid(a+859, 128);           // copy SMF part1
-        data.replace(815,128, temp);             // replace gt10 address "06"
-        temp = smf_data.mid(a+987, 72);            // copy SMF part1
-        temp.append(smf_data.mid(a+1075,56));      // copy SMF part2
-        data.replace(956, 128, temp);            // replace gt10 address "07"
-        temp = smf_data.mid(a+1131, 128);          // copy SMF part1
-        data.replace(1097,128, temp);            // replace gt10 address "08"
-        temp = smf_data.mid(a+1259, 58);           // copy SMF part1
-        temp.append(smf_data.mid(a+1333,42));      // copy SMF part2
-        data.replace(1238, 100, temp);           // replace gt10 address "09"
-        temp = smf_data.mid(a+1403, 128);          // copy SMF part1
-        data.replace(1351,128, temp);            // replace gt10 address "0A"
-        temp = smf_data.mid(a+1531, 44);           // copy SMF part1
-        temp.append(smf_data.mid(a+1591,84));      // copy SMF part2
-        data.replace(1492, 128, temp);           // replace gt10 address "0B"
-        temp = smf_data.mid(a+1675, 128);          // copy SMF part1
-        data.replace(1633,128, temp);            // replace gt10 address "0C"
+        //temp = data.mid(a+43, 128);            // copy SMF 128 bytes
+        GT10_default.replace(11, 16, data.mid(a+43, 16));             // replace gt10 address "00"
+        temp = data.mid(a+171, 114);           // copy SMF part1
+        temp.append(data.mid(a+301,14));       // copy SMF part2
+        GT10_default.replace(152, 128, temp);            // replace gt10 address "01"
+        temp = data.mid(a+315, 128);           // copy SMF part1
+        GT10_default.replace(293, 128, temp);            // replace gt10 address "02"
+        temp = data.mid(a+443, 100);           // copy SMF part1
+        temp.append(data.mid(a+559,28));       // copy SMF part2
+        GT10_default.replace(434, 128, temp);            // replace gt10 address "03"
+        temp = data.mid(a+587, 128);           // copy SMF part1
+        GT10_default.replace(575, 128, temp);            // replace gt10 address "04"
+        temp = data.mid(a+715, 86);            // copy SMF part1
+        GT10_default.replace(716, 86, temp);             // replace gt10 address "05"
+        temp = data.mid(a+859, 128);           // copy SMF part1
+        GT10_default.replace(815,128, temp);             // replace gt10 address "06"
+        temp = data.mid(a+987, 72);            // copy SMF part1
+        temp.append(data.mid(a+1075,56));      // copy SMF part2
+        GT10_default.replace(956, 128, temp);            // replace gt10 address "07"
+        temp = data.mid(a+1131, 128);          // copy SMF part1
+        GT10_default.replace(1097,128, temp);            // replace gt10 address "08"
+        temp = data.mid(a+1259, 58);           // copy SMF part1
+        temp.append(data.mid(a+1333,42));      // copy SMF part2
+        GT10_default.replace(1238, 100, temp);           // replace gt10 address "09"
+        temp = data.mid(a+1403, 128);          // copy SMF part1
+        GT10_default.replace(1351,128, temp);            // replace gt10 address "0A"
+        temp = data.mid(a+1531, 44);           // copy SMF part1
+        temp.append(data.mid(a+1591,84));      // copy SMF part2
+        GT10_default.replace(1492, 128, temp);           // replace gt10 address "0B"
+        temp = data.mid(a+1675, 128);          // copy SMF part1
+        GT10_default.replace(1633,128, temp);            // replace gt10 address "0C"
         if (index>0)
         {
-            SysxIO *sysxIO = SysxIO::Instance();
-            //QString area = "Structure";
-            //sysxIO->setFileSource(area, data);
-            sysxIO->setFileName(this->fileName);
-            //this->fileSource = sysxIO->getFileSource();
+            data = GT10_default;
+            translate10to100();
         }
     }
     else if (headerType == "GT10_GXG")      // if the read file is a Boss Librarian type. ***************************************
@@ -1141,8 +1159,6 @@ void sysxWriter::translate10to100()
     if (file.open(QIODevice::ReadOnly))
     {GT100_default = file.readAll(); };
 
-    QByteArray temp;
-
     GT100_default.replace(11, 16, data.mid(11, 16));   //copy name
     GT100_default.replace(27, 1, data.mid(28, 1));     //copy output select
     GT100_default.replace(43, 4, data.mid(75, 4));     //copy comp
@@ -1157,13 +1173,265 @@ void sysxWriter::translate10to100()
     GT100_default.replace(70, 1, midiTable->getArrayValue("Tables", "00", "00", "01", data.mid(134, 1))); //convert custom dist
     GT100_default.replace(71, 1, midiTable->getArrayValue("Tables", "00", "00", "01", data.mid(135, 1))); //convert custom dist
     GT100_default.replace(72, 1, midiTable->getArrayValue("Tables", "00", "00", "01", data.mid(136, 1))); //convert custom dist
+    GT100_default.replace(91, 1, data.mid(152, 1));  //copy Preamp A sw
+    GT100_default.replace(92, 1, midiTable->getArrayValue("Tables", "00", "00", "02", data.mid(168, 1))); //convert pre type
+    GT100_default.replace(93, 1, data.mid(169, 1));    //copy pre A gain
+    GT100_default.replace(96, 16, data.mid(171, 16));  //copy pre A
+    GT100_default.replace(111, 1, midiTable->getArrayValue("Tables", "00", "00", "01", data.mid(186, 1))); //convert custom pre
+    GT100_default.replace(112, 1, midiTable->getArrayValue("Tables", "00", "00", "01", data.mid(187, 1))); //convert custom pre
+    GT100_default.replace(115, 1, midiTable->getArrayValue("Tables", "00", "00", "01", data.mid(190, 1))); //convert custom pre
+    GT100_default.replace(116, 1, midiTable->getArrayValue("Tables", "00", "00", "01", data.mid(191, 1))); //convert custom pre
+    GT100_default.replace(118, 5, data.mid(192, 5));  //copy custom spkr A
+    GT100_default.replace(152, 1, data.mid(152, 1));  //copy Preamp B sw
+    GT100_default.replace(153, 1, midiTable->getArrayValue("Tables", "00", "00", "02", data.mid(200, 1))); //convert pre type
+    GT100_default.replace(154, 1, data.mid(201, 1));    //copy pre B gain
+    GT100_default.replace(157, 16, data.mid(203, 16));  //copy pre B
+    GT100_default.replace(172, 1, midiTable->getArrayValue("Tables", "00", "00", "01", data.mid(218, 1))); //convert custom pre
+    GT100_default.replace(173, 1, midiTable->getArrayValue("Tables", "00", "00", "01", data.mid(219, 1))); //convert custom pre
+    GT100_default.replace(176, 1, midiTable->getArrayValue("Tables", "00", "00", "01", data.mid(222, 1))); //convert custom pre
+    GT100_default.replace(177, 1, midiTable->getArrayValue("Tables", "00", "00", "01", data.mid(223, 1))); //convert custom pre
+    GT100_default.replace(179, 5, data.mid(224, 5));  //copy custom spkr B
+    GT100_default.replace(200, 12, data.mid(264, 12));  //copy EQ
+    GT100_default.replace(201, 1, midiTable->getArrayValue("Tables", "00", "00", "03", data.mid(265, 1))); //convert lo cut
+    GT100_default.replace(210, 1, midiTable->getArrayValue("Tables", "00", "00", "04", data.mid(274, 1))); //convert hi cut
+    GT100_default.replace(216, 1, data.mid(293, 1));  //copy FX1 sw
+    GT100_default.replace(217, 1, midiTable->getArrayValue("Tables", "00", "00", "05", data.mid(294, 1))); //convert FX type
+    GT100_default.replace(251, 5, data.mid(295, 5));  //copy ACS
+    GT100_default.replace(257, 6, data.mid(300, 6));  //copy ALM
+    GT100_default.replace(228, 7, data.mid(306, 7));  //copy TW
+    GT100_default.replace(236, 7, data.mid(313, 7));  //copy AW
+    GT100_default.replace(441, 3, data.mid(320, 3));  //copy TR
+    GT100_default.replace(410, 8, data.mid(323, 8));  //copy PH
+    GT100_default.replace(419, 2, data.mid(331, 2));  //copy FL
+    GT100_default.replace(434, 6, data.mid(333, 6));  //copy FL
+    GT100_default.replace(458, 5, data.mid(339, 5));  //copy PAN
+    GT100_default.replace(471, 4, data.mid(344, 4));  //copy VB
+    GT100_default.replace(454, 3, data.mid(348, 3));  //copy UV
+    GT100_default.replace(477, 4, data.mid(351, 4));  //copy RM
+    GT100_default.replace(313, 2, data.mid(355, 2));  //copy SG
+    GT100_default.replace(482, 8, data.mid(370, 8));  //copy HU
+    GT100_default.replace(465, 3, data.mid(378, 3));  //copy SL
+    GT100_default.replace(276, 1, midiTable->getArrayValue("Tables", "00", "00", "03", data.mid(381, 1))); //convert lo cut
+    GT100_default.replace(277, 3, data.mid(382, 3));  //copy SEQ
+    GT100_default.replace(293, 5, data.mid(385, 5));  //copy SEQ
+    GT100_default.replace(298, 1, midiTable->getArrayValue("Tables", "00", "00", "04", data.mid(390, 1))); //convert hi cut
+    GT100_default.replace(299, 1, data.mid(391, 1));  //copy SEQ
+    GT100_default.replace(362, 29, data.mid(392, 29));//copy HR
+    GT100_default.replace(391, 6, data.mid(434, 6));  //copy HR
+    GT100_default.replace(346, 15, data.mid(440, 15));//copy PS
+    GT100_default.replace(342, 3, data.mid(455, 3));  //copy OC
+    GT100_default.replace(446, 6, data.mid(458, 6));  //copy RT
+    GT100_default.replace(491, 9, data.mid(464, 9));  //copy 2CE
+    GT100_default.replace(504, 4, data.mid(475, 4));  //copy SDD
+    GT100_default.replace(502, 2, data.mid(473, 2));  //copy SDD
+    GT100_default.replace(505, 1, midiTable->getArrayValue("Tables", "00", "00", "04", data.mid(476, 1))); //convert hi cut
+    GT100_default.replace(317, 7, data.mid(479, 7));  //copy DF
+    GT100_default.replace(334, 7, data.mid(486, 7));  //copy SITAR
+    GT100_default.replace(325, 8, data.mid(493, 8));  //copy WSY
+    GT100_default.replace(398, 3, data.mid(744, 3));  //copy SH
+    GT100_default.replace(301, 5, data.mid(747, 5));  //copy TM
+    GT100_default.replace(307, 5, data.mid(752, 5));  //copy GS
+    GT100_default.replace(402, 7, data.mid(757, 7));  //copy AC
+    GT100_default.replace(244, 6, data.mid(764, 6));  //copy SWAH
+    GT100_default.replace(264, 1, midiTable->getArrayValue("Tables", "00", "00", "06", data.mid(771, 1))); //convert GEQ
+    GT100_default.replace(265, 1, midiTable->getArrayValue("Tables", "00", "00", "06", data.mid(772, 1))); //convert GEQ
+    GT100_default.replace(266, 1, midiTable->getArrayValue("Tables", "00", "00", "06", data.mid(773, 1))); //convert GEQ
+    GT100_default.replace(267, 1, midiTable->getArrayValue("Tables", "00", "00", "06", data.mid(774, 1))); //convert GEQ
+    GT100_default.replace(268, 1, midiTable->getArrayValue("Tables", "00", "00", "06", data.mid(775, 1))); //convert GEQ
+    GT100_default.replace(269, 1, midiTable->getArrayValue("Tables", "00", "00", "06", data.mid(776, 1))); //convert GEQ
+    GT100_default.replace(270, 1, midiTable->getArrayValue("Tables", "00", "00", "06", data.mid(777, 1))); //convert GEQ
+    GT100_default.replace(271, 1, midiTable->getArrayValue("Tables", "00", "00", "06", data.mid(778, 1))); //convert GEQ
+    GT100_default.replace(272, 1, midiTable->getArrayValue("Tables", "00", "00", "06", data.mid(779, 1))); //convert GEQ
+    GT100_default.replace(273, 1, midiTable->getArrayValue("Tables", "00", "00", "06", data.mid(780, 1))); //convert GEQ
+    GT100_default.replace(274, 1, midiTable->getArrayValue("Tables", "00", "00", "06", data.mid(770, 1))); //convert GEQ
+    GT100_default.replace(510, 1, data.mid(815, 1));  //copy FX2 sw
+    GT100_default.replace(511, 1, midiTable->getArrayValue("Tables", "00", "00", "05", data.mid(816, 1))); //convert FX type
+    GT100_default.replace(545, 5, data.mid(817, 5));  //copy ACS
+    GT100_default.replace(551, 6, data.mid(822, 6));  //copy ALM
+    GT100_default.replace(522, 7, data.mid(828, 7));  //copy TW
+    GT100_default.replace(530, 7, data.mid(835, 7));  //copy AW
+    GT100_default.replace(735, 3, data.mid(842, 3));  //copy TR
+    GT100_default.replace(716, 8, data.mid(845, 8));  //copy PH
+    GT100_default.replace(726, 8, data.mid(853, 8));  //copy FL
+    GT100_default.replace(752, 5, data.mid(861, 5));  //copy PAN
+    GT100_default.replace(765, 4, data.mid(866, 4));  //copy VB
+    GT100_default.replace(748, 3, data.mid(870, 3));  //copy UV
+    GT100_default.replace(771, 4, data.mid(873, 4));  //copy RM
+    GT100_default.replace(607, 2, data.mid(877, 2));  //copy SG
+    GT100_default.replace(776, 8, data.mid(892, 8));  //copy HU
+    GT100_default.replace(759, 3, data.mid(900, 3));  //copy SL
+    GT100_default.replace(583, 1, midiTable->getArrayValue("Tables", "00", "00", "03", data.mid(903, 1))); //convert lo cut
+    GT100_default.replace(584, 8, data.mid(904, 8));  //copy SEQ
+    GT100_default.replace(592, 1, midiTable->getArrayValue("Tables", "00", "00", "04", data.mid(912, 1))); //convert hi cut
+    GT100_default.replace(593, 1, data.mid(913, 1));  //copy SEQ
+    GT100_default.replace(656, 29, data.mid(914, 29));//copy HR
+    GT100_default.replace(685, 6, data.mid(956, 6));  //copy HR
+    GT100_default.replace(640, 15, data.mid(962, 15));//copy PS
+    GT100_default.replace(636, 3, data.mid(977, 3));  //copy OC
+    GT100_default.replace(740, 6, data.mid(980, 6));  //copy RT
+    GT100_default.replace(785, 9, data.mid(986, 9));  //copy 2CE
+    GT100_default.replace(796, 6, data.mid(995, 6));  //copy SDD
+    GT100_default.replace(799, 1, midiTable->getArrayValue("Tables", "00", "00", "04", data.mid(998, 1))); //convert hi cut
+    GT100_default.replace(611, 7, data.mid(1001, 7));  //copy DF
+    GT100_default.replace(628, 7, data.mid(1008, 7));  //copy SITAR
+    GT100_default.replace(619, 8, data.mid(1015, 8));  //copy WSY
+    GT100_default.replace(692, 3, data.mid(1266, 3));  //copy SH
+    GT100_default.replace(595, 5, data.mid(1269, 5));  //copy TM
+    GT100_default.replace(601, 5, data.mid(1274, 5));  //copy GS
+    GT100_default.replace(696, 7, data.mid(1279, 7));  //copy AC
+    GT100_default.replace(538, 6, data.mid(1286, 6));  //copy SWAH
+    GT100_default.replace(558, 1, midiTable->getArrayValue("Tables", "00", "00", "06", data.mid(1293, 1))); //convert GEQ
+    GT100_default.replace(559, 1, midiTable->getArrayValue("Tables", "00", "00", "06", data.mid(1294, 1))); //convert GEQ
+    GT100_default.replace(560, 1, midiTable->getArrayValue("Tables", "00", "00", "06", data.mid(1295, 1))); //convert GEQ
+    GT100_default.replace(561, 1, midiTable->getArrayValue("Tables", "00", "00", "06", data.mid(1296, 1))); //convert GEQ
+    GT100_default.replace(575, 1, midiTable->getArrayValue("Tables", "00", "00", "06", data.mid(1297, 1))); //convert GEQ
+    GT100_default.replace(576, 1, midiTable->getArrayValue("Tables", "00", "00", "06", data.mid(1298, 1))); //convert GEQ
+    GT100_default.replace(577, 1, midiTable->getArrayValue("Tables", "00", "00", "06", data.mid(1299, 1))); //convert GEQ
+    GT100_default.replace(578, 1, midiTable->getArrayValue("Tables", "00", "00", "06", data.mid(1300, 1))); //convert GEQ
+    GT100_default.replace(579, 1, midiTable->getArrayValue("Tables", "00", "00", "06", data.mid(1301, 1))); //convert GEQ
+    GT100_default.replace(580, 1, midiTable->getArrayValue("Tables", "00", "00", "06", data.mid(1302, 1))); //convert GEQ
+    GT100_default.replace(581, 1, midiTable->getArrayValue("Tables", "00", "00", "06", data.mid(1292, 1))); //convert GEQ
+    GT100_default.replace(812, 1, data.mid(1351, 1));  //copy DD sw
+    GT100_default.replace(813, 1, midiTable->getArrayValue("Tables", "00", "00", "07", data.mid(1352, 1))); //convert DD type
+    GT100_default.replace(814, 2, data.mid(1353, 2));  //copy DD time
+    GT100_default.replace(820, 1, data.mid(1355, 1));  //copy DD tap
+    GT100_default.replace(816, 1, data.mid(1356, 1));  //copy DD fb
+    GT100_default.replace(817, 1, midiTable->getArrayValue("Tables", "00", "00", "04", data.mid(1357, 1))); //convert hi cut
+    GT100_default.replace(821, 10, data.mid(1358, 10));  //copy DD
+    GT100_default.replace(824, 1, midiTable->getArrayValue("Tables", "00", "00", "03", data.mid(1361, 1))); //convert lo cut
+    GT100_default.replace(829, 1, midiTable->getArrayValue("Tables", "00", "00", "04", data.mid(1366, 1))); //convert hi cut
+    GT100_default.replace(831, 2, data.mid(1372, 2));  //copy DD mod
+    GT100_default.replace(818, 2, data.mid(1374, 2));  //copy DD level
+    GT100_default.replace(857, 5, data.mid(1383, 5));  //copy CE
+    GT100_default.replace(862, 1, midiTable->getArrayValue("Tables", "00", "00", "03", data.mid(1388, 1))); //convert lo cut
+    GT100_default.replace(863, 1, midiTable->getArrayValue("Tables", "00", "00", "04", data.mid(1389, 1))); //convert hi cut
+    GT100_default.replace(864, 1, data.mid(1390, 1));  //copy CE
+    GT100_default.replace(873, 3, data.mid(1399, 3));  //copy RV
+    GT100_default.replace(878, 1, midiTable->getArrayValue("Tables", "00", "00", "03", data.mid(1403, 1))); //convert lo cut
+    GT100_default.replace(879, 1, midiTable->getArrayValue("Tables", "00", "00", "04", data.mid(1404, 1))); //convert hi cut
+    GT100_default.replace(880, 4, data.mid(1405, 4));  //copy RV
+    GT100_default.replace(876, 2, data.mid(1409, 2));  //copy RV pre delay
+    GT100_default.replace(889, 1, data.mid(1415, 1));  //copy PFX sw
+    GT100_default.replace(1155, 1, data.mid(1420, 1));  //copy PFX mode
+    GT100_default.replace(1094, 1, midiTable->getArrayValue("Tables", "00", "00", "08", data.mid(1421, 1))); //convert EXP sw func
+    GT100_default.replace(1078, 1, midiTable->getArrayValue("Tables", "00", "00", "09", data.mid(1422, 1))); //convert ctl 1 func
+    GT100_default.replace(1110, 1, midiTable->getArrayValue("Tables", "00", "00", "09", data.mid(1423, 1))); //convert ctl 2 func
+    GT100_default.replace(895, 6, data.mid(1424, 6));  //copy PFX WAH
+    GT100_default.replace(891, 4, data.mid(1436, 4));  //copy PFX PB
+    GT100_default.replace(908, 1, data.mid(1441, 1));  //copy PFX FV
+    GT100_default.replace(906, 2, data.mid(1442, 2));  //copy PFX FV
+    GT100_default.replace(905, 1, data.mid(1444, 1));  //copy PFX FV
+    GT100_default.replace(1014, 1, data.mid(1447, 1));  //copy MST
+    GT100_default.replace(1015, 1, midiTable->getArrayValue("Tables", "00", "00", "06", data.mid(1448, 1))); //convert MEQ
+    GT100_default.replace(1018, 1, midiTable->getArrayValue("Tables", "00", "00", "06", data.mid(1449, 1))); //convert MEQ
+    GT100_default.replace(1017, 1, data.mid(1450, 1));  //copy MST
+    GT100_default.replace(1016, 1, data.mid(1451, 1));  //copy MST
+    GT100_default.replace(1019, 1, midiTable->getArrayValue("Tables", "00", "00", "06", data.mid(1452, 1))); //convert MEQ
+    GT100_default.replace(1020, 3, data.mid(1453, 3));  //copy MST bpm
+    GT100_default.replace(953, 1, data.mid(1456, 1));  //copy AMP sw
+    GT100_default.replace(956, 4, data.mid(1464, 4));  //copy NS1
+    GT100_default.replace(961, 4, data.mid(1468, 4));  //copy NS2
+    GT100_default.replace(942, 4, data.mid(1472, 4));  //copy SR loop
 
+    QByteArray chain(data.mid(1492, 18)); //copy gt10 chain
+    QString chn;
+    QString list;
+    for(int x=0; x<18; ++x)
+    {
+        char r = chain.at(x);
+        QString val = QString::number(r, 16).toUpper();
+        if(val.size()<2){val.prepend("0"); };
+        chn.append(val);
+        list.append(chn.mid(x*2, 1)); // make list of 10's units of chain items, channel b are prepended with 4
+    };
+    int pos = list.indexOf("4"); //find position of channel b start
 
-    //temp = GT100_default.mid(60, 1);
+    chain.replace(0, 1, midiTable->getArrayValue("Tables", "00", "00", "0A", chain.mid(0, 1))); //convert chain
+    chain.replace(1, 1, midiTable->getArrayValue("Tables", "00", "00", "0A", chain.mid(1, 1))); //convert chain
+    chain.replace(2, 1, midiTable->getArrayValue("Tables", "00", "00", "0A", chain.mid(2, 1))); //convert chain
+    chain.replace(3, 1, midiTable->getArrayValue("Tables", "00", "00", "0A", chain.mid(3, 1))); //convert chain
+    chain.replace(4, 1, midiTable->getArrayValue("Tables", "00", "00", "0A", chain.mid(4, 1))); //convert chain
+    chain.replace(5, 1, midiTable->getArrayValue("Tables", "00", "00", "0A", chain.mid(5, 1))); //convert chain
+    chain.replace(6, 1, midiTable->getArrayValue("Tables", "00", "00", "0A", chain.mid(6, 1))); //convert chain
+    chain.replace(7, 1, midiTable->getArrayValue("Tables", "00", "00", "0A", chain.mid(7, 1))); //convert chain
+    chain.replace(8, 1, midiTable->getArrayValue("Tables", "00", "00", "0A", chain.mid(8, 1))); //convert chain
+    chain.replace(9, 1, midiTable->getArrayValue("Tables", "00", "00", "0A", chain.mid(9, 1))); //convert chain
+    chain.replace(10, 1, midiTable->getArrayValue("Tables", "00", "00", "0A", chain.mid(10, 1))); //convert chain
+    chain.replace(11, 1, midiTable->getArrayValue("Tables", "00", "00", "0A", chain.mid(11, 1))); //convert chain
+    chain.replace(12, 1, midiTable->getArrayValue("Tables", "00", "00", "0A", chain.mid(12, 1))); //convert chain
+    chain.replace(13, 1, midiTable->getArrayValue("Tables", "00", "00", "0A", chain.mid(13, 1))); //convert chain
+    chain.replace(14, 1, midiTable->getArrayValue("Tables", "00", "00", "0A", chain.mid(14, 1))); //convert chain
+    chain.replace(15, 1, midiTable->getArrayValue("Tables", "00", "00", "0A", chain.mid(15, 1))); //convert chain
+    chain.replace(16, 1, midiTable->getArrayValue("Tables", "00", "00", "0A", chain.mid(16, 1))); //convert chain
+    chain.replace(17, 1, midiTable->getArrayValue("Tables", "00", "00", "0A", chain.mid(17, 1))); //convert chain
+    chain.insert(17, (char)10);
+    chain.insert(pos, (char)18);
+    GT100_default.replace(1030, 20, chain);
 
-    //temp = GT100_default.mid(70, 1);
-   // GT100_default.replace(70, 1, midiTable->getArrayValue("Tables", "00", "00", "01", GT100_default.mid(70, 1)));
-
+    GT100_default.replace(1187, 1, data.mid(1524, 1));  //copy Assign 1
+    GT100_default.replace(1188, 2, midiTable->getArrayValue("Tables", "00", "00", "0B", data.mid(1525, 2))); //convert target
+    GT100_default.replace(1190, 4, data.mid(1527, 4));  //copy min/max
+    GT100_default.replace(1194, 1, midiTable->getArrayValue("Tables", "00", "00", "0C", data.mid(1531, 1))); //convert source
+    GT100_default.replace(1195, 3, data.mid(1532, 3));  //copy Assign
+    GT100_default.replace(1198, 1, midiTable->getArrayValue("Tables", "00", "00", "0D", data.mid(1535, 1))); //convert int pedal
+    GT100_default.replace(1199, 4, data.mid(1536, 4));  //copy Assign
+    GT100_default.replace(1219, 1, data.mid(1540, 1));  //copy Assign 2
+    GT100_default.replace(1220, 2, midiTable->getArrayValue("Tables", "00", "00", "0B", data.mid(1541, 2))); //convert target
+    GT100_default.replace(1222, 4, data.mid(1543, 4));  //copy min/max
+    GT100_default.replace(1226, 1, midiTable->getArrayValue("Tables", "00", "00", "0C", data.mid(1547, 1))); //convert source
+    GT100_default.replace(1227, 3, data.mid(1548, 3));  //copy Assign
+    GT100_default.replace(1230, 1, midiTable->getArrayValue("Tables", "00", "00", "0D", data.mid(1551, 1))); //convert int pedal
+    GT100_default.replace(1231, 4, data.mid(1552, 4));  //copy Assign
+    GT100_default.replace(1251, 1, data.mid(1556, 1));  //copy Assign 3
+    GT100_default.replace(1252, 2, midiTable->getArrayValue("Tables", "00", "00", "0B", data.mid(1557, 2))); //convert target
+    GT100_default.replace(1254, 4, data.mid(1559, 4));  //copy min/max
+    GT100_default.replace(1258, 1, midiTable->getArrayValue("Tables", "00", "00", "0C", data.mid(1563, 1))); //convert source
+    GT100_default.replace(1259, 3, data.mid(1564, 3));  //copy Assign
+    GT100_default.replace(1262, 1, midiTable->getArrayValue("Tables", "00", "00", "0D", data.mid(1567, 1))); //convert int pedal
+    GT100_default.replace(1263, 4, data.mid(1568, 4));  //copy Assign
+    GT100_default.replace(1296, 1, data.mid(1572, 1));  //copy Assign 4
+    GT100_default.replace(1297, 2, midiTable->getArrayValue("Tables", "00", "00", "0B", data.mid(1573, 2))); //convert target
+    GT100_default.replace(1299, 4, data.mid(1575, 4));  //copy min/max
+    GT100_default.replace(1303, 1, midiTable->getArrayValue("Tables", "00", "00", "0C", data.mid(1579, 1))); //convert source
+    GT100_default.replace(1304, 3, data.mid(1580, 3));  //copy Assign
+    GT100_default.replace(1307, 1, midiTable->getArrayValue("Tables", "00", "00", "0D", data.mid(1583, 1))); //convert int pedal
+    GT100_default.replace(1308, 4, data.mid(1584, 4));  //copy Assign
+    GT100_default.replace(1328, 1, data.mid(1588, 1));  //copy Assign 5
+    GT100_default.replace(1329, 2, midiTable->getArrayValue("Tables", "00", "00", "0B", data.mid(1589, 2))); //convert target
+    GT100_default.replace(1331, 4, data.mid(1591, 4));  //copy min/max
+    GT100_default.replace(1335, 1, midiTable->getArrayValue("Tables", "00", "00", "0C", data.mid(1595, 1))); //convert source
+    GT100_default.replace(1336, 3, data.mid(1596, 3));  //copy Assign
+    GT100_default.replace(1339, 1, midiTable->getArrayValue("Tables", "00", "00", "0D", data.mid(1599, 1))); //convert int pedal
+    GT100_default.replace(1340, 4, data.mid(1600, 4));  //copy Assign
+    GT100_default.replace(1360, 1, data.mid(1604, 1));  //copy Assign 6
+    GT100_default.replace(1361, 2, midiTable->getArrayValue("Tables", "00", "00", "0B", data.mid(1605, 2))); //convert target
+    GT100_default.replace(1363, 4, data.mid(1607, 4));  //copy min/max
+    GT100_default.replace(1367, 1, midiTable->getArrayValue("Tables", "00", "00", "0C", data.mid(1611, 1))); //convert source
+    GT100_default.replace(1368, 3, data.mid(1612, 3));  //copy Assign
+    GT100_default.replace(1371, 1, midiTable->getArrayValue("Tables", "00", "00", "0D", data.mid(1615, 1))); //convert int pedal
+    GT100_default.replace(1372, 4, data.mid(1616, 4));  //copy Assign
+    GT100_default.replace(1392, 1, data.mid(1633, 1));  //copy Assign 7
+    GT100_default.replace(1393, 2, midiTable->getArrayValue("Tables", "00", "00", "0B", data.mid(1634, 2))); //convert target
+    GT100_default.replace(1395, 4, data.mid(1636, 4));  //copy min/max
+    GT100_default.replace(1399, 1, midiTable->getArrayValue("Tables", "00", "00", "0C", data.mid(1640, 1))); //convert source
+    GT100_default.replace(1400, 3, data.mid(1641, 3));  //copy Assign
+    GT100_default.replace(1403, 1, midiTable->getArrayValue("Tables", "00", "00", "0D", data.mid(1644, 1))); //convert int pedal
+    GT100_default.replace(1404, 4, data.mid(1645, 4));  //copy Assign
+    GT100_default.replace(1437, 1, data.mid(1649, 1));  //copy Assign 8
+    GT100_default.replace(1438, 2, midiTable->getArrayValue("Tables", "00", "00", "0B", data.mid(1650, 2))); //convert target
+    GT100_default.replace(1440, 4, data.mid(1652, 4));  //copy min/max
+    GT100_default.replace(1444, 1, midiTable->getArrayValue("Tables", "00", "00", "0C", data.mid(1656, 1))); //convert source
+    GT100_default.replace(1445, 3, data.mid(1657, 3));  //copy Assign
+    GT100_default.replace(1448, 1, midiTable->getArrayValue("Tables", "00", "00", "0D", data.mid(1660, 1))); //convert int pedal
+    GT100_default.replace(1449, 4, data.mid(1661, 4));  //copy Assign
+    GT100_default.replace(1469, 1, data.mid(1665, 1));  //copy input sensitivity
+    GT100_default.replace(922, 1, data.mid(154, 1));  //copy Channel A/B select
+    GT100_default.replace(939, 1, data.mid(155, 1));  //copy Channel Delay
+    GT100_default.replace(924, 1, data.mid(156, 1));  //copy Channel A dynamic
+    GT100_default.replace(928, 1, data.mid(156, 1));  //copy Channel B dynamic
+    GT100_default.replace(921, 1, midiTable->getArrayValue("Tables", "00", "00", "0E", data.mid(153, 1))); //convert CH mode
+    GT100_default.replace(923, 1, midiTable->getArrayValue("Tables", "00", "00", "0F", data.mid(153, 1))); //convert dynamic A
+    GT100_default.replace(927, 1, midiTable->getArrayValue("Tables", "00", "00", "10", data.mid(153, 1))); //convert dynamic B
 
     SysxIO *sysxIO = SysxIO::Instance();
     sysxIO->setFileSource("Structure", GT100_default);

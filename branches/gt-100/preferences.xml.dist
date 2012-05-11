@@ -2,7 +2,7 @@
 <!-- Preferences of the GT-100 Fx FloorBoard application. -->
 <Preferences>
 	<General>
-		<Application version="20120502"/>
+		<Application version="20120511"/>
 		<Files dir=""/>
 	</General>
 	<Language>
