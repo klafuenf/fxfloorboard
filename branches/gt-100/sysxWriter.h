@@ -55,8 +55,10 @@ private:
     SysxData systemSource;
     QByteArray data;
     void convertFromGT10();
+     void convertFromGT10B();
     void convertFromGT8();
     void translate10to100();
+     void translate10Bto100();
     QString headerType;
 };
 

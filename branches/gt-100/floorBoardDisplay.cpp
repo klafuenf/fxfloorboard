@@ -1214,7 +1214,7 @@ void floorBoardDisplay::writeSignal(bool)
                     msgBox->setTextFormat(Qt::RichText);
                     QString msgText;
                     msgText.append("<font size='+1'><b>");
-                    msgText.append(tr("You have chosen to write the patch permanently into ") + deviceType + (" memory."));
+                    msgText.append(tr("You are about to write the current patch to a GT-100 User memory location."));
                     msgText.append("<b></font><br>");
                     msgText.append(tr("This will overwrite the patch currently stored at patch location<br>"));
                     msgText.append("<font size='+2'><b>");
@@ -1222,7 +1222,7 @@ void floorBoardDisplay::writeSignal(bool)
                     else { msgText.append(bankNum +(":") +patchNum	); };
                     msgText.append("<b></font><br>");
                     msgText.append(tr (" and can't be undone. "));
-                    msgBox->setInformativeText(tr("Are you sure you want to continue?"));
+                    msgBox->setInformativeText(tr("Are you sure you want to continue ?"));
                     msgBox->setText(msgText);
                     msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 
