@@ -311,7 +311,7 @@ void mainWindow::open()
                 this,
                 tr("Choose a file"),
                 dir,
-                tr("for GT-100, GT-10, or GT-10B   (*.syx *.mid *.gcl *.gxg *.gxb)"));
+                tr("for GT-100, 10, 8, 10B, 6B (*.syx *.mid *.gcl *.gxg *.gxb)"));
     if (!fileName.isEmpty())
     {
         file.setFile(fileName);

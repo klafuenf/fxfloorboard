@@ -750,7 +750,8 @@ void bankTreeList::connectedSignal()
         this->currentPatchTreeItems = this->openPatchTreeItems;
         qSort(this->currentPatchTreeItems);
         this->updatePatchNames("");
-    };
+    }else if (sysxIO->deviceReady() && sysxIO->isConnected())
+    { requestPatch(); };
     //requestPatch();
 };
 
@@ -773,7 +774,7 @@ void bankTreeList::updateTree(QTreeWidgetItem *item)
         QObject::connect(sysxIO, SIGNAL(patchName(QString)),
                          this, SLOT(updatePatchNames(QString)));
 
-        //this->currentPatchTreeItems.append(item);  //3 lines of mods added below
+        this->currentPatchTreeItems.append(item);  //3 lines of mods added below
         this->currentPatchTreeItems.clear();
         this->currentPatchTreeItems = this->openPatchTreeItems;
         qSort(this->currentPatchTreeItems);
@@ -781,7 +782,7 @@ void bankTreeList::updateTree(QTreeWidgetItem *item)
     }
     else
     {
-        //this->currentPatchTreeItems.append(item);
+        this->currentPatchTreeItems.append(item);
     };
 };
 
@@ -830,12 +831,17 @@ void bankTreeList::updatePatchNames(QString name)
                     emit setStatusSymbol(1);
                     emit setStatusMessage(tr("Ready"));
                     emit setStatusProgress(0);
+                      QObject::disconnect(sysxIO, SIGNAL(patchName(QString)),
+                                this, SLOT(updatePatchNames(QString)));
                 };
             }
             else {SysxIO *sysxIO = SysxIO::Instance();
                 sysxIO->setDeviceReady(true);
                 emit setStatusSymbol(1);
                 emit setStatusMessage(tr("Ready"));
+                
+                QObject::disconnect(sysxIO, SIGNAL(patchName(QString)),
+                            this, SLOT(updatePatchNames(QString)));
             };
 };
 

@@ -28,72 +28,72 @@
 fileDialog::fileDialog(QString fileName, QList<QString> patchList, QByteArray fileData, QByteArray default_data, QString type)
 {
     //QObject::connect(this, SIGNAL(patchIndex(int)),
-                //this->parent(), SLOT(patchIndex(int)));
-  this->file_format = type;
-  this->fileData = fileData;
-  this->default_data = default_data;
-  QLabel *patchLabel = new QLabel(tr("Select patch to load"));
-  QLabel *nameLabel = new QLabel(fileName);
-  QComboBox *patchCombo = new QComboBox;
-  patchCombo->setMaxVisibleItems(200);
-  patchCombo->addItems(patchList);
-  patchCombo->setWhatsThis(tr("To auditon a multi-patch *.gcl file, hover the mouse cursor over a patch and the patch data will be loaded into the GT temporary buffer"
-                              "<br>a click on the patch will load it into the editor."));
+    //this->parent(), SLOT(patchIndex(int)));
+    this->file_format = type;
+    this->fileData = fileData;
+    this->default_data = default_data;
+    QLabel *patchLabel = new QLabel(tr("Select patch to load"));
+    QLabel *nameLabel = new QLabel(fileName);
+    QComboBox *patchCombo = new QComboBox;
+    patchCombo->setMaxVisibleItems(200);
+    patchCombo->addItems(patchList);
+    patchCombo->setWhatsThis(tr("To auditon a multi-patch *.gcl file, hover the mouse cursor over a patch and the patch data will be loaded into the GT temporary buffer"
+                                "<br>a click on the patch will load it into the editor."));
 
 
-  QObject::connect(patchCombo, SIGNAL(currentIndexChanged(int)),
-                this, SLOT(valueChanged(int)));
+    QObject::connect(patchCombo, SIGNAL(currentIndexChanged(int)),
+                     this, SLOT(valueChanged(int)));
 
-  QObject::connect(patchCombo, SIGNAL(highlighted(int)),
-                this, SLOT(highlighted(int)));
+    QObject::connect(patchCombo, SIGNAL(highlighted(int)),
+                     this, SLOT(highlighted(int)));
 
-  QPushButton *cancelButton = new QPushButton(tr("Cancel"));
-  connect(cancelButton, SIGNAL(clicked()), this, SLOT(cancel()));
-  cancelButton->setWhatsThis(tr("Selecting this will close the patch load window and reset the GT back to the current editor patch."));
+    QPushButton *cancelButton = new QPushButton(tr("Cancel"));
+    connect(cancelButton, SIGNAL(clicked()), this, SLOT(cancel()));
+    cancelButton->setWhatsThis(tr("Selecting this will close the patch load window and reset the GT back to the current editor patch."));
 
 
 
-        QHBoxLayout *horizontalLayout = new QHBoxLayout;
-        horizontalLayout->addWidget(patchLabel);
-        horizontalLayout->addWidget(patchCombo);
+    QHBoxLayout *horizontalLayout = new QHBoxLayout;
+    horizontalLayout->addWidget(patchLabel);
+    horizontalLayout->addWidget(patchCombo);
 
-        QHBoxLayout *buttonsLayout = new QHBoxLayout;
-        buttonsLayout->addStretch(1);
-        buttonsLayout->addWidget(cancelButton);
+    QHBoxLayout *buttonsLayout = new QHBoxLayout;
+    buttonsLayout->addStretch(1);
+    buttonsLayout->addWidget(cancelButton);
 
-        QVBoxLayout *mainLayout = new QVBoxLayout;
-        mainLayout->addWidget(nameLabel);
-        mainLayout->addLayout(horizontalLayout);
-        mainLayout->addStretch(1);
-        mainLayout->addSpacing(12);
-        mainLayout->addLayout(buttonsLayout);
-        setLayout(mainLayout);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout->addWidget(nameLabel);
+    mainLayout->addLayout(horizontalLayout);
+    mainLayout->addStretch(1);
+    mainLayout->addSpacing(12);
+    mainLayout->addLayout(buttonsLayout);
+    setLayout(mainLayout);
 
-        setWindowTitle(tr("Bulk File Patch Extraction"));
-};
+    setWindowTitle(tr("Bulk File Patch Extraction"));
+}
 
 void fileDialog::valueChanged(int value)
 {
-  SysxIO *sysxIO = SysxIO::Instance();
-  sysxIO->patchListValue = value;
-  this->close();
-};
+    SysxIO *sysxIO = SysxIO::Instance();
+    sysxIO->patchListValue = value;
+    this->close();
+}
 
 void fileDialog::cancel()
 {
-  SysxIO *sysxIO = SysxIO::Instance();
-  sysxIO->patchListValue = 0;
-  sysxIO->writeToBuffer();
-  this->close();
-};
+    SysxIO *sysxIO = SysxIO::Instance();
+    sysxIO->patchListValue = 0;
+    sysxIO->writeToBuffer();
+    this->close();
+}
 
 void fileDialog::highlighted(int value)
 {
 
 
- if (file_format == "gcl")
+    if (file_format == "gcl")
     {
-    QByteArray marker = fileData.mid(170, 2);      //copy marker key to find "06A5" which marks the start of each patch block
+        /*   QByteArray marker = fileData.mid(170, 2);      //copy marker key to find "06A5" which marks the start of each patch block
     unsigned int a = fileData.indexOf(marker, 0); // locate patch start position from the start of the file
     a=a+2;                             // offset is set in front of marker
     if (value>1)
@@ -165,9 +165,9 @@ void fileDialog::highlighted(int value)
      //this->fileSource = sysxIO->getFileSource();
      sysxIO->writeToBuffer();
      // QApplication::beep();
-     };
+     }; */
  };
-};
+}
 
 
 
