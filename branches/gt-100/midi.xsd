@@ -816,6 +816,10 @@
 						<xs:enumeration value="024D"/>
 						<xs:enumeration value="024E"/>
 						<xs:enumeration value="024F"/>
+						<xs:enumeration value="0250"/>
+						<xs:enumeration value="0251"/>
+						<xs:enumeration value="0252"/>
+						<xs:enumeration value="0253"/>
 						<xs:enumeration value="0254"/>
 						<xs:enumeration value="0255"/>
 						<xs:enumeration value="0256"/>
@@ -4373,6 +4377,8 @@
 						<xs:enumeration value="Exp1 Switch:"/>
 						<xs:enumeration value="FL:"/>
 						<xs:enumeration value="FV:"/>
+						<xs:enumeration value="FX-1 Select:"/>
+						<xs:enumeration value="FX-2 Select:"/>
 						<xs:enumeration value="FX1:"/>
 						<xs:enumeration value="FX2:"/>
 						<xs:enumeration value="FX:"/>
@@ -4459,6 +4465,7 @@
 						<xs:enumeration value="SH:"/>
 						<xs:enumeration value="SL:"/>
 						<xs:enumeration value="SOLO:"/>
+						<xs:enumeration value="SPKR"/>
 						<xs:enumeration value="SPKR A Custom:"/>
 						<xs:enumeration value="SPKR A:"/>
 						<xs:enumeration value="SPKR B Custom:"/>
@@ -4467,12 +4474,14 @@
 						<xs:enumeration value="SR:"/>
 						<xs:enumeration value="STR:"/>
 						<xs:enumeration value="SWAH:"/>
+						<xs:enumeration value="Source"/>
 						<xs:enumeration value="Sub CTRL1:"/>
 						<xs:enumeration value="Sub CTRL2:"/>
 						<xs:enumeration value="Sub EXP:"/>
 						<xs:enumeration value="TM:"/>
 						<xs:enumeration value="TR:"/>
 						<xs:enumeration value="TW:"/>
+						<xs:enumeration value="Target"/>
 						<xs:enumeration value="UV:"/>
 						<xs:enumeration value="VB:"/>
 						<xs:enumeration value="Voice 1 User Scale A"/>
@@ -4709,8 +4718,10 @@
 						<xs:enumeration value="Wave Rate"/>
 						<xs:enumeration value="Waveshape"/>
 						<xs:enumeration value="Xover Freq"/>
+						<xs:enumeration value="chain"/>
 						<xs:enumeration value="dynamic A"/>
 						<xs:enumeration value="dynamic B"/>
+						<xs:enumeration value="harmony"/>
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:attribute>
@@ -4728,6 +4739,7 @@
 						<xs:enumeration value="Feedbacker"/>
 						<xs:enumeration value="GT-10B_to_GT-100"/>
 						<xs:enumeration value="GT-10_to_GT-100"/>
+						<xs:enumeration value="GT-6B_to_GT-10B"/>
 						<xs:enumeration value="GT-8_toGT-10"/>
 						<xs:enumeration value="GT-8_to_GT-10"/>
 						<xs:enumeration value="Laser Beam"/>

@@ -79,7 +79,7 @@ bool sysxWriter::readFile()
         QByteArray SMF_file = data.mid(0, 18);
 
         headerType = "false";
-             if (SYX_file == SYX_header)                         {headerType = "GT100_SYX"; }
+        if (SYX_file == SYX_header)                         {headerType = "GT100_SYX"; }
         else if (GCL_file == GCL_header && data.mid(2, 1) == "G"){headerType = "GT10_GXG";  }
         else if (GCL_file == GCL_header && data.mid(2, 1) == "B"){headerType = "GT10B_GXB"; }
         else if (GCL_file == GCL_header)                         {headerType = "GT100_GCL"; }
@@ -346,59 +346,64 @@ bool sysxWriter::readFile()
         }
         else if(headerType == "other_SYX")
         {
-          other_SYX_file = data.mid(0, 11);
-          QString header;
-          for(int x=0; x<10; ++x)
-          {
-              char r = other_SYX_file.at(x+1);
-              QString val = QString::number(r, 16).toUpper();
-              if(val.size()<2){val.prepend("0"); };
-              header.append(val);
-          };
-          bool ok;
-          int address = header.mid(12, 2).toInt(&ok, 16);
-          bool isPatch = false;
-          if(address > 9)isPatch = true;
-          if(isPatch && header.contains("00002F") )
-          {
-             headerType = "GT10_SYX";
-             convertFromGT10();
-             return true;
-          } else if(isPatch && header.contains("000030") )
-          {
-             headerType = "GT10B_SYX";
-             convertFromGT10B();
-             return true;
-          }
-          else if(isPatch && header.contains("000006") )
-          {
-              convertFromGT8();
-              return true;
-          } else
-          {
-              QMessageBox *msgBox = new QMessageBox();
-              msgBox->setWindowTitle(QObject::tr("Patch type Error!"));
-              msgBox->setIcon(QMessageBox::Warning);
-              msgBox->setTextFormat(Qt::RichText);
-              QString msgText;
-              msgText.append("<font size='+1'><b>");
-              msgText.append(QObject::tr("This is not a ") + deviceType + QObject::tr(" patch!"));
-              msgText.append("<b></font><br>");
-              if (header.contains("005012")){
-                  msgText.append(QObject::tr("but appears to be a GT-6B patch<br>"));};
-              if (header.contains("004612")){
-                  msgText.append(QObject::tr("but appears to be a GT-6 patch<br>"));};
-              if (header.contains("001B12")){
-                  msgText.append(QObject::tr("but appears to be a GT-3 patch<br>"));};
-              if (header.contains("000412")){
-                  msgText.append(QObject::tr("but appears to be a GT-5 patch<br>"));};
+            other_SYX_file = data.mid(0, 11);
+            QString header;
+            for(int x=0; x<10; ++x)
+            {
+                char r = other_SYX_file.at(x+1);
+                QString val = QString::number(r, 16).toUpper();
+                if(val.size()<2){val.prepend("0"); };
+                header.append(val);
+            };
+            bool ok;
+            int address = header.mid(12, 2).toInt(&ok, 16);
+            bool isPatch = false;
+            if(address > 9)isPatch = true;
+            if(isPatch && header.contains("00002F") )
+            {
+                headerType = "GT10_SYX";
+                convertFromGT10();
+                return true;
+            } else if(isPatch && header.contains("000030") )
+            {
+                headerType = "GT10B_SYX";
+                convertFromGT10B();
+                return true;
+            }
+            else if(isPatch && header.contains("000006") )
+            {
+                convertFromGT8();
+                return true;
+            }
+            else if(header.contains("005012") )
+            {
+                convertFromGT6B();
+                return true;
+            } else
+            {
+                QMessageBox *msgBox = new QMessageBox();
+                msgBox->setWindowTitle(QObject::tr("Patch type Error!"));
+                msgBox->setIcon(QMessageBox::Warning);
+                msgBox->setTextFormat(Qt::RichText);
+                QString msgText;
+                msgText.append("<font size='+1'><b>");
+                msgText.append(QObject::tr("This is not a ") + deviceType + QObject::tr(" patch!"));
+                msgText.append("<b></font><br>");
+                if (header.contains("005012")){
+                    msgText.append(QObject::tr("but appears to be a GT-6B patch<br>"));};
+                if (header.contains("004612")){
+                    msgText.append(QObject::tr("but appears to be a GT-6 patch<br>"));};
+                if (header.contains("001B12")){
+                    msgText.append(QObject::tr("but appears to be a GT-3 patch<br>"));};
+                if (header.contains("000412")){
+                    msgText.append(QObject::tr("but appears to be a GT-5 patch<br>"));};
 
-              msgText.append(QObject::tr("Patch data size is ") + (QString::number(data.size(), 10)) + QObject::tr(" bytes, and does not meet GT-100FxFloorBoard requirements."));
-              msgBox->setText(msgText);
-              msgBox->setStandardButtons(QMessageBox::Ok);
-              msgBox->exec();
-              return false;
-          };
+                msgText.append(QObject::tr("Patch data size is ") + (QString::number(data.size(), 10)) + QObject::tr(" bytes, and does not meet GT-100FxFloorBoard requirements."));
+                msgBox->setText(msgText);
+                msgBox->setStandardButtons(QMessageBox::Ok);
+                msgBox->exec();
+                return false;
+            };
         }
         else
         {
@@ -757,7 +762,7 @@ void sysxWriter::convertFromGT10()
         {	GT10_default = file.readAll(); };
         QByteArray temp;                         // TRANSLATION of GT-10 SMF PATCHES, data read from smf patch **************
 
-       /* if ( data.at(37) != GT10_default.at(5) ){    // check if a valid GT-10 file
+        /* if ( data.at(37) != GT10_default.at(5) ){    // check if a valid GT-10 file
             QMessageBox *msgBox = new QMessageBox();
             msgBox->setWindowTitle(QObject::tr("SMF file import"));
             msgBox->setIcon(QMessageBox::Warning);
@@ -931,7 +936,7 @@ void sysxWriter::convertFromGT10()
         temp = data.mid(a+1536, 128);
         GT10_default.replace(1633, 128, temp);     //address "0C" +
         data = GT10_default;
-/*
+        /*
         // copy user text, first two sections only, sections seperated/terminated by "00"
         temp = data.mid(32, 1);                    //copy "00"
         int z = a+1701;                            //start position of first text dialog.
@@ -958,7 +963,7 @@ void sysxWriter::convertFromGT10()
 */
         if (index>0)
         {
-           translate10to100();
+            translate10to100();
         };
     }
 }
@@ -1521,7 +1526,7 @@ void sysxWriter::convertFromGT8()
         data.replace(1661, 4, gt8_data.mid(990, 4));  //copy Assign
         data.replace(1665, 1, gt8_data.mid(1007, 1));  //copy input sensitivity */
 
-      translate10to100();
+        translate10to100();
 
     };
 }
@@ -1535,195 +1540,195 @@ void sysxWriter::convertFromGT10B()
 
     if(headerType == "GT10B_SYX"){         // if GT-10B syx patch file format
 
-       // QByteArray temp;
-       // data.remove(1618, 50);
-       // temp = data.mid(1605, 13);
-       // data.remove(1605, 13);
-       // data.insert(1620, temp);
-       // data.remove(1761, 49);
+        // QByteArray temp;
+        // data.remove(1618, 50);
+        // temp = data.mid(1605, 13);
+        // data.remove(1605, 13);
+        // data.insert(1620, temp);
+        // data.remove(1761, 49);
 
-       // QByteArray standard_data = data;
-       // QFile file(":gt10b_default.syx");   // Read the default GT-10B sysx file so we don't start empty handed.
-       // if (file.open(QIODevice::ReadOnly))
-       // {	data = file.readAll(); };
+        // QByteArray standard_data = data;
+        // QFile file(":gt10b_default.syx");   // Read the default GT-10B sysx file so we don't start empty handed.
+        // if (file.open(QIODevice::ReadOnly))
+        // {	data = file.readAll(); };
 
-       // temp = data.mid(1763, 282);           // copy patch description from default.syx
-       // standard_data.append(temp);
-       // data = standard_data;
+        // temp = data.mid(1763, 282);           // copy patch description from default.syx
+        // standard_data.append(temp);
+        // data = standard_data;
 
         translate10Bto100();
     }
     else if (headerType == "GT10B_SMF")                      // SMF ******************************************************************
     {                                        // file contains a .mid type SMF patch file header from Boss Librarian
-    QByteArray smf_data = data;
-    QFile file(":gt10b_default.syx");              // Read the default GT-10B sysx file so we don't start empty handed.
-    if (file.open(QIODevice::ReadOnly))
-    {	data = file.readAll(); };
-    QByteArray temp;                         // TRANSLATION of GT-10B SMF PATCHES, data read from smf patch **************
-    bool isGT10B = false;
-  if ( smf_data.at(37) != data.at(5) ){ isGT10B = true; };    // check if a valid GT-10B file.
-  index = 1;
-  int patchCount = (smf_data.size()-32)/1806;
-  if (patchCount>1)
-  {
-  QString msgText;
-  QString patchText;
-    QString patchNumber;
-    unsigned char r;
-    this->patchList.clear();
-    this->patchList.append(QObject::tr("Select Patch"));
-  unsigned int a = 43; // locate patch text start position from the start of the file
-     for (int h=0;h<patchCount;h++)
-       {
-        for (int b=0;b<16;b++)
-           {
-             r = (char)smf_data[a+b];
-             patchText.append(r);
-           };
-            patchNumber = QString::number(h+1, 10).toUpper();
-            msgText.append(patchNumber + " : ");
-            msgText.append(patchText + "   ");
-            this->patchList.append(msgText);
-            patchText.clear();
-            msgText.clear();
-            a=a+1806;                      // offset is set in front of marker
+        QByteArray smf_data = data;
+        QFile file(":gt10b_default.syx");              // Read the default GT-10B sysx file so we don't start empty handed.
+        if (file.open(QIODevice::ReadOnly))
+        {	data = file.readAll(); };
+        QByteArray temp;                         // TRANSLATION of GT-10B SMF PATCHES, data read from smf patch **************
+        bool isGT10B = false;
+        if ( smf_data.at(37) != data.at(5) ){ isGT10B = true; };    // check if a valid GT-10B file.
+        index = 1;
+        int patchCount = (smf_data.size()-32)/1806;
+        if (patchCount>1)
+        {
+            QString msgText;
+            QString patchText;
+            QString patchNumber;
+            unsigned char r;
+            this->patchList.clear();
+            this->patchList.append(QObject::tr("Select Patch"));
+            unsigned int a = 43; // locate patch text start position from the start of the file
+            for (int h=0;h<patchCount;h++)
+            {
+                for (int b=0;b<16;b++)
+                {
+                    r = (char)smf_data[a+b];
+                    patchText.append(r);
+                };
+                patchNumber = QString::number(h+1, 10).toUpper();
+                msgText.append(patchNumber + " : ");
+                msgText.append(patchText + "   ");
+                this->patchList.append(msgText);
+                patchText.clear();
+                msgText.clear();
+                a=a+1806;                      // offset is set in front of marker
+            };
+
+            QString type = "smf";
+            fileDialog *dialog = new fileDialog(fileName, patchList, data, GT10B_default, type);
+            dialog->exec();
+            patchIndex(this->index);
         };
 
-    QString type = "smf";
-    fileDialog *dialog = new fileDialog(fileName, patchList, data, GT10B_default, type);
-    dialog->exec();
-    patchIndex(this->index);
-   };
+        int a=0;                             // offset is set to first patch
+        if (patchCount>1)
+        {
+            int q=index-1;
+            a = q*1806;
+        };
 
-   int a=0;                             // offset is set to first patch
-   if (patchCount>1)
-   {
-    int q=index-1;
-    a = q*1806;
-   };
+        temp = smf_data.mid(a+43, 128);            // copy SMF 128 bytes
+        data.replace(11, 128, temp);             // replace gt10 address "00"...
+        temp = smf_data.mid(a+171, 114);           // copy SMF part1...
+        temp.append(smf_data.mid(a+301,14));       // copy SMF part2...
+        data.replace(152, 128, temp);            // replace gt10 address "01"...
+        temp = smf_data.mid(a+315, 128);           // copy SMF part1...
+        data.replace(293, 128, temp);            // replace gt10 address "02"...
+        temp = smf_data.mid(a+443, 100);           // copy SMF part1...
+        data.replace(434, 100, temp);            // replace gt10 address "03"...
+        temp = smf_data.mid(a+715, 86);            // copy SMF part1...
+        temp.append(smf_data.mid(a+817,42));       // copy SMF part2...
+        data.replace(547, 128, temp);             // replace gt10 address "05"...
+        temp = smf_data.mid(a+859, 128);           // copy SMF part1...
+        data.replace(688,128, temp);             // replace gt10 address "06"...
+        temp = smf_data.mid(a+987, 72);            // copy SMF part1...
+        temp.append(smf_data.mid(a+1075,28));      // copy SMF part2...
+        data.replace(829, 100, temp);            // replace gt10 address "07"...
+        temp = smf_data.mid(a+1259, 58);           // copy SMF part1...
+        temp.append(smf_data.mid(a+1333,42));      // copy SMF part2...
+        data.replace(942, 100, temp);           // replace gt10 address "09"...
+        temp = smf_data.mid(a+1403, 128);          // copy SMF part1...
+        data.replace(1083,128, temp);            // replace gt10 address "0A"...
+        // if(isGT10B != true) {
+        temp = smf_data.mid(a+1531, 44);           // copy SMF part1...
+        temp.append(smf_data.mid(a+1591,84));      // copy SMF part2...
+        data.replace(1224, 128, temp);           // replace gt10 address "0B"...
+        temp = smf_data.mid(a+1675, 128);          // copy SMF part1...
+        data.replace(1365,128, temp);            // replace gt10 address "0C"...
+        //} else {
+        //temp = smf_data.mid(a+1531, 18);           // copy SMF part1...
+        //data.replace(1224, 18, temp);           // replace gt10 address "0B"...chain only.
+        //};
 
-    temp = smf_data.mid(a+43, 128);            // copy SMF 128 bytes
-    data.replace(11, 128, temp);             // replace gt10 address "00"...
-    temp = smf_data.mid(a+171, 114);           // copy SMF part1...
-    temp.append(smf_data.mid(a+301,14));       // copy SMF part2...
-    data.replace(152, 128, temp);            // replace gt10 address "01"...
-    temp = smf_data.mid(a+315, 128);           // copy SMF part1...
-    data.replace(293, 128, temp);            // replace gt10 address "02"...
-    temp = smf_data.mid(a+443, 100);           // copy SMF part1...
-    data.replace(434, 100, temp);            // replace gt10 address "03"...
-    temp = smf_data.mid(a+715, 86);            // copy SMF part1...
-    temp.append(smf_data.mid(a+817,42));       // copy SMF part2...
-    data.replace(547, 128, temp);             // replace gt10 address "05"...
-    temp = smf_data.mid(a+859, 128);           // copy SMF part1...
-    data.replace(688,128, temp);             // replace gt10 address "06"...
-    temp = smf_data.mid(a+987, 72);            // copy SMF part1...
-    temp.append(smf_data.mid(a+1075,28));      // copy SMF part2...
-    data.replace(829, 100, temp);            // replace gt10 address "07"...
-    temp = smf_data.mid(a+1259, 58);           // copy SMF part1...
-    temp.append(smf_data.mid(a+1333,42));      // copy SMF part2...
-    data.replace(942, 100, temp);           // replace gt10 address "09"...
-    temp = smf_data.mid(a+1403, 128);          // copy SMF part1...
-    data.replace(1083,128, temp);            // replace gt10 address "0A"...
-   // if(isGT10B != true) {
-  temp = smf_data.mid(a+1531, 44);           // copy SMF part1...
-    temp.append(smf_data.mid(a+1591,84));      // copy SMF part2...
-  data.replace(1224, 128, temp);           // replace gt10 address "0B"...
-    temp = smf_data.mid(a+1675, 128);          // copy SMF part1...
-    data.replace(1365,128, temp);            // replace gt10 address "0C"...
-    //} else {
-  //temp = smf_data.mid(a+1531, 18);           // copy SMF part1...
-  //data.replace(1224, 18, temp);           // replace gt10 address "0B"...chain only.
-  //};
-
-    if (index>0)
+        if (index>0)
+        {
+            translate10Bto100();
+        };
+    }
+    else if (headerType == "GT10B_GXB")      // if the read file is a Boss Librarian type. ***************************************
     {
-        translate10Bto100();
-    };
-  }
-  else if (headerType == "GT10B_GXB")      // if the read file is a Boss Librarian type. ***************************************
-  {
-  index=1;
-  unsigned char msb = (char)data[34];     // find patch count msb bit in GXB file at byte 34
-  unsigned char lsb = (char)data[35];     // find patch count lsb bit in GXB file at byte 35
-  bool ok;
-  int patchCount;
-  patchCount = (256*QString::number(msb, 16).toUpper().toInt(&ok, 16)) + (QString::number(lsb, 16).toUpper().toInt(&ok, 16));
-  QByteArray marker;
-  if (patchCount>1)
-  {
-  QString msgText;
-  marker = data.mid(170, 2);      //copy marker key to find "06A5" which marks the start of each patch block
-    QString patchText;
-    QString patchNumber;
-    this->patchList.clear();
-    this->patchList.append(QObject::tr("Select Patch"));
-  unsigned int a = data.indexOf(marker, 0); // locate patch start position from the start of the file
-   a=a+2;                             // offset is set in front of marker
-     for (int h=0;h<patchCount;h++)
-       {
-        for (int b=0;b<16;b++)
-           {
-             char r = (char)data[a+b];
-             patchText.append(r);
-           };
-            patchNumber = QString::number(h+1, 10).toUpper();
-            msgText.append(patchNumber + " : ");
-            msgText.append(patchText + "   ");
-            this->patchList.append(msgText);
-            patchText.clear();
-            msgText.clear();
-        a = data.indexOf(marker, a); // locate patch start position from the start of the file
-        a=a+2;                      // offset is set in front of marker
+        index=1;
+        unsigned char msb = (char)data[34];     // find patch count msb bit in GXB file at byte 34
+        unsigned char lsb = (char)data[35];     // find patch count lsb bit in GXB file at byte 35
+        bool ok;
+        int patchCount;
+        patchCount = (256*QString::number(msb, 16).toUpper().toInt(&ok, 16)) + (QString::number(lsb, 16).toUpper().toInt(&ok, 16));
+        QByteArray marker;
+        if (patchCount>1)
+        {
+            QString msgText;
+            marker = data.mid(170, 2);      //copy marker key to find "06A5" which marks the start of each patch block
+            QString patchText;
+            QString patchNumber;
+            this->patchList.clear();
+            this->patchList.append(QObject::tr("Select Patch"));
+            unsigned int a = data.indexOf(marker, 0); // locate patch start position from the start of the file
+            a=a+2;                             // offset is set in front of marker
+            for (int h=0;h<patchCount;h++)
+            {
+                for (int b=0;b<16;b++)
+                {
+                    char r = (char)data[a+b];
+                    patchText.append(r);
+                };
+                patchNumber = QString::number(h+1, 10).toUpper();
+                msgText.append(patchNumber + " : ");
+                msgText.append(patchText + "   ");
+                this->patchList.append(msgText);
+                patchText.clear();
+                msgText.clear();
+                a = data.indexOf(marker, a); // locate patch start position from the start of the file
+                a=a+2;                      // offset is set in front of marker
+            };
+
+            QString type = "gxb";
+            fileDialog *dialog = new fileDialog(fileName, patchList, data, GT10B_default, type);
+            dialog->exec();
+            patchIndex(this->index);
         };
 
-    QString type = "gxb";
-    fileDialog *dialog = new fileDialog(fileName, patchList, data, GT10B_default, type);
-    dialog->exec();
-    patchIndex(this->index);
-   };
+        marker = data.mid(170, 2);      //copy marker key to find "06A5" which marks the start of each patch block
+        unsigned int a = data.indexOf(marker, 0); // locate patch start position from the start of the file
+        a=a+2;                             // offset is set in front of marker
+        if (patchCount>1)
+        {
+            int q=index-1;
+            for (int h=0;h<q;h++)
+            {
+                a = data.indexOf(marker, a); // locate patch start position from the start of the file
+                a=a+2;
+            };                             // offset is set in front of marker
+        };
+        QByteArray temp;
+        temp = data.mid(a, 128);
+        GT10B_default.replace(11, 128, temp);      //address "00" +
+        temp = data.mid(a+128, 128);
+        GT10B_default.replace(152, 128, temp);     //address "01" +
+        temp = data.mid(a+256, 128);
+        GT10B_default.replace(293, 128, temp);     //address "02" +
+        temp = data.mid(a+384, 100);
+        GT10B_default.replace(434, 100, temp);     //address "03" +      no "04"
+        temp = data.mid(a+640, 128);
+        GT10B_default.replace(547, 128, temp);     //address "05" +
+        temp = data.mid(a+768, 128);
+        GT10B_default.replace(688, 128, temp);     //address "06" +
+        temp = data.mid(a+896, 100);
+        GT10B_default.replace(829, 100, temp);     //address "07" +      no "08"
+        temp = data.mid(a+1152, 128);
+        GT10B_default.replace(942, 128, temp);     //address "09" +
+        temp = data.mid(a+1280, 128);
+        GT10B_default.replace(1083, 128, temp);    //address "0A" +
+        temp = data.mid(a+1408, 128);
+        GT10B_default.replace(1224, 128, temp);    //address "0B" +
+        temp = data.mid(a+1536, 128);
+        GT10B_default.replace(1365, 128, temp);    //address "0C" +
+        // } else {
+        //  temp = data.mid(a+1408, 18);
+        // GT10B_default.replace(1224, 18, temp);    //address "0B" Chain only
+        //};
 
-   marker = data.mid(170, 2);      //copy marker key to find "06A5" which marks the start of each patch block
-   unsigned int a = data.indexOf(marker, 0); // locate patch start position from the start of the file
-   a=a+2;                             // offset is set in front of marker
-   if (patchCount>1)
-   {
-    int q=index-1;
-     for (int h=0;h<q;h++)
-       {
-        a = data.indexOf(marker, a); // locate patch start position from the start of the file
-        a=a+2;
-       };                             // offset is set in front of marker
-   };
-   QByteArray temp;
-   temp = data.mid(a, 128);
-   GT10B_default.replace(11, 128, temp);      //address "00" +
-   temp = data.mid(a+128, 128);
-   GT10B_default.replace(152, 128, temp);     //address "01" +
-   temp = data.mid(a+256, 128);
-   GT10B_default.replace(293, 128, temp);     //address "02" +
-   temp = data.mid(a+384, 100);
-   GT10B_default.replace(434, 100, temp);     //address "03" +      no "04"
-   temp = data.mid(a+640, 128);
-   GT10B_default.replace(547, 128, temp);     //address "05" +
-   temp = data.mid(a+768, 128);
-   GT10B_default.replace(688, 128, temp);     //address "06" +
-   temp = data.mid(a+896, 100);
-   GT10B_default.replace(829, 100, temp);     //address "07" +      no "08"
-   temp = data.mid(a+1152, 128);
-   GT10B_default.replace(942, 128, temp);     //address "09" +
-   temp = data.mid(a+1280, 128);
-   GT10B_default.replace(1083, 128, temp);    //address "0A" +
-   temp = data.mid(a+1408, 128);
-   GT10B_default.replace(1224, 128, temp);    //address "0B" +
-   temp = data.mid(a+1536, 128);
-   GT10B_default.replace(1365, 128, temp);    //address "0C" +
-  // } else {
-  //  temp = data.mid(a+1408, 18);
-  // GT10B_default.replace(1224, 18, temp);    //address "0B" Chain only
-   //};
-
-    // copy user text, first two sections only, sections seperated/terminated by "00"
- /*  temp = data.mid(32, 1);                    //copy "00"
+        // copy user text, first two sections only, sections seperated/terminated by "00"
+        /*  temp = data.mid(32, 1);                    //copy "00"
    int z = a+1701;                            //start position of first text dialog.
    int y = data.indexOf( temp, (a+1701));     //end position of first text dialog.
    int x = data.indexOf( temp, (a+1701)) + 1; //start position of second text dialog.
@@ -1745,12 +1750,12 @@ void sysxWriter::convertFromGT10B()
       if (temp.size()>32) {temp=temp.mid(0, 32); };
       GT10B_default.replace(1647, 32, temp);    // paste text 2
     };*/
-    data = GT10B_default;
-    if (index>0)
-    {
-    translate10Bto100();
+        data = GT10B_default;
+        if (index>0)
+        {
+            translate10Bto100();
+        };
     };
-  };
 }
 
 void sysxWriter::translate10Bto100()
@@ -1945,7 +1950,7 @@ void sysxWriter::translate10Bto100()
     GT100_default.replace(961, 4, data.mid(1200, 4));  //copy NS2
     GT100_default.replace(942, 4, data.mid(1204, 4));  //copy SR loop
 
-    QByteArray chain(data.mid(1224, 18)); //copy gt10 chain
+    QByteArray chain(data.mid(1224, 18)); //copy gt10b chain
     QString chn;
     QString list;
     for(int x=0; x<18; ++x)
@@ -2038,7 +2043,7 @@ void sysxWriter::translate10Bto100()
     GT100_default.replace(1448, 1, midiTable->getArrayValue("Tables", "00", "00", "0D", data.mid(1392, 1))); //convert int pedal
     GT100_default.replace(1449, 4, data.mid(1393, 4));  //copy Assign
     GT100_default.replace(1469, 1, data.mid(1397, 1));  //copy input sensitivity
-  /*  GT100_default.replace(922, 1, data.mid(154, 1));  //copy Channel A/B select
+    /*  GT100_default.replace(922, 1, data.mid(154, 1));  //copy Channel A/B select
     GT100_default.replace(939, 1, data.mid(155, 1));  //copy Channel Delay
     GT100_default.replace(924, 1, data.mid(156, 1));  //copy Channel A dynamic
     GT100_default.replace(928, 1, data.mid(156, 1));  //copy Channel B dynamic
@@ -2050,4 +2055,326 @@ void sysxWriter::translate10Bto100()
     sysxIO->setFileSource("Structure", GT100_default);
     sysxIO->setFileName(this->fileName);
     this->fileSource = sysxIO->getFileSource();
+}
+
+
+void sysxWriter::convertFromGT6B()
+{
+    MidiTable *midiTable = MidiTable::Instance();
+    QByteArray gt6b_data = data;
+    QFile file(":gt10b_default.syx");   // Read the default GT-10B sysx file so we don't start empty handed.
+    if (file.open(QIODevice::ReadOnly))
+    {	data = file.readAll(); };
+    char r;
+    QByteArray temp;                         // TRANSLATION of GT-6B PATCHES, data read from gt6b patch **************
+    QByteArray Qhex;                         // and used to replace gt10b patch data*********************************
+    QFile hexfile(":HexLookupTable.hex");    // use a QByteArray of hex numbers from a lookup table.
+    if (hexfile.open(QIODevice::ReadOnly))
+    {	Qhex = hexfile.readAll(); };
+    temp = gt6b_data.mid(403, 14);           // copy gt6b name
+    temp.append((char)32);
+    temp.append((char)32);                   // add 2 blank spaces as gt6b has only 14 characters
+    data.replace(11, 16, temp);              // replace gt10b name
+    temp = gt6b_data.mid(10,1);              // copy off/on
+    data.replace(91, 1, temp);               // replace gt10b compressor sw
+    data.replace(92, 1, midiTable->getArrayValue("Tables", "00", "00", "1E", gt6b_data.mid(12, 1))); //convert comp type
+    temp = gt6b_data.mid(19,2);              // copy gt6b compressor tone & level
+    temp.append(gt6b_data.mid(15,1));        // copy gt6b compressor sustain
+    temp.append(gt6b_data.mid(13,2));        // copy gt6b compressor attack & threshold
+    temp.append(gt6b_data.mid(16,1));        // copy gt6b compressor ratio (big 1 only)
+    temp.append(gt6b_data.mid(13,1));        // copy gt6b compressor attack again
+    temp.append(gt6b_data.mid(18,1));        // copy gt6b compressor release
+    data.replace(93, 8, temp);               // replace gt10b compressor...
+    temp = gt6b_data.mid(100, 1);            // copy gt6b dist/od on/off
+    data.replace(123, 1, temp);              // replace gt10 distortion
+    data.replace(124, 1, midiTable->getArrayValue("Tables", "00", "00", "1F", gt6b_data.mid(102, 1))); //convert dist type
+    temp = gt6b_data.mid(103,5);             // copy gt6b dist/od part2
+    data.replace(125, 5, temp);              // replace gt10b distortion
+
+    temp = gt6b_data.mid(120, 1);            // copy gt6b preAmp off/on
+    data.replace(232, 1, temp);              // replace gt10b preamp off/on
+    data.replace(233, 1, midiTable->getArrayValue("Tables", "00", "00", "20", gt6b_data.mid(122, 1))); //convert pre type
+    temp = gt6b_data.mid(128,1);             // copy gt6b preAmp gain
+    temp.append(gt6b_data.mid(133,1));        // copy gt6b preAmp bass
+    temp.append(gt6b_data.mid(131,1));        // copy gt6b preAmp mid
+    temp.append(gt6b_data.mid(129,1));        // copy gt6b preAmp treble
+    temp.append(gt6b_data.mid(135,1));        // copy gt6b preAmp level
+    temp.append(gt6b_data.mid(123,1));        // copy gt6b preAmp bright
+    temp.append(gt6b_data.mid(132,1));        // copy gt6b preAmp mid freq
+    temp.append(gt6b_data.mid(134,1));        // copy gt6b preAmp ultra low
+    temp.append(gt6b_data.mid(130,1));        // copy gt6b preAmp ultra hi
+    temp.append(gt6b_data.mid(125,1));        // copy gt6b preAmp response
+    temp.append(gt6b_data.mid(124,1));        // copy gt6b preAmp deep
+    temp.append(gt6b_data.mid(127,1));        // copy gt6b preAmp shape
+    temp.append(gt6b_data.mid(126,1));        // copy gt6b preAmp enhancer
+    data.replace(234, 13, temp);              // replace gt10b preamp
+    data.replace(247, 1, midiTable->getArrayValue("Tables", "00", "00", "21", gt6b_data.mid(138, 1))); //convert
+    temp = gt6b_data.mid(136, 1);            // read gt6b spkr off/on
+    if (temp == Qhex.mid((151), 1)){         // if spkr is off
+        temp = Qhex.mid((151), 1);               // read 00 from HexLookupTable 151->
+        data.replace(247, 1, temp);   };         // replace gt10b spkr type to OFF
+    temp = gt6b_data.mid(139,3);             // copy gt6b spkr settings
+    data.replace(248, 3, temp);              // replace gt10b spkr settings
+
+    temp = gt6b_data.mid(155, 1);             // copy gt6b EQ off/on
+    //temp.append(gt6b_data.mid(288,11));                     // copy gt8 EQ part2 ...yet to do
+    data.replace(264, 1, temp);               // replace gt10b EQ
+
+    temp = gt6b_data.mid(322, 1);            // copy gt6b delay off/on
+    temp.append(gt6b_data.mid(333,1));       // copy gt6b delay type
+    data.replace(1083, 2, temp);             // replace gt10b delay
+    r = gt6b_data.at(334);                   // copy gt6b delay time
+    temp = Qhex.mid((r/6), 1);               // convert delay time to delay MSB
+    data.replace(1085, 1, temp);             // replace gt10b delay
+    r = gt6b_data.at(335);                   // copy gt6b delay time
+    temp = Qhex.mid((r*5), 1);               // convert delay time to delay LSB
+    data.replace(1086, 1, temp);             // replace gt10b delay
+    temp = gt6b_data.mid(336, 3);            // copy gt6b delay stuff
+    data.replace(1087, 3, temp);             // replace gt10b delay
+    temp = gt6b_data.mid(339, 1);            // copy gt6b delay level
+    data.replace(1106, 1, temp);             // replace gt10b delay
+    temp = Qhex.mid(100, 1);                 // copy 0x64
+    data.replace(1107, 1, temp);             // replace gt10b direct to %100
+
+    temp = gt6b_data.mid(322, 1);            // copy gt6b reverb off/on
+    temp.append(gt6b_data.mid(325,2));       // copy gt6b reverb type & time
+    data.replace(1131, 3, temp);             // replace gt10b reverb type & time
+    temp = gt6b_data.mid(328,4);             // copy gt6b reverb stuff
+    temp.append(Qhex.mid(100, 1));           // copy 0x64 to set direct to %100
+    data.replace(1135, 5, temp);             // replace gt10b reverb
+    temp = (gt6b_data.mid(327,1));           // copy gt6b reverb pre-delay
+    data.replace(1142, 1, temp);             // replace gt10b reverb pre-delay LSB
+
+    if ( gt6b_data.mid(322, 1) == Qhex.mid(1, 1) ){ // if the rev/dly/sos effect pedal is "ON"
+        r = gt6b_data.at(324);               // copy gt6b delay/rev/sos select
+        temp = Qhex.mid((160+r), 1);         // set delay off/on state from hexlookuptable->160
+        data.replace(1083, 1, temp);         // replace gt10b delay off/on
+        temp = Qhex.mid((164+r), 1);         // set reverb off/on state from hexlookuptable->164
+        data.replace(1131, 1, temp);         // replace gt10b reverb off/on
+    };
+
+    temp = gt6b_data.mid(302, 1);            // copy gt6b chorus off/on
+    temp.append(gt6b_data.mid(304,5));       // copy gt6b chorus stuff
+    data.replace(1115, 6, temp);             // replace gt10b chorus
+    temp = gt6b_data.mid(309,1);             // copy gt6b chorus level
+    data.replace(1122, 1, temp);             // replace gt10b chorus
+
+    temp = gt6b_data.mid(379, 12);
+    QString chn;
+    QString list;
+    for(int x=0; x<12; ++x)
+    {
+        char r = temp.at(x);
+        QString val = QString::number(r, 16).toUpper();
+        if(val.size()<2){val.prepend("0"); };
+        chn.append(val);
+        list.append(chn.mid((x*2)+1, 1)); // make list of 01's units of chain items
+    };
+    int pos = list.indexOf("4")+1; //find position of preamp
+
+    temp.replace(0, 1, midiTable->getArrayValue("Tables", "00", "00", "22", temp.mid(0, 1))); //convert chain
+    temp.replace(1, 1, midiTable->getArrayValue("Tables", "00", "00", "22", temp.mid(1, 1))); //convert chain
+    temp.replace(2, 1, midiTable->getArrayValue("Tables", "00", "00", "22", temp.mid(2, 1))); //convert chain
+    temp.replace(3, 1, midiTable->getArrayValue("Tables", "00", "00", "22", temp.mid(3, 1))); //convert chain
+    temp.replace(4, 1, midiTable->getArrayValue("Tables", "00", "00", "22", temp.mid(4, 1))); //convert chain
+    temp.replace(5, 1, midiTable->getArrayValue("Tables", "00", "00", "22", temp.mid(5, 1))); //convert chain
+    temp.replace(6, 1, midiTable->getArrayValue("Tables", "00", "00", "22", temp.mid(6, 1))); //convert chain
+    temp.replace(7, 1, midiTable->getArrayValue("Tables", "00", "00", "22", temp.mid(7, 1))); //convert chain
+    temp.replace(8, 1, midiTable->getArrayValue("Tables", "00", "00", "22", temp.mid(8, 1))); //convert chain
+    temp.replace(9, 1, midiTable->getArrayValue("Tables", "00", "00", "22", temp.mid(9, 1))); //convert chain
+    temp.replace(10, 1, midiTable->getArrayValue("Tables", "00", "00", "22", temp.mid(10, 1))); //convert chain
+    temp.replace(11, 1, midiTable->getArrayValue("Tables", "00", "00", "22", temp.mid(11, 1))); //convert chain
+
+    temp.insert(pos, Qhex.mid(17, 1));       // insert gt10b_merge after preamp 1  "11"
+    temp.insert(pos, Qhex.mid(78, 1));       // add LP "4E" 78
+    temp.insert(pos, Qhex.mid(77, 1));       // insert NS_2 "4D"  77
+    temp.append(Qhex.mid(15 ,1));            // add DGT
+    temp.insert(pos-1, Qhex.mid(16, 1));     // insert gt10b_split before preamp 1 "10"
+    temp.append(Qhex.mid(67, 1));            // insert preamp B "43" last for gt-10b
+    data.replace(1224, 18, temp);            // replace gt10b chain
+
+    /*QString hex;
+for(int x=0; x<18; ++x)
+{
+char r = temp.at(x);
+QString val = QString::number(r, 16).toUpper();
+if(val.size()<2){val.prepend("0"); };
+hex.append(val);
+hex.append(" ");
+};
+QMessageBox *msgBox = new QMessageBox();
+msgBox->setWindowTitle(QObject::tr("TEST"));
+msgBox->setIcon(QMessageBox::Warning);
+msgBox->setTextFormat(Qt::RichText);
+QString msgText;
+msgText.append("<font size='+1'><b>");
+msgText.append("hex = " + hex + "<br>list = " + list );
+msgBox->setText(msgText);
+msgBox->setStandardButtons(QMessageBox::Ok);
+msgBox->exec();*/
+
+    temp = gt6b_data.mid(359, 3);            // copy gt6b NS
+    data.replace(1196, 3, temp);             // replace gt10b NS_1
+    data.replace(1200, 3, temp);             // replace gt10b NS_2
+
+    temp = gt6b_data.mid(67, 1);            // copy gt6b wah on/off
+    data.replace(1147, 1, temp);             // replace gt10b pedal fx on/off
+    temp = gt6b_data.mid(70, 2);             // copy gt6b wah
+    data.replace(1156, 2, temp);             // replace gt10b wah
+    temp = gt6b_data.mid(72, 1);             // copy gt6b wah level
+    data.replace(1160, 1, temp);             // replace gt10b wah
+
+    //temp = gt6b_data.mid(469, 5);            // copy gt8 pedal bend (fx2)
+    //data.replace(1435, 5, temp);             // replace gt10 pedal bend
+
+    temp = gt6b_data.mid(430, 2);            // copy gt6b FV min/max
+    data.replace(1174, 2, temp);             // replace gt10b FV min/max
+    temp = gt6b_data.mid(366, 1);             // copy gt6b FV vol
+    data.replace(1173, 1, temp);             // replace gt10b FV vol
+    /*
+    r = gt6b_data.at(737);
+    temp = Qhex.mid((r+1), 1);               // copy gt6b ExSw Func
+    data.replace(1421, 1, temp);             // replace gt10b ExSw 1 Func + 1
+    r = gt6b_data.at(722);
+    temp = Qhex.mid((r+1), 1);               // copy gt8 CTL Func
+    data.replace(1422, 1, temp);             // replace gt10 CTL 1 Func + 1
+
+    temp = gt6b_data.mid(633, 1);             // copy gt8 Master patch level
+    data.replace(1447, 1, temp);             // replace gt10 Master patch level
+    temp = gt6b_data.mid(634, 2);             // copy gt8 Master BPM
+    data.replace(1454, 2, temp);             // replace gt10 Master BPM
+*/
+    temp = gt6b_data.mid(33, 1);            // copy gt8 FX1 on/off
+    data.replace(293, 1, temp);             // replace gt10b FX1 on/off
+    data.replace(294, 1, midiTable->getArrayValue("Tables", "00", "00", "25", gt6b_data.mid(35, 1))); //convert FX1 Type
+    temp = gt6b_data.mid(36, 2);            // copy gt6b FX1 octave
+    data.replace(456, 2, temp);             // replace gt10b FX1 octave
+    temp = gt6b_data.mid(40,3);             // copy gt6b FX1 enh
+    data.replace(612, 3, temp);             // replace gt10b FX1 enh
+    temp = gt6b_data.mid(45, 2);            // copy gt6b FX1 sg
+    data.replace(355, 2, temp);             // replace gt10b FX1 sg
+    temp = gt6b_data.mid(47, 3);            // copy gt6b FX1 df
+    data.replace(480, 3, temp);             // replace gt10b FX1 df
+    temp = gt6b_data.mid(50, 1);            // copy gt6b FX1 df
+    data.replace(484, 1, temp);             // replace gt10b FX1 df
+    temp = gt6b_data.mid(51, 4);            // copy gt6b FX1 rm
+    data.replace(351, 4, temp);             // replace gt10b FX1 rm
+
+
+    temp = gt6b_data.mid(179, 1);           // copy gt6b FX2 on/off
+    data.replace(688, 1, temp);             // replace gt10b FX2 on/off
+    data.replace(689, 1, midiTable->getArrayValue("Tables", "00", "00", "26", gt6b_data.mid(181, 1))); //convert FX2 Type
+    temp = gt6b_data.mid(182, 5);           // copy gt6b FX2 PH
+    temp.append(gt6b_data.mid(188,3));      // copy gt6b FX2 PH
+    data.replace(718, 8, temp);             // replace gt10b FX2 PH
+    temp = gt6b_data.mid(190, 5);           // copy gt6b FX2 FL
+    data.replace(726, 5, temp);             // replace gt10b FX2 FL
+    temp = gt6b_data.mid(195,1);            // copy gt6b FX2 FL
+    data.replace(732, 1, temp);             // replace gt10b FX2 FL
+    temp = gt6b_data.mid(196, 4);          // copy gt6b FX2 HR
+    data.replace(787, 4, temp);            // replace gt10b FX2 HR
+    data.replace(788, 1, midiTable->getArrayValue("Tables", "00", "00", "27", gt6b_data.mid(197, 1))); //convert FX2
+    temp = gt6b_data.mid(200, 1);          // copy gt6b FX2 HR
+    data.replace(796, 1, temp);            // replace gt10b FX2 HR
+    temp = gt6b_data.mid(201, 5);          // copy gt6b FX2 HR
+    data.replace(791, 5, temp);            // replace gt10b FX2 HR
+    data.replace(792, 1, midiTable->getArrayValue("Tables", "00", "00", "27", gt6b_data.mid(202, 1))); //convert FX2
+    temp = gt6b_data.mid(207, 1);          // copy gt6b FX2 HR
+    data.replace(797, 1, temp);            // replace gt10b FX2 HR
+    temp = gt6b_data.mid(208, 6);          // copy gt6b FX2 PS
+    data.replace(835, 6, temp);            // replace gt10b FX2 PS
+    temp = gt6b_data.mid(214, 1);          // copy gt6b FX2 PS
+    data.replace(848, 1, temp);            // replace gt10b FX2 PS
+    temp = gt6b_data.mid(215, 7);          // copy gt6b FX2 PS
+    data.replace(841, 7, temp);            // replace gt10b FX2 PS
+    temp = gt6b_data.mid(222, 1);          // copy gt6b FX2 PS
+    data.replace(849, 1, temp);            // replace gt10b FX2 PS
+    /* temp = gt6b_data.mid(399, 24);          // copy gt8 FX2 part5
+    data.replace(879, 24, temp);            // replace gt10 FX2 part5
+    temp = gt6b_data.mid(431, 11);          // copy gt8 FX2 part6
+    data.replace(903, 11, temp);            // replace gt10 FX2 part6
+    temp = gt6b_data.mid(385, 14);          // copy gt8 FX2 part7
+    data.replace(1001, 14, temp);           // replace gt10 FX2 part7
+    temp = gt6b_data.mid(423, 8);           // copy gt8 FX2 part8
+    data.replace(1015, 8, temp);            // replace gt10 FX2 part8
+    temp = gt6b_data.mid(340, 10);          // copy gt8 FX2 part9
+    data.replace(1269, 10, temp);           // replace gt10 FX2 part9
+    temp = gt6b_data.mid(442, 4);           // copy gt8 FX2 part10  HR
+    temp.append(gt6b_data.mid(447,5));
+    temp.append(gt6b_data.mid(446,1));
+    temp.append(gt6b_data.mid(453,1));
+    data.replace(914, 11, temp);               // replace gt10 FX2 part10  HR
+    temp = gt6b_data.mid(454, 6);              // copy gt8 FX2 part11  PS
+    temp.append(gt6b_data.mid(461,7));
+    temp.append(gt6b_data.mid(460,1));
+    temp.append(gt6b_data.mid(468,1));
+    data.replace(962, 15, temp);               // replace gt10 FX2 part11  PS
+    temp = gt6b_data.mid(474, 18);              // copy gt8 FX2 part12  OC, RT, 2CE
+    data.replace(977, 18, temp);               // replace gt10 FX2 part12  OC, RT, 2CE
+    temp = gt6b_data.mid(492, 4);              // copy gt8 FX2 part13  AR
+    temp.append(gt6b_data.mid(497,4));
+    data.replace(1040, 8, temp);               // replace gt10 FX2 part13  AR
+    temp = gt6b_data.mid(502, 1);              // copy gt8 FX2 part14  SYN
+    temp.append(gt6b_data.mid(501,1));
+    temp.append(gt6b_data.mid(503,15));
+    data.replace(1023, 17, temp);               // replace gt10 FX2 part14 SYN
+    temp = gt6b_data.mid(518, 7);              // copy gt8 FX2 part15  AC
+    data.replace(1279, 7, temp);               // replace gt10 FX2 part15 AC
+    temp = gt6b_data.mid(525, 3);              // copy gt8 FX2 part16  SH
+    data.replace(1266, 3, temp);               // replace gt10 FX2 part16 SH
+    temp = gt6b_data.mid(528, 3);              // copy gt8 FX2 part17  SDD
+    data.replace(995, 3, temp);               // replace gt10 FX2 part17 SDD
+    temp = gt6b_data.mid(531, 1);              // copy gt8 FX2 part18  SDD
+    data.replace(999, 1, temp);               // replace gt10 FX2 part18 SDD*/
+
+    data.replace(1256, 1, gt6b_data.mid(502, 1));  //copy Assign 1
+    data.replace(1257, 2, midiTable->getArrayValue("Tables", "00", "00", "23", gt6b_data.mid(504, 2))); //convert target
+    data.replace(1259, 4, gt6b_data.mid(506, 4));  //copy min/max
+    data.replace(1263, 1, midiTable->getArrayValue("Tables", "00", "00", "24", gt6b_data.mid(510, 1))); //convert source
+    data.replace(1264, 3, gt6b_data.mid(511, 3));  //copy Assign
+
+    data.replace(1272, 1, gt6b_data.mid(526, 1));  //copy Assign 2
+    data.replace(1273, 2, midiTable->getArrayValue("Tables", "00", "00", "23", gt6b_data.mid(528, 2))); //convert target
+    data.replace(1275, 4, gt6b_data.mid(530, 4));  //copy min/max
+    data.replace(1279, 1, midiTable->getArrayValue("Tables", "00", "00", "24", gt6b_data.mid(534, 1))); //convert source
+    data.replace(1280, 3, gt6b_data.mid(535, 3));  //copy Assign
+
+    data.replace(1288, 1, gt6b_data.mid(550, 1));  //copy Assign 3
+    data.replace(1289, 2, midiTable->getArrayValue("Tables", "00", "00", "23", gt6b_data.mid(552, 2))); //convert target
+    data.replace(1291, 4, gt6b_data.mid(554, 4));  //copy min/max
+    data.replace(1295, 1, midiTable->getArrayValue("Tables", "00", "00", "24", gt6b_data.mid(558, 1))); //convert source
+    data.replace(1296, 3, gt6b_data.mid(559, 3));  //copy Assign
+
+    data.replace(1304, 1, gt6b_data.mid(574, 1));  //copy Assign 4
+    data.replace(1305, 2, midiTable->getArrayValue("Tables", "00", "00", "23", gt6b_data.mid(576, 2))); //convert target
+    data.replace(1307, 4, gt6b_data.mid(578, 4));  //copy min/max
+    data.replace(1311, 1, midiTable->getArrayValue("Tables", "00", "00", "24", gt6b_data.mid(582, 1))); //convert source
+    data.replace(1312, 3, gt6b_data.mid(583, 3));  //copy Assign
+
+    data.replace(1320, 1, gt6b_data.mid(598, 1));  //copy Assign 5
+    data.replace(1321, 2, midiTable->getArrayValue("Tables", "00", "00", "23", gt6b_data.mid(600, 2))); //convert target
+    data.replace(1323, 4, gt6b_data.mid(602, 4));  //copy min/max
+    data.replace(1327, 1, midiTable->getArrayValue("Tables", "00", "00", "24", gt6b_data.mid(606, 1))); //convert source
+    data.replace(1328, 3, gt6b_data.mid(607, 3));  //copy Assign
+
+    data.replace(1336, 1, gt6b_data.mid(622, 1));  //copy Assign 6
+    data.replace(1337, 2, midiTable->getArrayValue("Tables", "00", "00", "23", gt6b_data.mid(624, 2))); //convert target
+    data.replace(1339, 4, gt6b_data.mid(626, 4));  //copy min/max
+    data.replace(1343, 1, midiTable->getArrayValue("Tables", "00", "00", "24", gt6b_data.mid(630, 1))); //convert source
+    data.replace(1344, 3, gt6b_data.mid(631, 3));  //copy Assign
+
+    data.replace(1365, 1, gt6b_data.mid(646, 1));  //copy Assign 7
+    data.replace(1366, 2, midiTable->getArrayValue("Tables", "00", "00", "23", gt6b_data.mid(648, 2))); //convert target
+    data.replace(1368, 4, gt6b_data.mid(650, 4));  //copy min/max
+    data.replace(1372, 1, midiTable->getArrayValue("Tables", "00", "00", "24", gt6b_data.mid(654, 1))); //convert source
+    data.replace(1373, 3, gt6b_data.mid(655, 3));  //copy Assign
+
+    data.replace(1381, 1, gt6b_data.mid(670, 1));  //copy Assign 8
+    data.replace(1382, 2, midiTable->getArrayValue("Tables", "00", "00", "23", gt6b_data.mid(672, 2))); //convert target
+    data.replace(1384, 4, gt6b_data.mid(674, 4));  //copy min/max
+    data.replace(1388, 1, midiTable->getArrayValue("Tables", "00", "00", "24", gt6b_data.mid(678, 1))); //convert source
+    data.replace(1389, 3, gt6b_data.mid(679, 3));  //copy Assign
+
+
+    translate10Bto100();
 }

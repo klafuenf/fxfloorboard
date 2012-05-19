@@ -2,14 +2,14 @@
 <!-- Preferences of the GT-100 Fx FloorBoard application. -->
 <Preferences>
 	<General>
-		<Application version="20120418"/>
+		<Application version="20120511"/>
 		<Files dir=""/>
 	</General>
 	<Language>
 		<Locale select="0"/>
 	</Language>
 	<Midi>
-		<BulkFinish patch="297"/>
+		<BulkFinish patch="200"/>
 		<BulkStart patch="1"/>
 		<DBug bool="false"/>
 		<Delay set="1"/>
@@ -23,7 +23,7 @@
 	</Scheme>
 	<Window>
 		<Collapsed width="1330" bool="true"/>
-		<Position x="74" y="63"/>
+		<Position x="10" y="10"/>
 		<Restore window="true" sidepanel="true"/>
 		<Single bool="true"/>
 		<Size width="1330" height="720"/>

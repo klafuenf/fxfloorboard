@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "GT-100FxFloorBoard"
-!define PRODUCT_VERSION "20120418"
+!define PRODUCT_VERSION "20120511"
 !define PRODUCT_PUBLISHER "Colin Willcocks (gumtown)"
 !define PRODUCT_WEB_SITE "http://fxfloorboard.sourceforge.net/"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\GT-100FxFloorBoard.exe"
@@ -140,6 +140,7 @@ Section Uninstall
   Delete "$INSTDIR\license.txt"
   Delete "$INSTDIR\mingwm10.dll"
   Delete "$INSTDIR\preferences.xml.dist"
+    Delete "$INSTDIR\preferences.xml"
   Delete "$INSTDIR\QtCore4.dll"
   Delete "$INSTDIR\QtGui4.dll"
   Delete "$INSTDIR\QtXml4.dll"

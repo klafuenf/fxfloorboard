@@ -77,7 +77,7 @@ font-weight: bold;
 color: rgb(0,0,0);
 background-color: rgb(255,255,255);
 border-style: solid;
-border-width: 1px;
+border-width: 2px;
 border-radius: 3px;
 border-color: rgb(150,150,150);
 padding: -1px;
@@ -98,7 +98,7 @@ font-weight: bold;
 color: rgb(0,0,0);
 background-color: rgb(255,255,255);
 border-style: solid;
-border-width: 1px;
+border-width: 2px;
 border-radius: 3px;
 border-color: rgb(150,150,150);
 padding: -1px;
@@ -155,7 +155,7 @@ background: none;
 /* CUSTOM DISPLAY STYLE */
 
 #display {
-background-color: rgb(255,255,255); 
+background-color: rgb(34,24,25); 
 border-style: solid;
 border-width: 10px;
 border-radius: 3px;
@@ -165,37 +165,37 @@ QLabel#bankMain {
 font-family: Arial;
 font-size: 11px;
 font-weight: bold;
-color: rgb(0,0,0);
+color: rgb(255,255,255);
 }
 QLabel#bankSub {
 font-family: Arial;
 font-size: 9px;
 font-weight: bold;
-color: rgb(0,0,0);
+color: rgb(255,255,255);
 }
 QLabel#nameMain {
 font-family: Arial;
 font-size: 11px;
 font-weight: bold;
-color: rgb(0,0,0);
+color: rgb(255,255,255);
 }
 QLabel#nameSub {
 font-family: Arial;
 font-size: 10px;
 font-weight: bold;
-color: rgb(0,0,0);
+color: rgb(255,255,255);
 }
 QLabel#valueMain {
 font-family: Arial;
 font-size: 11px;
 font-weight: bold;
-color: rgb(0,0,0);
+color: rgb(255,255,255);
 }
 QLabel#valueSub {
 font-family: Arial;
 font-size: 10px;
 font-weight: bold;
-color: rgb(0,0,0);
+color: rgb(255,255,255);
 }
 
 /* CUSTOM LABEL STYLE */
@@ -225,14 +225,14 @@ QLabel#button {
 font-family: Arial;
 font-size: 9px;
 font-weight: bold;
-color: rgb(0,0,0);
+color: rgb(255,255,255);
 }
 
 QLabel#panelButton {
 font-family: Arial;
 font-size: 9px;
 font-weight: bold;
-color: rgb(100,100,255);
+color: rgb(255,255,255);
 }
 
 /* CUSTOM GROUPBOX STYLE */
@@ -250,7 +250,7 @@ QGroupBox#groupbox {
 font-family: Arial;
 font-size: 12px;
 font-weight: bold;
-color: rgb(0,0,0);
+color: rgb(125,125,125);
 border-width: 1px;
 border-style: solid;
 border-color:  rgb(0,0,0);

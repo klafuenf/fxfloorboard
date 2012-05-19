@@ -4,7 +4,7 @@ GT-100FxFloorBoard Copyright (C) 2007~2012 Colin Willcocks (gumtownbassman@yahoo
 =======
 
 
-GT-100FxFloorBoard version 20120418: 18 April 2012
+GT-100FxFloorBoard version 20120511: 11 May 2012
 *****************************************************
 PLEASE FEEL FREE TO DONATE, YOU MAY FREELY USE THIS SOFTWARE, 
  JUST KEEP IN MIND THE 1000's of HOURS SPENT OVER 7 YEARS GETTING IT HERE,
