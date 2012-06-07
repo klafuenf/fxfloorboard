@@ -28,26 +28,18 @@ stompbox_cn_m1_s2::stompbox_cn_m1_s2(QWidget *parent)
 {
     /* CHAIN MERGE */
     this->setImage(":/images/cn_m1_s2.png");
-    setLSB("06", "00");
-    //setComboBox("06", "00", "50", QRect(8, 78, 79, 13));
-    //editDetails()->patchPos(100, 3, "06", "50");
+    setLSB("07", "20");
+    editDetails()->patchPos(2060, 40, "07", "20");
     setEditPages();
-};
+}
 
 void stompbox_cn_m1_s2::updateSignal()
 {
-    //updateComboBox("06", "00", "50");
-};
+    emit updateStompBoxes();
+}
 
 void stompbox_cn_m1_s2::setEditPages()
 {
 
-/*
-    editDetails()->page()->newGroupBox(tr("Channel Mixer"));
-    editDetails()->page()->addComboBox(0, 0, 1, 1, "06", "00", "50"); //mix mode
-    editDetails()->page()->addKnob(0, 1, 1, 1, "06", "00", "51");   // balance
-    editDetails()->page()->addKnob(0, 2, 1, 1, "06", "00", "52");   // spread
-    editDetails()->page()->addGroupBox(0, 0, 1, 1);
-*/
     editDetails()->addPage();
-};
+}

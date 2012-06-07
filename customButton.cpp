@@ -43,7 +43,7 @@ customButton::customButton(bool active, QPoint buttonPos, QWidget *parent, QStri
 	timer = new QTimer(this);
 	QObject::connect(this, SIGNAL( valueChanged(bool, QString, QString, QString) ),
                 this->parent(), SLOT( valueChanged(bool, QString, QString, QString) ));
-};
+}
 
 customButton::customButton(QString text, bool active, QPoint buttonPos, QWidget *parent, 
 						   QString imagePath)
@@ -69,7 +69,7 @@ customButton::customButton(QString text, bool active, QPoint buttonPos, QWidget 
 
 	QObject::connect(this, SIGNAL( valueChanged(bool, QString, QString, QString) ),
                 this->parent(), SLOT( valueChanged(bool, QString, QString, QString) ));
-};
+}
 
 void customButton::paintEvent(QPaintEvent *)
 {
@@ -79,13 +79,13 @@ void customButton::paintEvent(QPaintEvent *)
 
 	QPainter painter(this);
 	painter.drawPixmap(target, image, source);
-};
+}
 
 void customButton::setOffset(signed int imageNr)
 {
 	this->yOffset = imageNr*buttonSize.height();
 	this->update();
-};
+}
 
 void customButton::mousePressEvent(QMouseEvent *event)
 {
@@ -102,7 +102,7 @@ void customButton::mousePressEvent(QMouseEvent *event)
 		};
 		setFocus();
 	};
-};
+}
 
 void customButton::mouseReleaseEvent(QMouseEvent *event)
 {
@@ -121,7 +121,7 @@ void customButton::mouseReleaseEvent(QMouseEvent *event)
 		};
 		clearFocus();
 	};
-};
+}
 
 void customButton::emitValue(bool value)
 {
@@ -137,7 +137,7 @@ void customButton::emitValue(bool value)
 			emit valueChanged((bool)value, this->hex1, this->hex2, this->hex3);
 		};
     //};
-};
+}
 
 void customButton::mouseMoveEvent(QMouseEvent *event)
 {
@@ -153,7 +153,7 @@ void customButton::mouseMoveEvent(QMouseEvent *event)
 	{
 		setOffset(0);
 	};*/
-};
+}
 
 void customButton::setValue(bool value)
 {
@@ -167,7 +167,7 @@ void customButton::setValue(bool value)
 		setOffset(0);
 	};
 	clearFocus();
-};
+}
 
 void customButton::setBlink(bool value)
 {
@@ -187,7 +187,7 @@ void customButton::setBlink(bool value)
 			setOffset(0);
 		};
 	 };
-};
+}
 
 void customButton::blink()
 {
@@ -202,4 +202,4 @@ void customButton::blink()
 		setOffset(2);
 	};
 	clearFocus();
-};
+}

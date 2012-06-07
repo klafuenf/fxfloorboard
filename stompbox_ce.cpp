@@ -35,7 +35,7 @@ stompbox_ce::stompbox_ce(QWidget *parent)
     setButton("06", "00", "00");
     editDetails()->patchPos(1714, 16, "06", "00");
 	setEditPages();
-};
+}
 
 void stompbox_ce::updateSignal()
 {
@@ -44,7 +44,7 @@ void stompbox_ce::updateSignal()
     updateComboBox("06", "00", "01");
     updateButton("06", "00", "00");
     updateSwitch("06", "00", "00");
-};
+}
 
 void stompbox_ce::setEditPages()
 {
@@ -71,4 +71,4 @@ void stompbox_ce::setEditPages()
 
 	editDetails()->addPage();
   	
-};
+}

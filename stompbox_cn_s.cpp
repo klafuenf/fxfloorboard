@@ -28,19 +28,19 @@ stompbox_cn_s::stompbox_cn_s(QWidget *parent)
 {
     /* CHAIN SPLIT */
     this->setImage(":/images/cn_s.png");
-    setLSB("06", "00");
+    setLSB("06", "40");
     setComboBox("06", "00", "40", QRect(8, 78, 79, 13));
     //setSwitch("01", "00", "00");
     editDetails()->patchPos(1842, 20, "06", "40");
     setEditPages();
-};
+}
 
 void stompbox_cn_s::updateSignal()
 {
     updateComboBox("06", "00", "40");
     updateSwitch("06", "00", "40");
     updateSwitch("06", "00", "41");
-};
+}
 
 void stompbox_cn_s::setEditPages()
 {
@@ -119,4 +119,4 @@ void stompbox_cn_s::setEditPages()
     editDetails()->page()->addStackField();
 
     editDetails()->addPage();
-};
+}

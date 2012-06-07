@@ -57,12 +57,12 @@ midiIO::midiIO()
     QObject::connect(this, SIGNAL(errorSignal(QString, QString)), sysxIO, SLOT(errorSignal(QString, QString)));
     QObject::connect(this, SIGNAL(replyMsg(QString)),	sysxIO, SLOT(receiveSysx(QString)));
     QObject::connect(this, SIGNAL(midiFinished()), sysxIO, SLOT(finishedSending()));
-};
+}
 
 midiIO::~midiIO()
 {
     this->terminate();
-};
+}
 
 /*********************** queryMidiOutDevices() *****************************
  * Retrieves all MIDI Out devices installed on your system and stores them
@@ -106,13 +106,13 @@ void midiIO::queryMidiOutDevices()
     /* Clean up */
 cleanup:
     delete midiout;
-};
+}
 
 QList<QString> midiIO::getMidiOutDevices()
 {
     queryMidiOutDevices();
     return this->midiOutDevices;
-};
+}
 
 /*********************** queryMidiInDevices() ******************************
  * Retrieves all MIDI In devices installed on your system and stores them
@@ -154,13 +154,13 @@ void midiIO::queryMidiInDevices()
     // Clean up
 cleanup:
     delete midiin;
-};
+}
 
 QList<QString> midiIO::getMidiInDevices()
 {
     queryMidiInDevices();
     return this->midiInDevices;
-};
+}
 
 /*********************** sendMsg() **********************************
  * Prepares the sysx message before sending on the MIDI Out device. It
@@ -233,7 +233,7 @@ cleanup:
     msleep(close);						// wait as long as the message is sending.
     midiMsgOut->closePort();
     delete midiMsgOut;
-};
+}
 /*********** send midi messages *******************************/
 void midiIO::sendMidiMsg(QString sysxOutMsg, int midiOutPort)
 {
@@ -276,7 +276,7 @@ void midiIO::sendMidiMsg(QString sysxOutMsg, int midiOutPort)
 cleanup:
     midiMsgOut->closePort();
     delete midiMsgOut;
-};
+}
 
 /*********************** receiveMsg() **********************************
  * Prepares the sysx message after receiving on the MIDI In device. It
@@ -297,11 +297,11 @@ void midicallback(double deltatime, std::vector<unsigned char> *message, void *u
     };
     if (rxData.contains("F0") || rxData.contains("F7"))
     { midi->callbackMsg(rxData); };
-};
+}
 void midiIO::callbackMsg(QString rxData)
 {
     this->sysxBuffer.append(rxData);
-};
+}
 
 void midiIO::receiveMsg(QString sysxInMsg, int midiInPort)
 {
@@ -363,7 +363,7 @@ cleanup:
     dataReceive = true;
     midiin->closePort();             // close the midi in port
     delete midiin;
-};
+}
 
 /**************************** run() **************************************
  * New QThread that processes the sysex or midi message and handles if yes
@@ -475,7 +475,7 @@ RECEIVE:
         emit setStatusSymbol(1);
         emit setStatusProgress(0);
     };
-};
+}
 
 /*********************** sendSysxMsg() ***********************************
  * Starts a new thread that handles the send and receive of sysex messages.
@@ -509,7 +509,7 @@ void midiIO::sendSysxMsg(QString sysxOutMsg, int midiOutPort, int midiInPort)
             i=i+2;
         };
     };
-
+    msgType = "unidentified";
     if (sysxOutMsg == idRequestString)
     {reBuild = sysxOutMsg;  msgType = "identity";  emit setStatusdBugMessage(tr("identity request")); };  // identity request not require checksum
     this->sysxOutMsg = reBuild.simplified().toUpper();
@@ -520,7 +520,7 @@ void midiIO::sendSysxMsg(QString sysxOutMsg, int midiOutPort, int midiInPort)
     if((sysxOutMsg.size() == 34) && (sysxOutMsg.contains("00000010")) && (sysxOutMsg.mid((sysxAddressOffset*2-2), 2) == "11"))
     { msgType = "name";  emit setStatusdBugMessage(tr("name request")); };
 
-    if (this->sysxOutMsg == systemRequest )
+    if (this->sysxOutMsg.contains(systemRequest) )
     { msgType = "system"; emit setStatusdBugMessage(tr("system request")); };
 
     this->midiOutPort = midiOutPort;
@@ -533,7 +533,7 @@ void midiIO::sendSysxMsg(QString sysxOutMsg, int midiOutPort, int midiInPort)
         emit setStatusMessage(tr("no midi device set"));
         emit replyMsg("");};
 
-};
+}
 
 /*********************** sendMidi() **********************************
  * Starts a new thread that handles the sending of the midi messages.
@@ -548,5 +548,5 @@ void midiIO::sendMidi(QString midiMsg, int midiOutPort)
     if(midiOut!="") {start();} else {
         emit setStatusSymbol(0);
         emit setStatusMessage(tr("no midi device set"));   };
-};
+}
 

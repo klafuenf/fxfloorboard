@@ -25,6 +25,7 @@
 #include <QLabel>
 #include "customSwitch.h"
 #include "customControlParaEQ.h"
+#include "customControlEZ_amp.h"
 #include "customControlGraphicEQ.h"
 #include "customControlMasterEQ.h"
 #include "customControlKnob.h"
@@ -57,7 +58,7 @@ editPage::editPage(QWidget *parent)
 
 	QObject::connect(this, SIGNAL( updateSignal() ),
                 this->parent(), SIGNAL( updateSignal() ));*/
-};
+}
 
 void editPage::paintEvent(QPaintEvent *)
 {
@@ -69,7 +70,7 @@ void editPage::paintEvent(QPaintEvent *)
 
 	QPainter painter(this);
 	painter.drawPixmap(target, image, source);*/
-};
+}
 
 void editPage::addGraphicEQ(int row, int column, int rowSpan, int columnSpan,
 					   QString hex1, QString hex2, QString hex3, 
@@ -89,7 +90,7 @@ void editPage::addGraphicEQ(int row, int column, int rowSpan, int columnSpan,
 	{
                 this->layout->addWidget(GraphicEQ, row, column, rowSpan, columnSpan, alignment);
 	};
-};
+}
 
 void editPage::addParaEQ(int row, int column, int rowSpan, int columnSpan,
                                            QString hex1, QString hex2, QString hex3,
@@ -109,7 +110,27 @@ void editPage::addParaEQ(int row, int column, int rowSpan, int columnSpan,
         {
                 this->layout->addWidget(ParaEQ, row, column, rowSpan, columnSpan, alignment);
         };
-};
+}
+
+void editPage::addEZ_amp(int row, int column, int rowSpan, int columnSpan,
+                                           QString hex1, QString hex2, QString hex3,
+                                           QString background, QString direction, int lenght,
+                                           Qt::Alignment alignment)
+{
+        customControlEZ_amp *EZ_amp = new customControlEZ_amp(this, hex1, hex2, hex3, background, direction, lenght);
+        if(this->groupBoxMode)
+        {
+                this->groupBoxLayout->addWidget(EZ_amp, row, column, rowSpan, columnSpan, alignment);
+        }
+        else if(this->stackFieldMode)
+        {
+                this->stackField->addWidget(EZ_amp, row, column, rowSpan, columnSpan, alignment);
+        }
+        else
+        {
+                this->layout->addWidget(EZ_amp, row, column, rowSpan, columnSpan, alignment);
+        };
+}
 
 void editPage::addMasterEQ(int row, int column, int rowSpan, int columnSpan,
                                            QString hex1, QString hex2, QString hex3,
@@ -129,7 +150,7 @@ void editPage::addMasterEQ(int row, int column, int rowSpan, int columnSpan,
         {
                 this->layout->addWidget(MasterEQ, row, column, rowSpan, columnSpan, alignment);
         };
-};
+}
 
 void editPage::addKnob(int row, int column, int rowSpan, int columnSpan,
 					   QString hex1, QString hex2, QString hex3, 
@@ -149,7 +170,7 @@ void editPage::addKnob(int row, int column, int rowSpan, int columnSpan,
 	{
 		this->layout->addWidget(knob, row, column, rowSpan, columnSpan, alignment);
 	};
-};
+}
 
 void editPage::addTarget(int row, int column, int rowSpan, int columnSpan,
 					   QString hex1, QString hex2, QString hex3, 
@@ -169,7 +190,7 @@ void editPage::addTarget(int row, int column, int rowSpan, int columnSpan,
 	{
 		this->layout->addWidget(target, row, column, rowSpan, columnSpan, alignment);
 	};
-};
+}
 
 void editPage::addRange(int row, int column, int rowSpan, int columnSpan,
 					   QString hex1, QString hex2, QString hex3, 
@@ -189,7 +210,7 @@ void editPage::addRange(int row, int column, int rowSpan, int columnSpan,
 	{
 		this->layout->addWidget(range, row, column, rowSpan, columnSpan, alignment);
 	};
-};
+}
 
 void editPage::addSwitch(int row, int column, int rowSpan, int columnSpan,
 		QString hex1,
@@ -211,7 +232,7 @@ void editPage::addSwitch(int row, int column, int rowSpan, int columnSpan,
 	{
 		this->layout->addWidget(switchbutton, row, column, rowSpan, columnSpan, alignment);
 	};
-};
+}
 
 void editPage::addComboBox(int row, int column, int rowSpan, int columnSpan,
 		QString hex1,
@@ -240,7 +261,7 @@ void editPage::addComboBox(int row, int column, int rowSpan, int columnSpan,
 	{
 		this->layout->addWidget(combobox, row, column, rowSpan, columnSpan, alignment);
 	};
-};
+}
 
 void editPage::addMultiComboBox(int row, int column, int rowSpan, int columnSpan,
         QString hex1,
@@ -269,7 +290,7 @@ void editPage::addMultiComboBox(int row, int column, int rowSpan, int columnSpan
     {
         this->layout->addWidget(combobox, row, column, rowSpan, columnSpan, alignment);
     };
-};
+}
 
 void editPage::addNameEdit(int row, int column, int rowSpan, int columnSpan,
 		QString hex1,
@@ -293,7 +314,7 @@ void editPage::addNameEdit(int row, int column, int rowSpan, int columnSpan,
 	{
 		this->layout->addWidget(nameEdit, row, column, rowSpan, columnSpan, alignment);
 	};
-};
+}
 
 void editPage::addLabel(int row, int column, int rowSpan, int columnSpan, QString text, Qt::Alignment alignment)
 {
@@ -312,7 +333,7 @@ void editPage::addLabel(int row, int column, int rowSpan, int columnSpan, QStrin
 	{
 		this->layout->addWidget(label, row, column, rowSpan, columnSpan, alignment);
 	};
-};
+}
 
 void editPage::valueChanged(bool value, QString hex1, QString hex2, QString hex3)
 {
@@ -320,7 +341,7 @@ void editPage::valueChanged(bool value, QString hex1, QString hex2, QString hex3
 	hex1 = hex1;
   hex2 = hex2;
 	hex3 = hex3;
-}; 
+}
 
 void editPage::newGroupBox(QString title, Qt::Alignment alignment)
 {
@@ -357,7 +378,7 @@ void editPage::newGroupBox(QString title, Qt::Alignment alignment)
 	this->groupBox->setTitle(title);
 	this->groupBox->setObjectName("groupbox");
 	this->groupBoxMode = true;
-};
+}
 
 void editPage::addGroupBox(int row, int column, int rowSpan, int columnSpan)
 {
@@ -397,7 +418,7 @@ void editPage::addGroupBox(int row, int column, int rowSpan, int columnSpan)
 		this->groupBoxLayout = this->groupBoxLayouts.at(layoutIndex - 1 - this->parentBoxDif);
 		this->groupBoxIndex--;
 	};
-};
+}
 
 void editPage::setGridLayout()
 {
@@ -412,7 +433,7 @@ void editPage::setGridLayout()
 	mainLayout->addStretch();
 	
 	this->setLayout(mainLayout);
-};
+}
 
 void editPage::newStackControl(int id)
 {
@@ -420,12 +441,12 @@ void editPage::newStackControl(int id)
 	this->stackControlId = id;
 	QStackedWidget *newStackField = new QStackedWidget;
 	this->stackedFields.insert(id, newStackField);
-};
+}
 
 void editPage::addStackControl()
 {
 	this->stackControlMode = false;
-};
+}
 
 void editPage::insertStackField(int id,
 	int row, int column, int rowSpan, int columnSpan,
@@ -443,7 +464,7 @@ void editPage::insertStackField(int id,
 	{
 		this->layout->addWidget(this->stackedFields.at(id), row, column, rowSpan, columnSpan, alignment);
 	};
-};
+}
 	
 void editPage::newStackField(int id, Qt::Alignment alignment)
 {
@@ -458,7 +479,7 @@ void editPage::newStackField(int id, Qt::Alignment alignment)
 	this->stackField->setMargin(0);
 	this->stackField->setSpacing(5);
 	this->stackField->setAlignment(alignment);
-};
+}
 
 void editPage::addStackField()
 {
@@ -468,10 +489,10 @@ void editPage::addStackField()
 	tmpWidget->setLayout(this->stackField);
 
 	this->stackedFields.at(this->stackFieldId)->addWidget(tmpWidget);
-};
+}
 
 void editPage::updateDialog(int index)
 {
 	index = index;
 	emit dialogUpdateSignal();
-};
+}

@@ -93,6 +93,7 @@ public slots:
     void setDisplayToFxName();
     void pathSwitchSignal(bool value);
     void updateStompPath();
+    void chain_ButtonSignal(bool value);
     void ch_mode_ButtonSignal(bool value);
     void channel_Mix_ButtonSignal(bool value);
     void preamp1_ButtonSignal(bool value);

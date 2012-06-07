@@ -34,7 +34,7 @@ stompbox_ns_1::stompbox_ns_1(QWidget *parent)
     setButton("06", "00", "63");
     editDetails()->patchPos(1912, 8, "06", "63");
     setEditPages();
-};
+}
 
 void stompbox_ns_1::updateSignal()
 {
@@ -42,7 +42,7 @@ void stompbox_ns_1::updateSignal()
     updateKnob2("06", "00", "65");
     updateButton("06", "00", "63");
     updateSwitch("06", "00", "63");
-};
+}
 
 void stompbox_ns_1::setEditPages()
 {
@@ -56,5 +56,4 @@ void stompbox_ns_1::setEditPages()
     editDetails()->page()->addKnob(0, 1, 1, 1, "06", "00", "65");
     editDetails()->page()->addGroupBox(0, 1, 1, 1);
     editDetails()->addPage();
-
-};
+}

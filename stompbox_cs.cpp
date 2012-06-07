@@ -35,7 +35,7 @@ stompbox_cs::stompbox_cs(QWidget *parent)
     setButton("00", "00", "20");
     editDetails()->patchPos(86, 12, "00", "20");
     setEditPages();
-};
+}
 
 void stompbox_cs::updateSignal()
 {
@@ -44,7 +44,7 @@ void stompbox_cs::updateSignal()
     updateComboBox("00", "00", "21");
     updateButton("00", "00", "20");
     updateSwitch("00", "00", "20");
-};
+}
 
 void stompbox_cs::setEditPages()
 {
@@ -52,7 +52,6 @@ void stompbox_cs::setEditPages()
     editDetails()->page()->addSwitch(0, 0, 1, 1, "00", "00", "20", "middle", Qt::AlignCenter);
     editDetails()->page()->addComboBox(1, 0, 1, 1, "00", "00", "21");
 	editDetails()->page()->addGroupBox(0, 0, 1, 1);
-
 
 	editDetails()->page()->newGroupBox("Compressor");
     editDetails()->page()->addKnob(0, 0, 1, 1, "00", "00", "22");
@@ -64,6 +63,5 @@ void stompbox_cs::setEditPages()
     editDetails()->page()->addKnob(0, 0, 1, 1, "00", "00", "25");
     editDetails()->page()->addGroupBox(0, 2, 1, 1);
 
-
 	editDetails()->addPage();
-};
+}

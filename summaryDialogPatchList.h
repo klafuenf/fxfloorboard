@@ -39,33 +39,34 @@ class QStackedWidget;
 
 class summaryDialogPatchList : public QWidget
 {
-        Q_OBJECT
+    Q_OBJECT
 
 public:
-  summaryDialogPatchList(QWidget *parent = 0);
-  QTextEdit *textDialog;
-  QTextDocument *document;
-  QPrintDialog *dialog;
-  QPushButton *cancelButton;
-  QPushButton *printButton;
-  QPushButton *saveAsButton;
+    summaryDialogPatchList(QWidget *parent = 0);
+    ~summaryDialogPatchList();
+    QTextEdit *textDialog;
+    QTextDocument *document;
+    QPrintDialog *dialog;
+    QPushButton *cancelButton;
+    QPushButton *printButton;
+    QPushButton *saveAsButton;
 
 public slots:
-  void updatePatchNames(QString name);
-  void cancel();
-  void printFile();
-  void saveAs();
+    void updatePatchNames(QString name);
+    void cancel();
+    void printFile();
+    void saveAs();
 
 signals:  
-  void setStatusSymbol(int value);
-	void setStatusProgress(int value);
-  void setStatusMessage(QString message);
+    void setStatusSymbol(int value);
+    void setStatusProgress(int value);
+    void setStatusMessage(QString message);
 
 private:
-QString patchList;
-int bank;
-int patch;
-int count;
+    QString patchList;
+    int bank;
+    int patch;
+    int count;
 };
 
 #endif //SUMMARYDIALOGPATCHLIST

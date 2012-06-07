@@ -32,12 +32,12 @@ stompbox_cn_m::stompbox_cn_m(QWidget *parent)
     setComboBox("06", "00", "50", QRect(8, 78, 79, 13));
     editDetails()->patchPos(1874, 6, "06", "50");
     setEditPages();
-};
+}
 
 void stompbox_cn_m::updateSignal()
 {
     updateComboBox("06", "00", "50");
-};
+}
 
 void stompbox_cn_m::setEditPages()
 {
@@ -50,4 +50,4 @@ void stompbox_cn_m::setEditPages()
     editDetails()->page()->addGroupBox(0, 0, 1, 1);
 
     editDetails()->addPage();
-};
+}

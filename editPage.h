@@ -42,8 +42,15 @@ public:
                    QString direction = "bottom",
                    int lenght = 45,
                    Qt::Alignment alignment = 0);
+    void addEZ_amp(int row, int column, int rowSpan, int columnSpan,
+                     QString hex1 = "void",
+                     QString hex2 = "void",
+                     QString hex3 = "void",
+                     QString background = "normal",
+                     QString direction = "bottom",
+                     int lenght = 45,
+                     Qt::Alignment alignment = 0);
     void addMasterEQ(int row, int column, int rowSpan, int columnSpan,
-
                      QString hex1 = "void",
                      QString hex2 = "void",
                      QString hex3 = "void",

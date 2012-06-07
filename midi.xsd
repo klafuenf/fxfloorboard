@@ -1355,6 +1355,7 @@
 						<xs:enumeration value="7/4"/>
 						<xs:enumeration value="7/8"/>
 						<xs:enumeration value="70 R"/>
+						<xs:enumeration value="70&apos;s Hard Rock"/>
 						<xs:enumeration value="72 R"/>
 						<xs:enumeration value="74 R"/>
 						<xs:enumeration value="76 R"/>
@@ -1370,6 +1371,7 @@
 						<xs:enumeration value="8/4"/>
 						<xs:enumeration value="8/8"/>
 						<xs:enumeration value="80 R"/>
+						<xs:enumeration value="80&apos;s Metal"/>
 						<xs:enumeration value="80.0Hz"/>
 						<xs:enumeration value="800Hz"/>
 						<xs:enumeration value="82 R"/>
@@ -1436,9 +1438,11 @@
 						<xs:enumeration value="Accel: Warp Fall Time"/>
 						<xs:enumeration value="Accel: Warp Level"/>
 						<xs:enumeration value="Accel: Warp Rise Time"/>
+						<xs:enumeration value="Acoustic"/>
 						<xs:enumeration value="Ambience"/>
 						<xs:enumeration value="Amp CTL"/>
 						<xs:enumeration value="Amp Control"/>
+						<xs:enumeration value="Amp Customise"/>
 						<xs:enumeration value="Analog"/>
 						<xs:enumeration value="Auto"/>
 						<xs:enumeration value="Auto      "/>
@@ -1512,6 +1516,7 @@
 						<xs:enumeration value="Comp: Type"/>
 						<xs:enumeration value="Compressor"/>
 						<xs:enumeration value="Core Metal"/>
+						<xs:enumeration value="Country"/>
 						<xs:enumeration value="Crunch"/>
 						<xs:enumeration value="Custom"/>
 						<xs:enumeration value="Custom #1"/>
@@ -2037,6 +2042,7 @@
 						<xs:enumeration value="Foot Volume"/>
 						<xs:enumeration value="Full Range"/>
 						<xs:enumeration value="Fuzz"/>
+						<xs:enumeration value="Fuzz Rock"/>
 						<xs:enumeration value="G"/>
 						<xs:enumeration value="G (Em)"/>
 						<xs:enumeration value="GRAPHIC EQ "/>
@@ -2070,6 +2076,7 @@
 						<xs:enumeration value="JC-120"/>
 						<xs:enumeration value="JC-120 RETURN"/>
 						<xs:enumeration value="JC-120 return"/>
+						<xs:enumeration value="Jazz"/>
 						<xs:enumeration value="K"/>
 						<xs:enumeration value="KEY: Master Key"/>
 						<xs:enumeration value="L"/>
@@ -2089,6 +2096,7 @@
 						<xs:enumeration value="Light WAH"/>
 						<xs:enumeration value="Line/Phones"/>
 						<xs:enumeration value="Linear"/>
+						<xs:enumeration value="LiverPool"/>
 						<xs:enumeration value="Low"/>
 						<xs:enumeration value="Low Pass"/>
 						<xs:enumeration value="M"/>
@@ -2130,6 +2138,7 @@
 						<xs:enumeration value="Mixer: Mode"/>
 						<xs:enumeration value="Mixer: Spread"/>
 						<xs:enumeration value="Mod"/>
+						<xs:enumeration value="Modern Metal"/>
 						<xs:enumeration value="Modern Stack"/>
 						<xs:enumeration value="Modulate"/>
 						<xs:enumeration value="Moment"/>
@@ -2161,6 +2170,7 @@
 						<xs:enumeration value="OD-1"/>
 						<xs:enumeration value="OD-2"/>
 						<xs:enumeration value="OD/DS"/>
+						<xs:enumeration value="OD/DS Customise"/>
 						<xs:enumeration value="OD/DS Solo"/>
 						<xs:enumeration value="OD: Bottom Level"/>
 						<xs:enumeration value="OD: Custom Bottom"/>
@@ -2518,6 +2528,7 @@
 						<xs:enumeration value="Pan L/R"/>
 						<xs:enumeration value="Patch"/>
 						<xs:enumeration value="Patch Change"/>
+						<xs:enumeration value="Patch Create"/>
 						<xs:enumeration value="Patch Edit"/>
 						<xs:enumeration value="Patch Level"/>
 						<xs:enumeration value="Pedal Bend"/>
@@ -2538,6 +2549,8 @@
 						<xs:enumeration value="Presence"/>
 						<xs:enumeration value="Pro Crunch"/>
 						<xs:enumeration value="Programmable"/>
+						<xs:enumeration value="Progressive"/>
+						<xs:enumeration value="Punk Pop"/>
 						<xs:enumeration value="Q"/>
 						<xs:enumeration value="R"/>
 						<xs:enumeration value="R-Fier Modern"/>
@@ -2603,6 +2616,7 @@
 						<xs:enumeration value="Slow Rise"/>
 						<xs:enumeration value="Small"/>
 						<xs:enumeration value="Small Amp"/>
+						<xs:enumeration value="Soul Funk"/>
 						<xs:enumeration value="Speaker  #1"/>
 						<xs:enumeration value="Speaker  #2"/>
 						<xs:enumeration value="Speaker  #3"/>
@@ -2614,12 +2628,14 @@
 						<xs:enumeration value="Stereo Comp"/>
 						<xs:enumeration value="Stereo1"/>
 						<xs:enumeration value="Stereo2"/>
+						<xs:enumeration value="Studio"/>
 						<xs:enumeration value="Sub CTL 1 PDL"/>
 						<xs:enumeration value="Sub CTL 2 PDL"/>
 						<xs:enumeration value="Sub CTL1 Pedal"/>
 						<xs:enumeration value="Sub CTL2 Pedal"/>
 						<xs:enumeration value="Sub EXP PDL"/>
 						<xs:enumeration value="Sub EXP Pedal"/>
+						<xs:enumeration value="Surf Rock"/>
 						<xs:enumeration value="System"/>
 						<xs:enumeration value="System 1"/>
 						<xs:enumeration value="System 10"/>
@@ -2875,6 +2891,7 @@
 						<xs:enumeration value="Warm OD"/>
 						<xs:enumeration value="Warp"/>
 						<xs:enumeration value="Wave PEDAL"/>
+						<xs:enumeration value="West Coast"/>
 						<xs:enumeration value="X"/>
 						<xs:enumeration value="Y"/>
 						<xs:enumeration value="Z"/>
@@ -3110,11 +3127,13 @@
 						<xs:enumeration value="7/2"/>
 						<xs:enumeration value="7/4"/>
 						<xs:enumeration value="7/8"/>
+						<xs:enumeration value="70&apos;s Hard Rock"/>
 						<xs:enumeration value="8"/>
 						<xs:enumeration value="8/1"/>
 						<xs:enumeration value="8/2"/>
 						<xs:enumeration value="8/4"/>
 						<xs:enumeration value="8/8"/>
+						<xs:enumeration value="80&apos;s Metal"/>
 						<xs:enumeration value="8x12&quot;"/>
 						<xs:enumeration value="9"/>
 						<xs:enumeration value="A &amp; B Solo"/>
@@ -3130,10 +3149,12 @@
 						<xs:enumeration value="Accel Fx"/>
 						<xs:enumeration value="Accel/CTL PDL"/>
 						<xs:enumeration value="Accel/CTL Pedal"/>
+						<xs:enumeration value="Acoustic"/>
 						<xs:enumeration value="Address MSB"/>
 						<xs:enumeration value="Ambience"/>
 						<xs:enumeration value="Amp CTL"/>
 						<xs:enumeration value="Amp Control"/>
+						<xs:enumeration value="Amp Customise"/>
 						<xs:enumeration value="Analog"/>
 						<xs:enumeration value="Auto"/>
 						<xs:enumeration value="B (G#m)      "/>
@@ -3175,6 +3196,7 @@
 						<xs:enumeration value="Command ID (DT1)"/>
 						<xs:enumeration value="Compressor"/>
 						<xs:enumeration value="Core Metal"/>
+						<xs:enumeration value="Country"/>
 						<xs:enumeration value="Crunch"/>
 						<xs:enumeration value="Custom"/>
 						<xs:enumeration value="Custom A"/>
@@ -3235,6 +3257,7 @@
 						<xs:enumeration value="Foot Volume"/>
 						<xs:enumeration value="Full Range"/>
 						<xs:enumeration value="Fuzz"/>
+						<xs:enumeration value="Fuzz Rock"/>
 						<xs:enumeration value="G (Em)"/>
 						<xs:enumeration value="GEQ:"/>
 						<xs:enumeration value="GS:"/>
@@ -3263,6 +3286,7 @@
 						<xs:enumeration value="JC-120"/>
 						<xs:enumeration value="JC-120 RETURN"/>
 						<xs:enumeration value="JC-120 return"/>
+						<xs:enumeration value="Jazz"/>
 						<xs:enumeration value="Knob Setting"/>
 						<xs:enumeration value="LCD Contrast"/>
 						<xs:enumeration value="LED On/Off"/>
@@ -3278,6 +3302,7 @@
 						<xs:enumeration value="Light"/>
 						<xs:enumeration value="Line/Phones"/>
 						<xs:enumeration value="Linear"/>
+						<xs:enumeration value="LiverPool"/>
 						<xs:enumeration value="Low"/>
 						<xs:enumeration value="METAL-1"/>
 						<xs:enumeration value="METAL-2"/>
@@ -3305,6 +3330,7 @@
 						<xs:enumeration value="Model ID"/>
 						<xs:enumeration value="Model ID LSB"/>
 						<xs:enumeration value="Model ID MSB3"/>
+						<xs:enumeration value="Modern Metal"/>
 						<xs:enumeration value="Modern Stack"/>
 						<xs:enumeration value="Modulate"/>
 						<xs:enumeration value="Moment"/>
@@ -3322,6 +3348,7 @@
 						<xs:enumeration value="OD-1"/>
 						<xs:enumeration value="OD-2"/>
 						<xs:enumeration value="OD/DS"/>
+						<xs:enumeration value="OD/DS Customise"/>
 						<xs:enumeration value="OD/DS Solo"/>
 						<xs:enumeration value="ODDS:"/>
 						<xs:enumeration value="OFF"/>
@@ -3555,6 +3582,7 @@
 						<xs:enumeration value="Pan"/>
 						<xs:enumeration value="Patch"/>
 						<xs:enumeration value="Patch Change"/>
+						<xs:enumeration value="Patch Create"/>
 						<xs:enumeration value="Patch Edit"/>
 						<xs:enumeration value="Patch Level"/>
 						<xs:enumeration value="Pedal Bend"/>
@@ -3571,6 +3599,8 @@
 						<xs:enumeration value="Preamp"/>
 						<xs:enumeration value="Pro Crunch"/>
 						<xs:enumeration value="Programmable"/>
+						<xs:enumeration value="Progressive"/>
+						<xs:enumeration value="Punk Pop"/>
 						<xs:enumeration value="R-Fier Modern"/>
 						<xs:enumeration value="R-Fier Vintage"/>
 						<xs:enumeration value="RM:"/>
@@ -3606,6 +3636,7 @@
 						<xs:enumeration value="Single"/>
 						<xs:enumeration value="Slow Rise"/>
 						<xs:enumeration value="Small Amp"/>
+						<xs:enumeration value="Soul Funk"/>
 						<xs:enumeration value="Speaker A"/>
 						<xs:enumeration value="Speaker B"/>
 						<xs:enumeration value="Spring"/>
@@ -3617,6 +3648,7 @@
 						<xs:enumeration value="Stereo 1"/>
 						<xs:enumeration value="Stereo 2"/>
 						<xs:enumeration value="Stereo Comp"/>
+						<xs:enumeration value="Studio"/>
 						<xs:enumeration value="Sub CTL 1 PDL"/>
 						<xs:enumeration value="Sub CTL 2 PDL"/>
 						<xs:enumeration value="Sub CTL1 Pedal"/>
@@ -3625,6 +3657,7 @@
 						<xs:enumeration value="Sub CTRL2 Pedal"/>
 						<xs:enumeration value="Sub EXP PDL"/>
 						<xs:enumeration value="Sub EXP Pedal"/>
+						<xs:enumeration value="Surf Rock"/>
 						<xs:enumeration value="System"/>
 						<xs:enumeration value="System 1"/>
 						<xs:enumeration value="System 2"/>
@@ -3866,6 +3899,7 @@
 						<xs:enumeration value="Warm OD"/>
 						<xs:enumeration value="Warp"/>
 						<xs:enumeration value="Wave PEDAL"/>
+						<xs:enumeration value="West Coast"/>
 						<xs:enumeration value="closed        "/>
 						<xs:enumeration value="dB"/>
 						<xs:enumeration value="disable"/>
@@ -4222,12 +4256,15 @@
 						<xs:enumeration value="Divider"/>
 						<xs:enumeration value="Divider dynamic A"/>
 						<xs:enumeration value="Divider dynamic B"/>
+						<xs:enumeration value="EQ"/>
 						<xs:enumeration value="EQ H mid"/>
 						<xs:enumeration value="EQ Hi cut"/>
 						<xs:enumeration value="EQ L mid"/>
 						<xs:enumeration value="EQ high"/>
 						<xs:enumeration value="EQ lo cut"/>
 						<xs:enumeration value="EQ low"/>
+						<xs:enumeration value="EXP PDL SW"/>
+						<xs:enumeration value="EZ-Edit"/>
 						<xs:enumeration value="Equalizer"/>
 						<xs:enumeration value="FX"/>
 						<xs:enumeration value="FX-1"/>
@@ -4320,6 +4357,7 @@
 						<xs:enumeration value="ACL: Twist"/>
 						<xs:enumeration value="ACL: Warp"/>
 						<xs:enumeration value="ACS:"/>
+						<xs:enumeration value="ASL:"/>
 						<xs:enumeration value="AW:"/>
 						<xs:enumeration value="Accel/CTRL:"/>
 						<xs:enumeration value="Amp Control"/>
@@ -4373,6 +4411,7 @@
 						<xs:enumeration value="EQ lo cut"/>
 						<xs:enumeration value="EQ low"/>
 						<xs:enumeration value="EQ:"/>
+						<xs:enumeration value="EXP PDL SW:"/>
 						<xs:enumeration value="EXP Sw:"/>
 						<xs:enumeration value="Exp1 Switch:"/>
 						<xs:enumeration value="FL:"/>
@@ -4511,6 +4550,8 @@
 						<xs:enumeration value="WAH:"/>
 						<xs:enumeration value="WSY:"/>
 						<xs:enumeration value="assign"/>
+						<xs:enumeration value="page select"/>
+						<xs:enumeration value="patch create"/>
 						<xs:enumeration value="pre Delay"/>
 					</xs:restriction>
 				</xs:simpleType>
@@ -4538,11 +4579,12 @@
 						<xs:enumeration value="Attack"/>
 						<xs:enumeration value="B"/>
 						<xs:enumeration value="B-FLAT"/>
-						<xs:enumeration value="BPM Master"/>
+						<xs:enumeration value="BPM/Tempo"/>
 						<xs:enumeration value="Balance"/>
 						<xs:enumeration value="Band"/>
 						<xs:enumeration value="Bank Down"/>
 						<xs:enumeration value="Bank Up"/>
+						<xs:enumeration value="Basic Tone"/>
 						<xs:enumeration value="Bass"/>
 						<xs:enumeration value="Body"/>
 						<xs:enumeration value="Bottom"/>
@@ -4618,17 +4660,15 @@
 						<xs:enumeration value="Low Cut"/>
 						<xs:enumeration value="Manual"/>
 						<xs:enumeration value="Master Beat"/>
-						<xs:enumeration value="Master High"/>
 						<xs:enumeration value="Master Key"/>
-						<xs:enumeration value="Master Low"/>
-						<xs:enumeration value="Master Mid Frequency"/>
-						<xs:enumeration value="Master Mid Gain"/>
-						<xs:enumeration value="Master Mid Q"/>
 						<xs:enumeration value="Max"/>
 						<xs:enumeration value="Mic Dis."/>
 						<xs:enumeration value="Mic Level"/>
 						<xs:enumeration value="Mic Pos."/>
 						<xs:enumeration value="Mic Type"/>
+						<xs:enumeration value="Mid Freq"/>
+						<xs:enumeration value="Mid Gain"/>
+						<xs:enumeration value="Mid Q"/>
 						<xs:enumeration value="Mid.Freq"/>
 						<xs:enumeration value="Middle"/>
 						<xs:enumeration value="Min"/>
@@ -4675,6 +4715,7 @@
 						<xs:enumeration value="Reverb Time"/>
 						<xs:enumeration value="Ring Level"/>
 						<xs:enumeration value="Rise Time"/>
+						<xs:enumeration value="SELECT"/>
 						<xs:enumeration value="Send Level"/>
 						<xs:enumeration value="Sens"/>
 						<xs:enumeration value="Separ"/>
@@ -4722,6 +4763,10 @@
 						<xs:enumeration value="dynamic A"/>
 						<xs:enumeration value="dynamic B"/>
 						<xs:enumeration value="harmony"/>
+						<xs:enumeration value="high freq"/>
+						<xs:enumeration value="low freq"/>
+						<xs:enumeration value="mid freq"/>
+						<xs:enumeration value="phrase"/>
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:attribute>
@@ -4742,11 +4787,14 @@
 						<xs:enumeration value="GT-6B_to_GT-10B"/>
 						<xs:enumeration value="GT-8_toGT-10"/>
 						<xs:enumeration value="GT-8_to_GT-10"/>
+						<xs:enumeration value="GT10B_to_GT-100"/>
 						<xs:enumeration value="Laser Beam"/>
 						<xs:enumeration value="Ring Mod"/>
 						<xs:enumeration value="S-Bend"/>
 						<xs:enumeration value="Twist"/>
 						<xs:enumeration value="Warp"/>
+						<xs:enumeration value="page select"/>
+						<xs:enumeration value="patch create"/>
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:attribute>

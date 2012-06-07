@@ -357,7 +357,7 @@ QByteArray MidiTable::getArrayValue(QString root, QString hex1, QString hex2, QS
 
     QByteArray value;
     unsigned int n = valueStr.mid(0,2).toInt(&ok, 16);
-    if(hex4.size()>1)
+    if(valueStr.size()>2)
         {
         unsigned int b= valueStr.mid(2,2).toInt(&ok, 16);
             value[0] = ((char)n);

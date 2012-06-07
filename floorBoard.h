@@ -90,6 +90,8 @@ signals:
     void eq_buttonSignal(bool value);
     void pedal_buttonSignal(bool value);
     void master_buttonSignal(bool value);
+    void chain_buttonSignal(bool value);
+    void ez_edit_buttonSignal(bool value);
     void system_buttonSignal(bool value);
     void midi_buttonSignal(bool value);
     void assign1_buttonSignal(bool value);

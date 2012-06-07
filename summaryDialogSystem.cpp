@@ -212,7 +212,11 @@ summaryDialogSystem::summaryDialogSystem(QWidget *parent)
     setLayout(mainLayout);
 
     setWindowTitle(deviceType + tr(" System and Global List Summary"));
-};
+}
+
+summaryDialogSystem::~summaryDialogSystem()
+{
+}
 
 void summaryDialogSystem::systemReply(QString replyMsg)
 {
@@ -325,7 +329,7 @@ void summaryDialogSystem::systemReply(QString replyMsg)
         };
     };
     emit setStatusMessage(tr("Ready"));
-};
+}
 
 void summaryDialogSystem::cancel()
 {
@@ -336,7 +340,7 @@ void summaryDialogSystem::cancel()
     emit setStatusSymbol(1);
     emit setStatusMessage(tr("Ready"));
     this->close();
-};
+}
 
 void summaryDialogSystem::printFile()
 {
@@ -349,7 +353,7 @@ void summaryDialogSystem::printFile()
     if (dialog->exec() != QDialog::Accepted) { return; }
     else { textDialog->print(&printer); };
 #endif
-};
+}
 
 void summaryDialogSystem::saveAs()
 {
@@ -394,7 +398,7 @@ void summaryDialogSystem::saveAs()
         };
 
     };
-};
+}
 
 void summaryDialogSystem::makeList()
 {
@@ -422,7 +426,7 @@ void summaryDialogSystem::makeList()
             text.append(midiTable->getValue("System", address1, address2, pos, valueHex) );
         };
     };
-};
+}
 
 void summaryDialogSystem::makeMidiMapList()
 {
@@ -454,7 +458,7 @@ void summaryDialogSystem::makeMidiMapList()
         };
         ++i;
     };
-};
+}
 
 
 

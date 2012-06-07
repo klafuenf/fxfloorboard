@@ -441,7 +441,7 @@ summaryDialog::summaryDialog(QWidget *parent)
     setLayout(mainLayout);
 
     setWindowTitle(tr("GT-100 Patch Summary of ")+ patchName);
-};
+}
 
 void summaryDialog::makeList()
 {
@@ -501,12 +501,12 @@ void summaryDialog::makeList()
             {this->filter = midiTable->getMidiMap("Structure", address, "00", pos, valueHex).desc;};
         };
     };
-};
+}
 
 summaryDialog::~summaryDialog()
 {
     this->deleteLater();
-};
+}
 
 void summaryDialog::view()
 {
@@ -520,12 +520,12 @@ void summaryDialog::view()
         textDialog->setText(small_text);
         this->mode = "Compact";
     };
-};
+}
 
 void summaryDialog::cancel()
 {
     this->close();
-};
+}
 
 void summaryDialog::printFile()
 {
@@ -538,7 +538,7 @@ void summaryDialog::printFile()
     if (dialog->exec() != QDialog::Accepted) { return; }
     else { textDialog->print(&printer); };
 #endif
-};
+}
 
 void summaryDialog::printPreview()
 {
@@ -551,7 +551,7 @@ void summaryDialog::printPreview()
     if (dialog->exec() != QDialog::Accepted) { return; }
     else { textDialog->print(&printer); };
 #endif
-};
+}
 
 void summaryDialog::saveAs()
 {
@@ -596,4 +596,4 @@ void summaryDialog::saveAs()
         };
 
     };
-};
+}

@@ -137,7 +137,7 @@ void mainWindow::createActions()
     openAct->setWhatsThis(tr("Open an existing file"));
     connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
 
-    saveAct = new QAction(QIcon(":/images/filesave.png"), tr("&Save Patch...       (*.syx)"), this);
+    saveAct = new QAction(QIcon(":/images/filesave.png"), tr("&Save currently open Patch file...       (*.gcl *.mid *.syx)"), this);
     saveAct->setShortcut(tr("Ctrl+S"));
     saveAct->setStatusTip(tr("Save the document to disk"));
     saveAct->setWhatsThis(tr("Save the document to disk"));
@@ -246,6 +246,7 @@ void mainWindow::createMenus()
     //QMenu *fileMenu = new QMenu(tr("&File"));
     fileMenu->addAction(openAct);
     fileMenu->addSeparator();
+    fileMenu->addAction(saveAct);
     fileMenu->addAction(saveGCLAct);
     fileMenu->addAction(saveAsAct);
     fileMenu->addAction(exportSMFAct);
@@ -333,26 +334,32 @@ void mainWindow::open()
 
 void mainWindow::save()
 {
-    Preferences *preferences = Preferences::Instance();
-    QString dir = preferences->getPreferences("General", "Files", "dir");
-
-    SysxIO *sysxIO = SysxIO::Instance();
-    file.setFile(sysxIO->getFileName());
-
-    if(file.getFileName().isEmpty())
+    if(reg == true)
     {
-        QString fileName = QFileDialog::getSaveFileName(
-                    this,
-                    tr("Save As"),
-                    dir,
-                    tr("System Exclusive (*.syx)"));
-        if (!fileName.isEmpty())
+        Preferences *preferences = Preferences::Instance();
+        QString dir = preferences->getPreferences("General", "Files", "dir");
+
+        SysxIO *sysxIO = SysxIO::Instance();
+        file.setFile(sysxIO->getFileName());
+
+        if(file.getFileName().isEmpty() || file.getFileName().contains("system_syx"))
         {
-            if(!fileName.contains(".syx"))
+            QString fileName = QFileDialog::getSaveFileName(
+                        this,
+                        tr("Save As"),
+                        dir,
+                        tr(" (*.gcl *.mid *.syx)"));
+            if (!fileName.isEmpty())
             {
-                fileName.append(".syx");
+                if(!fileName.contains(".syx") && !fileName.contains(".mid") && !fileName.contains(".gcl"))
+                {
+                    fileName.append(".gcl");
+                };
+
             };
-            file.writeFile(fileName);
+            if(fileName.contains(".syx"))      { file.writeFile(fileName); }
+            else if(fileName.contains(".mid")) { file.writeSMF(fileName); }
+            else if(fileName.contains(".gcl")) {file.writeGCL(fileName); };
 
             file.setFile(fileName);
             if(file.readFile())
@@ -363,11 +370,13 @@ void mainWindow::save()
                 sysxIO->setFileSource(area, file.getFileSource());
                 emit updateSignal();
             };
+        }
+        else
+        {
+            if(file.getFileName().contains(".syx"))      { file.writeFile(file.getFileName()); }
+            else if(file.getFileName().contains(".mid")) { file.writeSMF(file.getFileName()); }
+            else if(file.getFileName().contains(".gcl")) {file.writeGCL(file.getFileName()); };
         };
-    }
-    else
-    {
-        file.writeFile(file.getFileName());
     };
 }
 
@@ -387,7 +396,7 @@ void mainWindow::saveAs()
         {
             if(!fileName.contains(".syx"))
             {
-                fileName.append(".syx");
+                fileName.append(".gcl");
             };
             file.writeFile(fileName);
 

@@ -72,6 +72,10 @@ fileDialog::fileDialog(QString fileName, QList<QString> patchList, QByteArray fi
     setWindowTitle(tr("Bulk File Patch Extraction"));
 }
 
+fileDialog::~fileDialog()
+{
+}
+
 void fileDialog::valueChanged(int value)
 {
     SysxIO *sysxIO = SysxIO::Instance();
@@ -166,7 +170,7 @@ void fileDialog::highlighted(int value)
      sysxIO->writeToBuffer();
      // QApplication::beep();
      }; */
- };
+    };
 }
 
 

@@ -28,25 +28,26 @@ stompbox_usb::stompbox_usb(QWidget *parent)
     /* USB */
     this->setImage(":/images/usb.png");
     setLSB("void", "void");
-    //setComboBox("06", "00", "50", QRect(8, 78, 79, 13));
-    //editDetails()->patchPos(100, 3, "06", "50");
     setEditPages();
-};
+}
 
 void stompbox_usb::updateSignal()
 {
-    //updateComboBox("06", "00", "50");
-};
+
+}
 
 void stompbox_usb::setEditPages()
 {
 
 
-    editDetails()->page()->newGroupBox(tr("USB"));
-    //editDetails()->page()->addComboBox(0, 0, 1, 1, "06", "00", "50"); //mix mode
-    //editDetails()->page()->addKnob(0, 1, 1, 1, "06", "00", "51");   // balance
-    //editDetails()->page()->addKnob(0, 2, 1, 1, "06", "00", "52");   // spread
+    editDetails()->page()->newGroupBox(tr("USB-System - Note* Changes are automatically written to system settings"));
+    editDetails()->page()->addComboBox(0, 0, 1, 1, "00", "00", "50", "System"); //usb I/O mode
+    editDetails()->page()->addLabel(0, 1, 1, 1, "     ");
+    editDetails()->page()->addComboBox(0, 2, 1, 1, "00", "00", "55", "System"); //usb monitor cmd
+    editDetails()->page()->addKnob(0, 3, 1, 1, "00", "00", "51", "System"); //usb input level
+    editDetails()->page()->addKnob(0, 4, 1, 1, "00", "00", "52", "System"); //usb mix level
+    editDetails()->page()->addKnob(0, 5, 1, 1, "00", "00", "53", "System"); //usb mix level
     editDetails()->page()->addGroupBox(0, 0, 1, 1);
 
     editDetails()->addPage();
-};
+}

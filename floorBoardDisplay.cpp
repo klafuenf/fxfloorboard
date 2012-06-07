@@ -52,6 +52,9 @@ floorBoardDisplay::floorBoardDisplay(QWidget *parent, QPoint pos)
     this->patchLoadError = false;
     this->blinkCount = 0;
 
+    this->autosyncTimer = new QTimer(this);
+    connect(autosyncTimer, SIGNAL(timeout()), this, SLOT(autosync()));
+
     int patchDisplayRowOffset = 5;
     int editButtonRowOffset = 60;
     int editButtonRowOffset2 = 95;
@@ -99,7 +102,7 @@ floorBoardDisplay::floorBoardDisplay(QWidget *parent, QPoint pos)
 
     Preferences *preferences = Preferences::Instance();
     QString version = preferences->getPreferences("General", "Application", "version");
-    this->patchDisplay->setMainText(deviceType + tr(" Fx FloorBoard"));
+    this->patchDisplay->setMainText(tr("GT-100FxFloorBoard"));
     this->patchDisplay->setSubText(tr("version"), version);
 
     initPatch = new initPatchListMenu(QRect(390, patchDisplayRowOffset+19, 168, 15), this);
@@ -108,16 +111,19 @@ floorBoardDisplay::floorBoardDisplay(QWidget *parent, QPoint pos)
     nameEdit->setGeometry(70, patchDisplayRowOffset, 150, 34);
     nameEdit->setWhatsThis(tr("Clicking on this will open<br>a text dialog window<br>allowing user text input."));
     customRenameWidget *userDialog = new customRenameWidget(this, "0A", "00", "40", "Structure", "20");
-    userDialog->setGeometry(570, patchDisplayRowOffset, 262, 25);
+    userDialog->setGeometry(670, patchDisplayRowOffset, 262, 25);
     userDialog->setWhatsThis(tr("Clicking on this will open<br>a text dialog window<br>allowing user text input."));
     customRenameWidget *patchDialog = new customRenameWidget(this, "0B", "00", "00", "Structure", "80");
     patchDialog->setGeometry(10, bottomOffset, 1100, 25);
     patchDialog->setWhatsThis(tr("Clicking on this will open<br>a text dialog window<br>allowing user text input."));
     this->output = new customControlListMenu(this, "00", "00", "10", "right");
-    output->setGeometry(845, patchDisplayRowOffset, 162, 30);
+    output->setGeometry(945, patchDisplayRowOffset, 162, 30);
     output->setWhatsThis(tr("This is the Patch Mode setting of Output Select<br>this is only active if the SYSTEM setting<br>is set to Patch Mode."));
     //this->catagory = new customControlListMenu(this, "00", "00", "10", "right");
     //catagory->setGeometry(845, patchDisplayRowOffset+19, 280, 30);
+
+    this->autoButton = new customButton(tr("Auto Sync"), false, QPoint(570, patchDisplayRowOffset), this, ":/images/greenledbutton.png");
+    this->autoButton->setWhatsThis(tr("Auto refresh<br>used to automatically update editor settings changes made on the GR-55"));
 
     this->connectButton = new customButton(tr("Connect"), false, QPoint(387, patchDisplayRowOffset), this, ":/images/greenledbutton.png");
     this->connectButton->setWhatsThis(tr("Connect Button<br>used to establish a continuous midi connection<br>when lit green, the connection is valid"));
@@ -129,6 +135,10 @@ floorBoardDisplay::floorBoardDisplay(QWidget *parent, QPoint pos)
     this->system_Button->setWhatsThis(tr("Deep editing of the selected effect<br>pressing this button will open an edit page<br>allowing detailed setting of this effects parameters."));
     this->master_Button = new customPanelButton(tr("MASTER"), false, QPoint(horizontalOffset + 700, editButtonRowOffset2), this, ":/images/switch.png");
     this->master_Button->setWhatsThis(tr("Deep editing of the selected effect<br>pressing this button will open an edit page<br>allowing detailed setting of this effects parameters."));
+    this->chain_Button = new customPanelButton(tr("CHAIN"), false, QPoint(horizontalOffset + 770, editButtonRowOffset), this, ":/images/switch.png");
+    this->chain_Button->setWhatsThis(tr("Deep editing of the selected effect<br>pressing this button will open an edit page<br>allowing detailed setting of this effects parameters."));
+    this->ez_edit_Button = new customPanelButton(tr("EZ-EDIT"), false, QPoint(horizontalOffset + 770, editButtonRowOffset2), this, ":/images/switch.png");
+    this->ez_edit_Button->setWhatsThis(tr("Deep editing of the selected effect<br>pressing this button will open an edit page<br>allowing detailed setting of this effects parameters."));
 
     this->ch_mode_Button = new customPanelButton(tr("DIVIDE"), false, QPoint(horizontalOffset + 40, editButtonRowOffset), this, ":/images/switch.png");
     this->ch_mode_Button->setWhatsThis(tr("Deep editing of the selected effect<br>pressing this button will open an edit page<br>allowing detailed setting of this effects parameters."));
@@ -226,6 +236,7 @@ floorBoardDisplay::floorBoardDisplay(QWidget *parent, QPoint pos)
 
     QObject::connect(this->connectButton, SIGNAL(valueChanged(bool)), this, SLOT(connectSignal(bool)));
     QObject::connect(this->writeButton, SIGNAL(valueChanged(bool)), this, SLOT(writeSignal(bool)));
+    QObject::connect(this->autoButton, SIGNAL(valueChanged(bool)), this, SLOT(autosyncSignal(bool)));
 
     QObject::connect(this->ch_mode_Button, SIGNAL(valueChanged(bool)), this->parent(), SIGNAL(ch_mode_buttonSignal(bool)));
     QObject::connect(this->channel_Mix_Button, SIGNAL(valueChanged(bool)), this->parent(), SIGNAL(channel_Mix_buttonSignal(bool)));
@@ -249,6 +260,8 @@ floorBoardDisplay::floorBoardDisplay(QWidget *parent, QPoint pos)
     QObject::connect(this->eq_Button, SIGNAL(valueChanged(bool)), this->parent(), SIGNAL(eq_buttonSignal(bool)));
     QObject::connect(this->pedal_Button, SIGNAL(valueChanged(bool)), this->parent(), SIGNAL(pedal_buttonSignal(bool)));
     QObject::connect(this->master_Button, SIGNAL(valueChanged(bool)), this->parent(), SIGNAL(master_buttonSignal(bool)));
+    QObject::connect(this->chain_Button, SIGNAL(valueChanged(bool)), this->parent(), SIGNAL(chain_buttonSignal(bool)));
+    QObject::connect(this->ez_edit_Button, SIGNAL(valueChanged(bool)), this->parent(), SIGNAL(ez_edit_buttonSignal(bool)));
     QObject::connect(this->system_Button, SIGNAL(valueChanged(bool)), this->parent(), SIGNAL(system_buttonSignal(bool)));
     QObject::connect(this->midi_Button, SIGNAL(valueChanged(bool)), this->parent(), SIGNAL(midi_buttonSignal(bool)));
     QObject::connect(this->assign1_Button, SIGNAL(valueChanged(bool)), this->parent(), SIGNAL(assign1_buttonSignal(bool)));
@@ -314,7 +327,7 @@ floorBoardDisplay::floorBoardDisplay(QWidget *parent, QPoint pos)
     {autoconnect(); } else {
         QMessageBox *msgBox = new QMessageBox();
         msgBox->isTopLevel();
-        msgBox->setWindowTitle(deviceType + tr(" FloorBoard"));
+        msgBox->setWindowTitle(tr("GT-100FxFloorBoard"));
         msgBox->setIcon(QMessageBox::Warning);
         msgBox->setTextFormat(Qt::RichText);
         QString msgText;
@@ -368,7 +381,7 @@ void floorBoardDisplay::setPatchDisplay(QString patchName)
             if(this->patchLoadError)
             {
                 QMessageBox *msgBox = new QMessageBox();
-                msgBox->setWindowTitle(deviceType + tr(" Fx FloorBoard"));
+                msgBox->setWindowTitle(tr("GT-100FxFloorBoard"));
                 msgBox->setIcon(QMessageBox::Warning);
                 msgBox->setTextFormat(Qt::RichText);
                 QString msgText;
@@ -443,7 +456,7 @@ void floorBoardDisplay::setPatchNumDisplay(int bank, int patch)
         QString str = tr("Buffer");
         this->patchNumDisplay->setMainText(str, Qt::AlignCenter);
     };
-};
+}
 
 void floorBoardDisplay::updateDisplay()
 {
@@ -489,7 +502,7 @@ void floorBoardDisplay::updateDisplay()
         if(sysxIO->getBank() > 50)
         {
             this->writeButton->setBlink(false);
-            this->writeButton->setValue(true);
+            this->writeButton->setValue(false);
         }
         else
         {
@@ -519,13 +532,13 @@ void floorBoardDisplay::updateDisplay()
     };
     int index = sysxIO->getSourceValue("Structure", "00", "00", "10");
     this->output->controlListComboBox->setCurrentIndex(index);
-   // index = sysxIO->getSourceValue("Structure", "00", "00", "10");
+    // index = sysxIO->getSourceValue("Structure", "00", "00", "10");
     //this->catagory->controlListComboBox->setCurrentIndex(index);
-};
+}
 
 void floorBoardDisplay::autoconnect()
 {
-    QString replyMsg;
+    QString sysxMsg;
     SysxIO *sysxIO = SysxIO::Instance();
     //this->connectButtonActive = value;
     if(!sysxIO->isConnected() && sysxIO->deviceReady())
@@ -731,7 +744,7 @@ void floorBoardDisplay::set_temp()
         this->temp5Display->setMainText(patchText, Qt::AlignCenter);
         sysxIO->temp5_sysxMsg = sysxBuffer;
     };
-};
+}
 
 void floorBoardDisplay::temp1_copy(bool value)
 {
@@ -770,7 +783,7 @@ void floorBoardDisplay::temp1_copy(bool value)
         QString size = QString::number(sysxMsg.size()/2, 10);
         sysxIO->emitStatusdBugMessage(tr("in-consistant patch data detected ") + size + tr("bytes: re-save or re-load file to correct"));
     };
-};
+}
 
 void floorBoardDisplay::temp1_paste(bool value)
 {
@@ -788,7 +801,7 @@ void floorBoardDisplay::temp1_paste(bool value)
         QApplication::beep();
         sysxIO->emitStatusdBugMessage(tr("patch must be copied to clipboard first"));
     };
-};
+}
 
 void floorBoardDisplay::temp2_copy(bool value)
 {
@@ -827,7 +840,7 @@ void floorBoardDisplay::temp2_copy(bool value)
         QString size = QString::number(sysxMsg.size()/2, 10);
         sysxIO->emitStatusdBugMessage(tr("in-consistant patch data detected ") + size + tr("bytes: re-save or re-load file to correct"));
     };
-};
+}
 
 void floorBoardDisplay::temp2_paste(bool value)
 {
@@ -844,7 +857,7 @@ void floorBoardDisplay::temp2_paste(bool value)
         QApplication::beep();
         sysxIO->emitStatusdBugMessage(tr("patch must be copied to clipboard first"));
     };
-};
+}
 
 void floorBoardDisplay::temp3_copy(bool value)
 {
@@ -883,7 +896,7 @@ void floorBoardDisplay::temp3_copy(bool value)
         QString size = QString::number(sysxMsg.size()/2, 10);
         sysxIO->emitStatusdBugMessage(tr("in-consistant patch data detected ") + size + tr("bytes: re-save or re-load file to correct"));
     };
-};
+}
 
 void floorBoardDisplay::temp3_paste(bool value)
 {
@@ -900,7 +913,7 @@ void floorBoardDisplay::temp3_paste(bool value)
         QApplication::beep();
         sysxIO->emitStatusdBugMessage(tr("patch must be copied to clipboard first"));
     };
-};
+}
 
 void floorBoardDisplay::temp4_copy(bool value)
 {
@@ -939,7 +952,7 @@ void floorBoardDisplay::temp4_copy(bool value)
         QString size = QString::number(sysxMsg.size()/2, 10);
         sysxIO->emitStatusdBugMessage(tr("in-consistant patch data detected ") + size + tr("bytes: re-save or re-load file to correct"));
     };
-};
+}
 
 void floorBoardDisplay::temp4_paste(bool value)
 {
@@ -956,7 +969,7 @@ void floorBoardDisplay::temp4_paste(bool value)
         QApplication::beep();
         sysxIO->emitStatusdBugMessage(tr("patch must be copied to clipboard first"));
     };
-};
+}
 
 void floorBoardDisplay::temp5_copy(bool value)
 {
@@ -995,7 +1008,7 @@ void floorBoardDisplay::temp5_copy(bool value)
         QString size = QString::number(sysxMsg.size()/2, 10);
         sysxIO->emitStatusdBugMessage(tr("in-consistant patch data detected ") + size + tr("bytes: re-save or re-load file to correct"));
     };
-};
+}
 
 void floorBoardDisplay::temp5_paste(bool value)
 {
@@ -1012,7 +1025,7 @@ void floorBoardDisplay::temp5_paste(bool value)
         QApplication::beep();
         sysxIO->emitStatusdBugMessage(tr("patch must be copied to clipboard first"));
     };
-};
+}
 
 void floorBoardDisplay::save_temp(QString fileName, QString sysxMsg)
 {
@@ -1034,11 +1047,11 @@ void floorBoardDisplay::save_temp(QString fileName, QString sysxMsg)
         };
         file.write(out);
     };
-};
+}
 
 void floorBoardDisplay::connectSignal(bool value)
 {
-    QString replyMsg;
+    QString sysxMsg;
     SysxIO *sysxIO = SysxIO::Instance();
     this->connectButtonActive = value;
     if(connectButtonActive == true && sysxIO->deviceReady())
@@ -1109,12 +1122,12 @@ void floorBoardDisplay::connectionResult(QString sysxMsg)
             sysxIO->setConnected(false);
 
             QMessageBox *msgBox = new QMessageBox();
-            msgBox->setWindowTitle(deviceType + tr(" Fx FloorBoard connection Error !!"));
+            msgBox->setWindowTitle(tr("GT-100FxFloorBoard connection Error !!"));
             msgBox->setIcon(QMessageBox::Warning);
             msgBox->setTextFormat(Qt::RichText);
             QString msgText;
             msgText.append("<font size='+1'><b>");
-            msgText.append(tr("The device connected is not a Boss ") + deviceType + tr(" Effects Processor."));
+            msgText.append(tr("The device connected is not a Boss GT-100 Effects Processor."));
             if (sysxMsg.contains(idRequestString))
             {msgText.append(tr("<br>Midi loopback detected, ensure midi device 'thru' is switched off.")); };
             msgText.append("<b></font>");
@@ -1135,15 +1148,14 @@ void floorBoardDisplay::connectionResult(QString sysxMsg)
             sysxIO->setConnected(false);
 
             QMessageBox *msgBox = new QMessageBox();
-            msgBox->setWindowTitle(deviceType + tr(" Fx FloorBoard connection Error !!"));
+            msgBox->setWindowTitle(tr("GT-100FxFloorBoard connection Error !!"));
             msgBox->setIcon(QMessageBox::Warning);
             msgBox->setTextFormat(Qt::RichText);
             QString msgText;
             msgText.append("<font size='+1'><b>");
-            msgText.append(tr("The Boss ") + deviceType + tr(" Effects Processor was not found."));
+            msgText.append(tr("The Boss GT-100 Effects Processor was not found."));
             msgText.append(tr("<br><br>Ensure correct midi device is selected in Menu, "));
             msgText.append(tr("<br>Boss drivers are installed and the GT-100 is switched on,"));
-            msgText.append(tr("<br>and GT-100 USB driver mode is set to advanced"));
             msgText.append("<b></font><br>");
             msgBox->setText(msgText);
             msgBox->setStandardButtons(QMessageBox::Ok);
@@ -1182,7 +1194,7 @@ void floorBoardDisplay::writeSignal(bool)
                 if((sysxIO->getBank() > bankTotalUser && sysxIO->getBank() <= bankTotalAll) || (sysxIO->getBank() == 105)) // Preset banks are NOT writable so we check.
                 {
                     QMessageBox *msgBox = new QMessageBox();
-                    msgBox->setWindowTitle(deviceType + tr(" Fx FloorBoard"));
+                    msgBox->setWindowTitle(tr("GT-100FxFloorBoard"));
                     msgBox->setIcon(QMessageBox::Warning);
                     msgBox->setTextFormat(Qt::RichText);
                     QString msgText;
@@ -1209,7 +1221,7 @@ void floorBoardDisplay::writeSignal(bool)
                     patchNum.append(QString::number(patch, 10));
 
                     QMessageBox *msgBox = new QMessageBox();
-                    msgBox->setWindowTitle(deviceType + tr(" Fx FloorBoard"));
+                    msgBox->setWindowTitle(tr("GT-100FxFloorBoard"));
                     msgBox->setIcon(QMessageBox::Warning);
                     msgBox->setTextFormat(Qt::RichText);
                     QString msgText;
@@ -1236,19 +1248,19 @@ void floorBoardDisplay::writeSignal(bool)
                     {
                         sysxIO->setDeviceReady(true);
                         this->writeButton->setBlink(false);
-                        //this->writeButton->setValue(true);
+                        this->writeButton->setValue(false);
                     };
                 };
             };
         };
-    }
-};
+    };
+}
 
 void floorBoardDisplay::writeToBuffer()
 {
     SysxIO *sysxIO = SysxIO::Instance();
     QMessageBox *msgBox = new QMessageBox();
-    msgBox->setWindowTitle(deviceType + tr(" FloorBoard"));
+    msgBox->setWindowTitle(tr("GT-100FxFloorBoard"));
     msgBox->setIcon(QMessageBox::Warning);
     msgBox->setTextFormat(Qt::RichText);
     QString msgText;
@@ -1268,7 +1280,7 @@ void floorBoardDisplay::writeToBuffer()
 
     this->writeButton->setBlink(false);	// Sync so we stop blinking the button
     this->writeButton->setValue(false);	// and activate the write button.
-};
+}
 
 void floorBoardDisplay::writeToMemory()
 {
@@ -1276,7 +1288,6 @@ void floorBoardDisplay::writeToMemory()
 
     QString sysxMsg; bool ok;
     QList< QList<QString> > patchData = sysxIO->getFileSource().hex; // Get the loaded patch data.
-    QList<QString> patchAddress = sysxIO->getFileSource().address;
 
     emit setStatusSymbol(2);
     emit setStatusMessage(tr("Writing to Patch"));
@@ -1332,7 +1343,157 @@ void floorBoardDisplay::writeToMemory()
 
     QObject::connect(sysxIO, SIGNAL(sysxReply(QString)), this, SLOT(resetDevice(QString))); // Connect the result signal to a slot that will reset the device after sending.
     sysxIO->sendSysx(sysxMsg);								// Send the data.
-};
+}
+
+void floorBoardDisplay::autosyncSignal(bool value)
+{
+    SysxIO *sysxIO = SysxIO::Instance();
+    this->autosyncButtonActive = value;
+    if(autosyncButtonActive == true  && sysxIO->isConnected())
+    {
+        autosyncTimer->start(5000);
+        autosync();
+    }
+    else
+    {
+        autosyncTimer->stop();
+        this->autoButton->setBlink(false);
+        this->autoButton->setValue(false);
+        emit setStatusMessage(tr("Ready"));
+    };
+}
+
+void floorBoardDisplay::autosync()
+{
+    SysxIO *sysxIO = SysxIO::Instance();
+    if(autosyncButtonActive == true && sysxIO->deviceReady() && sysxIO->isConnected())
+    {
+
+        emit setStatusSymbol(2);
+        emit setStatusMessage(tr("Auto Sync"));
+
+        this->autoButton->setBlink(true);
+        sysxIO->setDeviceReady(false); // Reserve the device for interaction.
+
+        QObject::disconnect(sysxIO, SIGNAL(sysxReply(QString)));
+        QObject::connect(sysxIO, SIGNAL(sysxReply(QString)),
+                         this, SLOT(autosyncResult(QString)));
+
+        sysxIO->requestPatch(0, 0); // GT100 patch request from temorary buffer memory.
+
+    };
+}
+
+void floorBoardDisplay::autosyncResult(QString sysxMsg)
+{
+    SysxIO *sysxIO = SysxIO::Instance();
+    QObject::disconnect(sysxIO, SIGNAL(sysxReply(QString)),
+                        this, SLOT(autosyncResult(QString)));
+
+    sysxIO->setDeviceReady(true); // Free the device after finishing interaction.
+    this->autoButton->setBlink(false);
+    sysxMsg = sysxMsg.remove(" ").toUpper();       /* TRANSLATE SYSX MESSAGE FORMAT to 128 byte data blocks */
+    if (sysxMsg.size()/2 == patchReplySize){
+        QString header = "F0410000006012";
+        QString footer ="00F7";
+        QString addressMsb = sysxMsg.mid(14,4);
+        QString part1 = sysxMsg.mid(22, 256); //y
+        part1.prepend("0000").prepend(addressMsb).prepend(header).append(footer);
+        QString part2 = sysxMsg.mid(278, 228); //y
+        QString part2B = sysxMsg.mid(532, 28); //y
+        part2.prepend("0100").prepend(addressMsb).prepend(header).append(part2B).append(footer);
+        QString part3 = sysxMsg.mid(560, 256); //y
+        part3.prepend("0200").prepend(addressMsb).prepend(header).append(footer);
+        QString part4 = sysxMsg.mid(816, 200); //y
+        QString part4B = sysxMsg.mid(1042, 56); //y
+        part4.prepend("0300").prepend(addressMsb).prepend(header).append(part4B).append(footer);
+        QString part5 = sysxMsg.mid(1098, 256); //y
+        part5.prepend("0400").prepend(addressMsb).prepend(header).append(footer);
+        QString part6 = sysxMsg.mid(1354, 172); //y
+        QString part6B = sysxMsg.mid(1552, 84); //y
+        part6.prepend("0500").prepend(addressMsb).prepend(header).append(part6B).append(footer);
+        QString part7 = sysxMsg.mid(1636, 256); //y
+        part7.prepend("0600").prepend(addressMsb).prepend(header).append(footer);
+        QString part8 = sysxMsg.mid(1892, 144);  //y
+        QString part8B = sysxMsg.mid(2072, 16); //spacer
+        QString part8C = sysxMsg.mid(2062, 96); //y
+        part8.prepend("0700").prepend(addressMsb).prepend(header).append(part8B).append(part8C).append(footer);
+        QString part9 = sysxMsg.mid(2158, 256); //y
+        part9.prepend("0800").prepend(addressMsb).prepend(header).append(footer);
+        QString part10 = sysxMsg.mid(2414,132); //y
+        QString part10B = sysxMsg.mid(2072, 14); //spacer added twice
+        QString part10C = sysxMsg.mid(2572,96); //y
+        part10.prepend("0900").prepend(addressMsb).prepend(header).append(part10B).append(part10B).append(part10C).append(footer);
+        QString part11 = sysxMsg.mid(2668, 256); //y
+        part11.prepend("0A00").prepend(addressMsb).prepend(header).append(footer);
+        QString part12 = sysxMsg.mid(2924, 132); //y
+        QString part12B = sysxMsg.mid(3082, 124);//y
+        part12.prepend("0B00").prepend(addressMsb).prepend(header).append(part12B).append(footer);
+        QString part13 = sysxMsg.mid(3206, 256); //y
+        part13.prepend("0C00").prepend(addressMsb).prepend(header).append(footer);
+        QString part14 = sysxMsg.mid(3462, 104); //y
+        QString part14B = sysxMsg.mid(3592, 152);//y
+        part14.prepend("0D00").prepend(addressMsb).prepend(header).append(part14B).append(footer);
+        QString part15 = sysxMsg.mid(3744, 256); //y
+        part15.prepend("0E00").prepend(addressMsb).prepend(header).append(footer);
+        QString part16 = sysxMsg.mid(4000, 48); //y
+        part16.prepend("0F00").prepend(addressMsb).prepend(header).append(footer);
+
+        sysxMsg.clear();
+        sysxMsg.append(part1).append(part2).append(part3).append(part4).append(part5).append(part6)
+                .append(part7).append(part8).append(part9).append(part10).append(part11).append(part12)
+                .append(part13).append(part14).append(part15).append(part16);
+
+        QString reBuild = "";       /* Add correct checksum to patch strings */
+        QString sysxEOF = "";
+        QString hex = "";
+        int msgLength = sysxMsg.length()/2;
+        for(int i=0;i<msgLength*2;++i)
+        {
+            hex.append(sysxMsg.mid(i*2, 2));
+            sysxEOF = (sysxMsg.mid((i*2)+4, 2));
+            if (sysxEOF == "F7")
+            {
+                int dataSize = 0; bool ok;
+                for(int h=checksumOffset;h<hex.size()-1;++h)
+                { dataSize += hex.mid(h*2, 2).toInt(&ok, 16); };
+                QString base = "80";                       // checksum calculate.
+                unsigned int sum = dataSize % base.toInt(&ok, 16);
+                if(sum!=0) { sum = base.toInt(&ok, 16) - sum; };
+                QString checksum = QString::number(sum, 16).toUpper();
+                if(checksum.length()<2) {checksum.prepend("0");};
+                hex.append(checksum);
+                hex.append("F7");
+                reBuild.append(hex);
+
+                hex = "";
+                sysxEOF = "";
+                i=i+2;
+            };
+        };
+        sysxMsg = reBuild.simplified().toUpper().remove("0X").remove(" ");
+
+        QList< QList<QString> > patchData = sysxIO->getFileSource().hex; // Get the loaded patch data.
+        QString current_data;
+        for(int i=0;i<patchData.size();++i)
+        {
+            QList<QString> data = patchData.at(i);
+            for(int x=0;x<data.size();++x)
+            {
+                QString hex = data.at(x);
+                if (hex.length() < 2) hex.prepend("0");
+                current_data.append(hex);
+            };
+        };
+        if(sysxMsg != current_data)
+        {
+            sysxIO->setFileSource("Structure", sysxMsg);		// Set the source to the data received.
+            sysxIO->setDevice(true);				// Patch received from the device so this is set to true.
+            sysxIO->setSyncStatus(true);			// We can't be more in sync than right now! :)
+            emit updateSignal();
+        };
+    };
+}
 
 void floorBoardDisplay::patchChangeFailed()
 {
@@ -1342,7 +1503,7 @@ void floorBoardDisplay::patchChangeFailed()
     setPatchNumDisplay(sysxIO->getLoadedBank(), sysxIO->getLoadedPatch());
 }
 
-void floorBoardDisplay::resetDevice(QString replyMsg)
+void floorBoardDisplay::resetDevice(QString sysxMsg)
 {
     SysxIO *sysxIO = SysxIO::Instance();
     QObject::disconnect(sysxIO, SIGNAL(sysxReply(QString)),	this, SLOT(resetDevice(QString)));
@@ -1366,9 +1527,11 @@ void floorBoardDisplay::resetDevice(QString replyMsg)
     emit setStatusProgress(25);
     SLEEP(50);
     sysxIO->setDeviceReady(true);	// Free the device after finishing interaction.
+
+    sysxIO->requestPatchChange(sysxIO->getBank(), sysxIO->getPatch());
     emit connectedSignal();			// Emit this signal to tell we are still connected and to update the patch names in case they have changed.
     sysxIO->setDeviceReady(true);
-};
+}
 
 void floorBoardDisplay::patchSelectSignal(int bank, int patch)
 {
@@ -1452,6 +1615,9 @@ void floorBoardDisplay::notConnected()
     this->connectButton->setValue(false);
     this->writeButton->setBlink(false);
     this->writeButton->setValue(false);
+    this->autosyncTimer->stop();
+    this->autoButton->setBlink(false);
+    this->autoButton->setValue(false);
 
     SysxIO *sysxIO = SysxIO::Instance();
     sysxIO->setConnected(false);
@@ -1466,6 +1632,6 @@ void floorBoardDisplay::notConnected()
 void floorBoardDisplay::valueChanged(bool value, QString hex1, QString hex2, QString hex3)
 {
 
-};
+}
 
 

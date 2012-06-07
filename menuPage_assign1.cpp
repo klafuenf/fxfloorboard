@@ -29,12 +29,12 @@ menuPage_assign1::menuPage_assign1(QWidget *parent)
     setLSB("08", "30");
     editDetails()->patchPos(2374, 32, "08", "30");
     setEditPages();
-};
+}
 
 void menuPage_assign1::updateSignal()
 {
    updateSwitch("08", "00", "30");
-};
+}
 
 void menuPage_assign1::setEditPages()
 {
@@ -75,7 +75,7 @@ void menuPage_assign1::setEditPages()
     editDetails()->page()->addStackField();
     editDetails()->page()->newStackField(0);
     editDetails()->page()->newGroupBox("Assign 1 Wave Pedal");
-    editDetails()->page()->addKnob(1, 0, 1, 1, "08", "00", "3E", "normal","right", 105);// Wave Form Rate
+    editDetails()->page()->addKnob(1, 0, 1, 1, "08", "00", "3E", "normal","right", 120);// Wave Form Rate
     editDetails()->page()->addComboBox(1, 1, 1, 1, "08", "00", "3F");                    // Wave Form
     editDetails()->page()->addGroupBox(0, 0, 1, 1);
     editDetails()->page()->addStackField();
@@ -85,5 +85,45 @@ void menuPage_assign1::setEditPages()
     editDetails()->page()->addGroupBox(0, 0, 1, 1);
     editDetails()->page()->addStackField();
     editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
 
-};
+}

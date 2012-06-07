@@ -35,30 +35,31 @@ class QStackedWidget;
 
 class fileDialog : public QDialog
 {
-        Q_OBJECT
+    Q_OBJECT
 
 public:
-  fileDialog(QString fileName, QList<QString> patchList, QByteArray fileData, QByteArray default_data, QString type);
-  QLabel *patchLabel;
-  QLabel *nameLabel;
-  QComboBox *patchCombo;
-  //int index;
+    fileDialog(QString fileName, QList<QString> patchList, QByteArray fileData, QByteArray default_data, QString type);
+    ~fileDialog();
+    QLabel *patchLabel;
+    QLabel *nameLabel;
+    QComboBox *patchCombo;
+    //int index;
 signals:
-  //void currentIndex(int value);
-  void patchIndex(int value);
+    //void currentIndex(int value);
+    void patchIndex(int value);
 
 public slots:
-  void valueChanged(int value);
-  void highlighted(int value);
-  void cancel();
+    void valueChanged(int value);
+    void highlighted(int value);
+    void cancel();
 
 private:
-  QList<QString> patchList;
-  QListWidget *contentsWidget;
-  QStackedWidget *pagesWidget;
-  QByteArray fileData;
-  QByteArray default_data;
-  QString file_format;
+    QList<QString> patchList;
+    QListWidget *contentsWidget;
+    QStackedWidget *pagesWidget;
+    QByteArray fileData;
+    QByteArray default_data;
+    QString file_format;
 };
 
 #endif // FILEDIALOG_H

@@ -33,18 +33,18 @@ stompbox_pdl::stompbox_pdl(QWidget *parent)
     setButton("06", "00", "20", QPoint(0, 110), ":/images/pedal.png");
     editDetails()->patchPos(1778, 40, "06", "20");
     setEditPages();
-};
+}
 
 void stompbox_pdl::updateSignal()
 {
     updateComboBox("08", "00", "10");
     updateButton("06", "00", "20");
     updateSwitch("06", "00", "20");
-};
+}
 
 void stompbox_pdl::setEditPages()
 {
-    editDetails()->page()->newGroupBox("Pedal FX");
+    editDetails()->page()->newGroupBox("Pedal FX (exp pdl sw)");
     editDetails()->page()->addSwitch(0, 0, 1, 1, "06", "00", "20", "middle", Qt::AlignCenter);  //Pedal FX on/off
     editDetails()->page()->addGroupBox(0, 0, 1, 1);
 
@@ -883,4 +883,4 @@ void stompbox_pdl::setEditPages()
     editDetails()->page()->addStackField();
 
     editDetails()->addPage();
-};
+}
