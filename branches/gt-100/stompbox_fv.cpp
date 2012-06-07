@@ -31,24 +31,22 @@ stompbox_fv::stompbox_fv(QWidget *parent)
     setLSB("00", "00");
     editDetails()->patchPos(0, 1, "00", "00");
 	setEditPages();
-};
+}
 
 void stompbox_fv::updateSignal()
 {
 
-};
+}
 
 void stompbox_fv::setEditPages()
 {
 
-        editDetails()->page()->newGroupBox("Foot Volume");
-        /*editDetails()->page()->addComboBox(0, 0, 1, 1, "06", "00", "30");
-        editDetails()->page()->addKnob(0, 1, 1, 1, "06", "00", "31");
-        editDetails()->page()->addKnob(1, 0, 1, 1, "06", "00", "32");
-        editDetails()->page()->addKnob(2, 1, 1, 1, "06", "00", "33");*/
-        editDetails()->page()->addLabel(0, 0, 1, 1, "Settings found in Pedal/FX");
-        editDetails()->page()->addGroupBox(0, 1, 1, 1);
+    editDetails()->page()->newGroupBox("Foot Volume");
+    editDetails()->page()->addComboBox(0, 0, 1, 2, "06", "00", "30");
+    editDetails()->page()->addKnob(1, 0, 1, 1, "06", "00", "31");
+    editDetails()->page()->addKnob(1, 1, 1, 1, "06", "00", "32");
+    editDetails()->page()->addKnob(2, 0, 1, 2, "06", "00", "33");
+    editDetails()->page()->addGroupBox(0, 1, 1, 1);
 
-        
-        editDetails()->addPage();
-};
+    editDetails()->addPage();
+}

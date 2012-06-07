@@ -46,6 +46,7 @@
 #include "menuPage_midi.h"
 #include "menuPage_system.h"
 #include "menuPage_master.h"
+#include "menuPage_ez_edit.h"
 
 #include "stompbox_fx1.h"
 #include "stompbox_ch_a.h"
@@ -168,7 +169,7 @@ floorBoard::floorBoard(QWidget *parent,
     };
 
     emit updateSignal();
-};
+}
 
 floorBoard::~floorBoard()
 {
@@ -183,7 +184,7 @@ floorBoard::~floorBoard()
     };
     preferences->setPreferences("Window", "Collapsed", "bool", QString(this->colapseState?"true":"false"));
     preferences->savePreferences();
-};
+}
 
 void floorBoard::paintEvent(QPaintEvent *)
 {
@@ -193,7 +194,7 @@ void floorBoard::paintEvent(QPaintEvent *)
     QPainter painter(this);
     painter.drawPixmap(target, image, source);
     this->setAcceptDrops(true);
-};
+}
 
 void floorBoard::setFloorBoard() {
     QPixmap imageFloor(imagePathFloor);
@@ -251,7 +252,7 @@ void floorBoard::setFloorBoard() {
 
     QRect newBankListRect = QRect(borderWidth, borderWidth, offset - panelBarOffset - (borderWidth*2), floorHeight - (borderWidth*2));
     emit resizeSignal(newBankListRect);
-};
+}
 
 void floorBoard::dragEnterEvent(QDragEnterEvent *event)
 {
@@ -272,7 +273,7 @@ void floorBoard::dragEnterEvent(QDragEnterEvent *event)
     } else {
         event->ignore();
     };
-};
+}
 
 void floorBoard::dragMoveEvent(QDragMoveEvent *event)
 {
@@ -293,7 +294,7 @@ void floorBoard::dragMoveEvent(QDragMoveEvent *event)
     } else {
         event->ignore();
     };
-};
+}
 
 void floorBoard::dropEvent(QDropEvent *event)
 {
@@ -413,7 +414,7 @@ void floorBoard::dropEvent(QDropEvent *event)
             event->ignore();
         };
     };
-};
+}
 
 void floorBoard::initSize(QSize floorSize)
 {
@@ -437,12 +438,12 @@ void floorBoard::initSize(QSize floorSize)
 
     this->fxPos = fxPos;
     this->setFixedSize(floorSize);
-};
+}
 
 QPoint floorBoard::getStompPos(int id)
 {
     return fxPos.at(id);
-};
+}
 
 void floorBoard::setCollapse()
 {
@@ -459,7 +460,7 @@ void floorBoard::setCollapse()
         emit setCollapseState(true);
         this->colapseState = true;
     };
-};
+}
 
 void floorBoard::setSize(QSize newSize)
 {
@@ -505,7 +506,7 @@ void floorBoard::setSize(QSize newSize)
 
     emit sizeChanged(floorSize, oldFloorSize);
     this->centerEditDialog();
-};
+}
 
 void floorBoard::setWidth(int dist)
 {
@@ -531,7 +532,7 @@ void floorBoard::setWidth(int dist)
         emit setCollapseState(true);
     };
     this->setSize(newSize);
-};
+}
 
 void floorBoard::initStomps()
 {
@@ -696,7 +697,7 @@ void floorBoard::initStomps()
     usb->setPos(this->getStompPos(usb->getId()));
     this->stompBoxes.replace(usb->getId(), usb);
     this->stompNames.replace(usb->getId(), "USB");
-};
+}
 
 void floorBoard::setStomps(QList<QString> stompOrder)
 {
@@ -706,19 +707,19 @@ void floorBoard::setStomps(QList<QString> stompOrder)
         setStompPos(name, i);
         this->fx.replace(i, stompNames.indexOf(name));
     };
-};
+}
 
 void floorBoard::setStompPos(QString name, int order)
 {
     this->stompBoxes.at(stompNames.indexOf(name))->setPos(this->getStompPos(order));
     this->fx.replace(order, stompNames.indexOf(name));
-};
+}
 
 void floorBoard::setStompPos(int index, int order)
 {
     this->stompBoxes.at(index)->setPos(this->getStompPos(order));
     this->fx.replace(order, index);
-};
+}
 
 void floorBoard::updateStompBoxes()
 {
@@ -735,7 +736,7 @@ void floorBoard::updateStompBoxes()
     };
 
     setStomps(stompOrder);
-};
+}
 
 void floorBoard::setEditDialog(editWindow* editDialog)
 {
@@ -750,7 +751,7 @@ void floorBoard::setEditDialog(editWindow* editDialog)
     this->centerEditDialog();
     this->editDialog->pageUpdateSignal();
     this->editDialog->show();
-};
+}
 
 void floorBoard::centerEditDialog()
 {
@@ -761,14 +762,17 @@ void floorBoard::centerEditDialog()
         int y = this->pos.y() + (((this->floorSize.height() + this->infoBarHeight/2) - this->editDialog->height()) / 2);
         this->editDialog->move(x, y);
     };
-};
+}
 
 void floorBoard::initMenuPages()
 {
-    QVector<menuPage *> initMenuPages(13);
+    QVector<menuPage *> initMenuPages(14);
     this->menuPages = initMenuPages.toList();;
 
     /* MENU_PAGES */
+    menuPage *ez_edit = new menuPage_ez_edit(this);
+    ez_edit->setId(31);
+
     menuPage *system = new menuPage_system(this);
     system->setId(30);
     
@@ -799,10 +803,9 @@ void floorBoard::initMenuPages()
     menuPage *assign1 = new menuPage_assign1(this);
     assign1->setId(21);
 
-
     menuPage *master = new menuPage_master(this);
     master->setId(20);
-};
+}
 
 void floorBoard::menuButtonSignal()
 {
@@ -810,7 +813,8 @@ void floorBoard::menuButtonSignal()
     if(preferences->getPreferences("Window", "Single", "bool")=="true")
     { this->oldDialog->hide();
     this->editDialog->show(); };
-};
+    emit updateSignal();
+}
 
 
 

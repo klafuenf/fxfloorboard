@@ -60,7 +60,7 @@ const int fullPatchSize = 2152;    // size of bytes in a patch with user text da
 const int systemSize = 1617;    // size of bytes for system data.
 const int nameReplySize = 29;    // size of bytes for name data.
 const QString patchRequestDataSize = "00000F18";
-const QString systemRequest = "F04100000060110000000000087F0075F7";
+const QString systemRequest = "F04100000060110000000000087F0079F7";
 
 //const int maxWait = 40;			 // Maximum times we loop through the receive handle before we give up waiting.(for whole patch) tempory used by midi prefs
 //const int minWait = 5;			 // Minimum times we loop through the receive handle before we give up waiting.(for small data)   "      "       "       "

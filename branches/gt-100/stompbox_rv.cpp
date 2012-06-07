@@ -35,7 +35,7 @@ stompbox_rv::stompbox_rv(QWidget *parent)
     setButton("06", "00", "10");
     editDetails()->patchPos(1746, 22, "06", "10");
     setEditPages();
-};
+}
 
 void stompbox_rv::updateSignal()
 {
@@ -44,7 +44,7 @@ void stompbox_rv::updateSignal()
     updateComboBox("06", "00", "11");
     updateButton("06", "00", "10");
     updateSwitch("06", "00", "10");
-};
+}
 
 void stompbox_rv::setEditPages()
 {
@@ -83,5 +83,5 @@ void stompbox_rv::setEditPages()
     editDetails()->page()->addKnob(0, 0, 1, 1, "06", "00", "1A"); // spring sensitivity
     editDetails()->page()->addStackField();
     editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
-};
+}
 

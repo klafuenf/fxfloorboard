@@ -34,6 +34,7 @@ HEADERS += ./editPage.h \
     ./customButton.h \
     ./customComboBox.h \
     ./customControlParaEQ.h \
+    ./customControlEZ_amp.h \
     ./customControlGraphicEQ.h \
     ./customControlKnob.h \
     ./customControlRange.h \
@@ -47,6 +48,7 @@ HEADERS += ./editPage.h \
     ./customDisplay.h \
     ./customDisplayButton.h \
     ./customParaEQGraph.h \
+    ./customEZ_amp.h \
     ./customGraphicEQGraph.h \
     ./customKnob.h \
     ./customKnobTarget.h \
@@ -80,6 +82,7 @@ HEADERS += ./editPage.h \
     ./menuPage_assign6.h \
     ./menuPage_assign7.h \
     ./menuPage_assign8.h \
+    ./menuPage_ez_edit.h \
     ./menuPage_midi.h \
     ./menuPage_master.h \
     ./menuPage_system.h \
@@ -138,6 +141,7 @@ SOURCES += ./editPage.cpp \
     ./customButton.cpp \
     ./customComboBox.cpp \
     ./customControlParaEQ.cpp \
+    ./customControlEZ_amp.cpp \
     ./customControlGraphicEQ.cpp \
     ./customControlKnob.cpp \
     ./customControlLabel.cpp \
@@ -151,6 +155,7 @@ SOURCES += ./editPage.cpp \
     ./customDisplay.cpp \
     ./customDisplayButton.cpp \
     ./customParaEQGraph.cpp \
+    ./customEZ_amp.cpp \
     ./customGraphicEQGraph.cpp \
     ./customKnob.cpp \
     ./customKnobTarget.cpp \
@@ -184,6 +189,7 @@ SOURCES += ./editPage.cpp \
     ./menuPage_assign6.cpp \
     ./menuPage_assign7.cpp \
     ./menuPage_assign8.cpp \
+    ./menuPage_ez_edit.cpp \
     ./menuPage_midi.cpp \
     ./menuPage_master.cpp \
     ./menuPage_system.cpp \

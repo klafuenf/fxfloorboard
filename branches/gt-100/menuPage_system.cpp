@@ -26,34 +26,35 @@
 menuPage_system::menuPage_system(QWidget *parent)
     : menuPage(parent)
 { 
-    //setImage(":/images/system_pushbutton.png");
     setLSB("00", "00");
     setEditPages();
-};
+}
 
 void menuPage_system::updateSignal()
 {
 
-};
+}
 
 void menuPage_system::setEditPages()
 { 
     QString text = tr("***CAUTION*** Settings changes are automatically written to GT-100 when changed");
-    editDetails()->page()->addLabel(0, 0, 1, 1, text);
-    editDetails()->page()->newGroupBox("settings");
+    editDetails()->page()->addLabel(0, 0, 1, 3, text);
+    editDetails()->page()->newGroupBox("User settings");
     editDetails()->page()->addKnob(0, 0, 1, 1, "00", "00", "00", "System"); // lcd contrast left
     editDetails()->page()->addKnob(0, 1, 1, 1, "00", "00", "01", "System"); // lcd contrast right
-    //editDetails()->page()->addLabel(0, 1, 1, 1, "     ");
-    editDetails()->page()->addComboBox(0, 2, 1, 1, "00", "00", "41", "System"); // preamp mode
-    editDetails()->page()->addLabel(0, 3, 1, 1, "     ");
-    editDetails()->page()->addComboBox(0, 4, 1, 1, "00", "00", "11", "System"); //exp hold
-    editDetails()->page()->addLabel(0, 5, 1, 1, "     ");
-    editDetails()->page()->addComboBox(0, 6, 1, 1, "00", "00", "12", "System"); //knob lock
-    editDetails()->page()->addLabel(0, 7, 1, 1, "     ");
-    editDetails()->page()->addComboBox(0, 8, 1, 1, "00", "00", "13", "System"); //num pdl sw
-    //editDetails()->page()->addComboBox(0, 9, 1, 1, "00", "00", "18", "System"); //pedal indication
-   // editDetails()->page()->addComboBox(0, 10, 1, 1, "00", "00", "60", "System"); //auto off
-    editDetails()->page()->addGroupBox(1, 0, 1, 2);
+    editDetails()->page()->addLabel(0, 2, 1, 1, "     ");
+    editDetails()->page()->addComboBox(0, 3, 1, 1, "00", "00", "41", "System"); // preamp mode
+    editDetails()->page()->addLabel(0, 4, 1, 1, "     ");
+    editDetails()->page()->addComboBox(0, 5, 1, 1, "00", "00", "11", "System"); //exp hold
+    editDetails()->page()->addLabel(0, 6, 1, 1, "     ");
+    editDetails()->page()->addComboBox(0, 7, 1, 1, "00", "00", "12", "System"); //knob lock
+    editDetails()->page()->addLabel(0, 8, 1, 1, "     ");
+    editDetails()->page()->addComboBox(0, 9, 1, 1, "00", "00", "13", "System"); //num pdl sw
+    editDetails()->page()->addLabel(0, 10, 1, 1, "     ");
+    editDetails()->page()->addComboBox(0, 11, 1, 1, "00", "00", "18", "System"); //pedal indication
+    editDetails()->page()->addLabel(0, 12, 1, 1, "     ");
+    editDetails()->page()->addComboBox(0, 13, 1, 1, "00", "00", "60", "System"); //auto off
+    editDetails()->page()->addGroupBox(1, 0, 1, 3);
 
     editDetails()->page()->newGroupBox("USB settings");
     editDetails()->page()->addComboBox(0, 0, 1, 1, "00", "00", "50", "System"); //usb I/O mode
@@ -62,27 +63,28 @@ void menuPage_system::setEditPages()
     editDetails()->page()->addKnob(0, 3, 1, 1, "00", "00", "51", "System"); //usb input level
     editDetails()->page()->addKnob(0, 4, 1, 1, "00", "00", "52", "System"); //usb mix level
     editDetails()->page()->addKnob(0, 5, 1, 1, "00", "00", "53", "System"); //usb mix level
-    editDetails()->page()->addGroupBox(2, 0, 1, 1);
+    editDetails()->page()->addGroupBox(2, 0, 1, 2);
 
     editDetails()->page()->newGroupBox("Tuner");
     editDetails()->page()->addComboBox(0, 0, 1, 1, "00", "00", "20", "System"); // tuner pitch
     editDetails()->page()->addLabel(0, 1, 1, 1, "               ");
     editDetails()->page()->addComboBox(0, 2, 1, 1, "00", "00", "21", "System"); //tuner output
     editDetails()->page()->addKnob(0, 3, 1, 1, "00", "00", "34", "System"); //metronome level
-    editDetails()->page()->addGroupBox(2, 1, 1, 1);
+    editDetails()->page()->addGroupBox(2, 2, 1, 1);
 
     editDetails()->page()->newGroupBox("Patch Change");
     editDetails()->page()->addComboBox(0, 1, 1, 1, "00", "00", "10", "System"); // bank change mode
     editDetails()->page()->addKnob(0, 2, 1, 1, "00", "00", "14", "System"); // bank extent min
     editDetails()->page()->addKnob(0, 3, 1, 1, "00", "00", "16", "System"); // bank extent max
-    editDetails()->page()->addGroupBox(3, 1, 1, 1);
+    editDetails()->page()->addGroupBox(3, 2, 1, 1);
 
-    editDetails()->page()->newGroupBox("Input settings and Global NS/Reverb");
+    editDetails()->page()->newGroupBox("Input Level");
     editDetails()->page()->addKnob(0, 0, 1, 1, "00", "00", "71", "System"); // input level
-    editDetails()->page()->addLabel(0, 1, 1, 1, "     ");
+    editDetails()->page()->addGroupBox(3, 0, 1, 1);
+    editDetails()->page()->newGroupBox("Global NS/Reverb");
     editDetails()->page()->addKnob(0, 2, 1, 1, "00", "00", "77", "System"); // NS threshold
     editDetails()->page()->addKnob(0, 3, 1, 1, "00", "00", "78", "System"); // revberb level
-    editDetails()->page()->addGroupBox(3, 0, 1, 1);
+    editDetails()->page()->addGroupBox(3, 1, 1, 1);
 
     editDetails()->addPage("00", "00", "02", "00", "System");
 
@@ -90,37 +92,40 @@ void menuPage_system::setEditPages()
     editDetails()->page()->newGroupBox("User Options " + text);
     editDetails()->page()->newGroupBox("Output");
     editDetails()->page()->addComboBox(0, 0, 1, 1, "00", "00", "79", "System"); // output level
-    editDetails()->page()->addLabel(0, 1, 1, 1, "     ");
-    editDetails()->page()->addComboBox(0, 2, 1, 1, "00", "00", "70", "System"); // output select
-    editDetails()->page()->addGroupBox(0, 0, 1, 1);
+    editDetails()->page()->addLabel(0, 1, 1, 1, "          ");
+    editDetails()->page()->addComboBox(0, 2, 1, 1, "00", "00", "40", "System"); // select mode
+    editDetails()->page()->addLabel(0, 3, 1, 1, "     ");
+    editDetails()->page()->addComboBox(0, 4, 1, 1, "00", "00", "70", "System"); // output select
+    editDetails()->page()->addGroupBox(0, 1, 1, 1);
 
     editDetails()->page()->newGroupBox("Phrase Looper");
     editDetails()->page()->addComboBox(0, 0, 1, 1, "00", "01", "00", "System"); // PH LOOP mode
     editDetails()->page()->addComboBox(0, 1, 1, 1, "00", "01", "02", "System"); // record mode
     editDetails()->page()->addComboBox(0, 2, 1, 1, "00", "01", "01", "System"); // pedal mode
     editDetails()->page()->addKnob(0, 3, 1, 1, "00", "01", "04", "System"); // play level
-    editDetails()->page()->addGroupBox(0, 1, 1, 1);
+    editDetails()->page()->addGroupBox(1, 1, 1, 1);
 
     editDetails()->page()->newGroupBox("Knob Function");
     editDetails()->page()->addComboBox(0, 0, 1, 1, "00", "02", "50", "System"); // knob 1
     editDetails()->page()->addComboBox(0, 1, 1, 1, "00", "02", "52", "System"); // knob 2
     editDetails()->page()->addComboBox(0, 2, 1, 1, "00", "02", "54", "System"); // knob 3
     editDetails()->page()->addComboBox(0, 3, 1, 1, "00", "02", "56", "System"); // knob 4
-    editDetails()->page()->addComboBox(0, 4, 1, 1, "00", "02", "58", "System"); // knob 5
-    editDetails()->page()->addComboBox(0, 5, 1, 1, "00", "02", "5A", "System"); // knob 6
-    editDetails()->page()->addComboBox(0, 6, 1, 1, "00", "02", "5C", "System"); // knob 7
-    editDetails()->page()->addComboBox(0, 7, 1, 1, "00", "02", "5E", "System"); // knob 8
-    editDetails()->page()->addGroupBox(1, 0, 1, 2);
+    editDetails()->page()->addComboBox(1, 0, 1, 1, "00", "02", "58", "System"); // knob 5
+    editDetails()->page()->addComboBox(1, 1, 1, 1, "00", "02", "5A", "System"); // knob 6
+    editDetails()->page()->addComboBox(1, 2, 1, 1, "00", "02", "5C", "System"); // knob 7
+    editDetails()->page()->addComboBox(1, 3, 1, 1, "00", "02", "5E", "System"); // knob 8
+    editDetails()->page()->addGroupBox(2, 1, 1, 1);
 
     editDetails()->page()->newGroupBox("Global Equalizer");
-    editDetails()->page()->addKnob(0, 0, 1, 1, "00", "00", "72", "System"); // eq low
+    editDetails()->page()->addMasterEQ(0, 1, 2, 4, "00", "00", "71", "System");
+    /*editDetails()->page()->addKnob(0, 0, 1, 1, "00", "00", "72", "System"); // eq low
     editDetails()->page()->addLabel(0, 1, 1, 1, "       ");
     editDetails()->page()->addKnob(0, 2, 1, 1, "00", "00", "73", "System"); // eq mid gain
     editDetails()->page()->addKnob(0, 3, 1, 1, "00", "00", "75", "System"); // eq mid Q
     editDetails()->page()->addKnob(0, 4, 1, 1, "00", "00", "74", "System"); // eq mid freq
     editDetails()->page()->addLabel(0, 5, 1, 1, "       ");
-    editDetails()->page()->addKnob(0, 6, 1, 1, "00", "00", "76", "System"); // eq high
-    editDetails()->page()->addGroupBox(2, 0, 1, 2);
+    editDetails()->page()->addKnob(0, 6, 1, 1, "00", "00", "76", "System"); // eq high*/
+    editDetails()->page()->addGroupBox(0, 0, 3, 1);
     editDetails()->page()->addGroupBox(0, 0, 1, 1);
 
     editDetails()->addPage("00", "00", "02", "01", "System");
@@ -1418,4 +1423,4 @@ void menuPage_system::setEditPages()
 
     editDetails()->addPage("00", "00", "02", "09", "System");
 
-};
+}

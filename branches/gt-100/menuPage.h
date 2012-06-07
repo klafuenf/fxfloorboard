@@ -56,9 +56,10 @@ public slots:
     void updatePos(signed int offsetDif);
     void valueChanged(int value, QString hex1, QString hex2, QString hex3);
     void valueChanged(bool value, QString hex1, QString hex2, QString hex3);
-    virtual void updateSignal() {};
+    virtual void updateSignal() {}
     void setDisplayToFxName();
     void master_ButtonSignal(bool value);
+    void ez_edit_ButtonSignal(bool value);
     void system_ButtonSignal(bool value);
     void midi_ButtonSignal(bool value);
     void assign1_ButtonSignal(bool value);

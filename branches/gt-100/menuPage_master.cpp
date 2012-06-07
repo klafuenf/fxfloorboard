@@ -26,34 +26,32 @@
 menuPage_master::menuPage_master(QWidget *parent)
     : menuPage(parent)
 {
-    //setImage(":/images/master_pushbutton.png");
     setLSB("07", "00");
     editDetails()->patchPos(2028, 20, "07", "10");
     //editDetails()->patchPos(2124, 16, "07", "40");
     setEditPages();
-};
+}
 
 void menuPage_master::updateSignal()
 {
 
-};
+}
 
 void menuPage_master::setEditPages()
 {
 
     editDetails()->page()->newGroupBox("Master EQ");
-    //editDetails()->page()->addMasterEQ(0, 1, 2, 4, "0A", "00", "60");
-    editDetails()->page()->addKnob(0, 0, 1, 1, "07", "00", "11");                        // master low
+    editDetails()->page()->addMasterEQ(0, 1, 2, 4, "07", "00", "10");
+    /*editDetails()->page()->addKnob(0, 0, 1, 1, "07", "00", "11");                        // master low
     editDetails()->page()->addKnob(0, 1, 1, 1, "07", "00", "14");                        // master mid gain
     editDetails()->page()->addKnob(1, 1, 1, 1, "07", "00", "13");                        // master mid Q
     editDetails()->page()->addKnob(2, 1, 1, 1, "07", "00", "12");                        // master mid freq
-
-    editDetails()->page()->addKnob(0, 2, 1, 1, "07", "00", "15");                        // master high
+    editDetails()->page()->addKnob(0, 2, 1, 1, "07", "00", "15");    */                    // master high
     editDetails()->page()->addGroupBox(0, 0, 2, 1);
 
-    editDetails()->page()->newGroupBox("Patch Level");
+   /* editDetails()->page()->newGroupBox("Patch Level");
     editDetails()->page()->addKnob(0, 3, 1, 1, "07", "00", "10");                        // patch level
-    editDetails()->page()->addGroupBox(0, 1, 1, 1);
+    editDetails()->page()->addGroupBox(0, 1, 1, 1); */
 
     editDetails()->page()->newGroupBox("Amp CTRL");
     editDetails()->page()->addComboBox(0, 0, 1, 1, "06", "00", "60");                     // amp control
@@ -78,4 +76,4 @@ void menuPage_master::setEditPages()
     editDetails()->page()->addGroupBox(0, 3, 2, 1);
 
     editDetails()->addPage();
-};
+}

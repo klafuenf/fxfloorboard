@@ -64,12 +64,12 @@ bankTreeList::bankTreeList(QWidget *parent)
     QObject::connect(this, SIGNAL(setStatusMessage(QString)), sysxIO, SIGNAL(setStatusMessage(QString)));
 
     QObject::connect(this, SIGNAL(notConnectedSignal()), sysxIO, SIGNAL(notConnectedSignal()));
-};
+}
 
 void bankTreeList::updateSize(QRect newrect)
 {
     this->setGeometry(newrect);
-};
+}
 
 void bankTreeList::setClosedItems(QTreeWidgetItem *item)
 {
@@ -88,7 +88,7 @@ void bankTreeList::setClosedItems(QTreeWidgetItem *item)
     {
         closeChildren(item);
     };
-};
+}
 
 void bankTreeList::closeChildren(QTreeWidgetItem *item)
 {
@@ -100,7 +100,7 @@ void bankTreeList::closeChildren(QTreeWidgetItem *item)
         };
         item->child(i)->setExpanded(false);
     };
-};
+}
 
 void bankTreeList::setOpenItems(QTreeWidgetItem *item)
 {
@@ -285,7 +285,7 @@ void bankTreeList::setOpenItems(QTreeWidgetItem *item)
             openPatchTreeItems.first()->setExpanded(false);
         };
     };
-};
+}
 
 QTreeWidget* bankTreeList::newTreeList()
 {
@@ -409,7 +409,7 @@ QTreeWidget* bankTreeList::newTreeList()
     newTreeList->setExpanded(newTreeList->model()->index(2, 0), true);
     newTreeList->setExpanded(newTreeList->model()->index(3, 0), true);
     return newTreeList;
-};
+}
 
 /*********************** setItemClicked() ***********************************
  * Expands and colapses on a single click and sets patch sellection.
@@ -458,13 +458,13 @@ void bankTreeList::setItemClicked(QTreeWidgetItem *item, int column)
             if (item->text(0) != "Temp" && !item->text(0).contains("QFX"))
             { sysxIO->requestPatchChange(bank, patch); }; // extra to try patch change
             sysxIO->setRequestName(item->text(0));	// Set the name of the patch we have sellected in case we load it.
-            //sysxIO->setBank(bank);
-            //sysxIO->setPatch(patch);
+            sysxIO->setBank(bank);
+            sysxIO->setPatch(patch);
             emit patchSelectSignal(bank, patch);
         };
 
     };
-};
+}
 
 /*********************** setItemDoubleClicked() *****************************
  * Handles when a patch is double clicked in the tree list. Patch will be
@@ -508,7 +508,7 @@ void bankTreeList::setItemDoubleClicked(QTreeWidgetItem *item, int column)
         };
         emit patchSelectSignal(bank, patch);
     };
-};
+}
 /*********************** requestPatch() *******************************
  * Does the actual requesting of the patch data and hands the
  * reception over to updatePatch function.
@@ -529,7 +529,7 @@ void bankTreeList::requestPatch()
         emit setStatusMessage(tr("Receiving Patch"));
         sysxIO->requestPatch(0, 0);
     };
-};
+}
 
 void bankTreeList::requestPatch(int bank, int patch)
 {
@@ -544,7 +544,7 @@ void bankTreeList::requestPatch(int bank, int patch)
 
         sysxIO->requestPatch(bank, patch);
     };
-};
+}
 
 /*********************** updatePatch() *******************************
  * Updates the source of the currently handled patch and set the
@@ -724,7 +724,7 @@ void bankTreeList::updatePatch(QString replyMsg)
                         msgBox->exec();
                         };
                 };*/
-};
+}
 
 /********************************** connectedSignal() ****************************
 * This slot reloads all patch names of expanded items, if any, on (re)connection to a
@@ -748,12 +748,11 @@ void bankTreeList::connectedSignal()
 
         this->currentPatchTreeItems.clear();
         this->currentPatchTreeItems = this->openPatchTreeItems;
-        qSort(this->currentPatchTreeItems);
         this->updatePatchNames("");
     }else if (sysxIO->deviceReady() && sysxIO->isConnected())
     { requestPatch(); };
     //requestPatch();
-};
+}
 
 /********************************** updateTree() ********************************
 * This handles whether we add the newly expanded item to the current job or
@@ -784,7 +783,7 @@ void bankTreeList::updateTree(QTreeWidgetItem *item)
     {
         this->currentPatchTreeItems.append(item);
     };
-};
+}
 
 /***************************** updatePatchNames() ********************************
 * This updates the patch names in the treeList of all expanded items. this is
@@ -843,5 +842,5 @@ void bankTreeList::updatePatchNames(QString name)
                 QObject::disconnect(sysxIO, SIGNAL(patchName(QString)),
                             this, SLOT(updatePatchNames(QString)));
             };
-};
+}
 

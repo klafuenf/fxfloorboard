@@ -39,36 +39,37 @@ class QStackedWidget;
 
 class summaryDialogSystem : public QWidget
 {
-        Q_OBJECT
+    Q_OBJECT
 
 public:
-  summaryDialogSystem(QWidget *parent = 0);
-  QTextEdit *textDialog;
-  QTextDocument *document;
-  QPrintDialog *dialog;
-  QPushButton *cancelButton;
-  QPushButton *printButton;
-  QPushButton *saveAsButton;
+    summaryDialogSystem(QWidget *parent = 0);
+    ~summaryDialogSystem();
+    QTextEdit *textDialog;
+    QTextDocument *document;
+    QPrintDialog *dialog;
+    QPushButton *cancelButton;
+    QPushButton *printButton;
+    QPushButton *saveAsButton;
 
 public slots:
-  void systemReply(QString replyMsg);
-  void cancel();
-  void printFile();
-  void saveAs();
-  void makeList();
-  void makeMidiMapList();
+    void systemReply(QString replyMsg);
+    void cancel();
+    void printFile();
+    void saveAs();
+    void makeList();
+    void makeMidiMapList();
 
 signals:  
-  void setStatusSymbol(int value);
-	void setStatusProgress(int value);
-  void setStatusMessage(QString message);
+    void setStatusSymbol(int value);
+    void setStatusProgress(int value);
+    void setStatusMessage(QString message);
 
 private:
-QString text;
-int start;
-int finish;
-QString address1;
-QString address2;
+    QString text;
+    int start;
+    int finish;
+    QString address1;
+    QString address2;
 };
 
 #endif //summaryDialogSystem

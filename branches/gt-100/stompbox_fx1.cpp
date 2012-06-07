@@ -33,14 +33,14 @@ stompbox_fx1::stompbox_fx1(QWidget *parent)
     setButton("01", "00", "40");
     editDetails()->patchPos(432, 588, "01", "40");
     setEditPages();
-};
+}
 
 void stompbox_fx1::updateSignal()
 {
     updateComboBox("01", "00", "41");
     updateButton("01", "00", "40");
     updateSwitch("01", "00", "40");
-};
+}
 
 void stompbox_fx1::setEditPages()
 {
@@ -713,8 +713,8 @@ void stompbox_fx1::setEditPages()
     editDetails()->page()->newGroupBox("Humanizer");
     editDetails()->page()->addComboBox(0, 0, 1, 1, "03", "00", "31");
     editDetails()->page()->addComboBox(1, 0, 1, 1, "03", "00", "32");
-    editDetails()->page()->addKnob(0, 1, 1, 3, "03", "00", "34", "normal","right", 105);
-    editDetails()->page()->addKnob(1, 1, 1, 1, "03", "00", "33");
+    editDetails()->page()->addKnob(0, 1, 1, 3, "03", "00", "33", "normal","right", 120);
+    editDetails()->page()->addKnob(1, 1, 1, 1, "03", "00", "34");
     editDetails()->page()->addKnob(1, 2, 1, 1, "03", "00", "35");
     editDetails()->page()->addKnob(1, 3, 1, 1, "03", "00", "36");
     editDetails()->page()->addGroupBox(0, 1, 2, 1);
@@ -783,4 +783,4 @@ void stompbox_fx1::setEditPages()
     editDetails()->page()->addStackField();
 
     editDetails()->addPage();
-};
+}

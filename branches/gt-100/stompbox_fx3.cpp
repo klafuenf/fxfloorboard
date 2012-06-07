@@ -32,12 +32,12 @@ stompbox_fx3::stompbox_fx3(QWidget *parent)
     setComboBox("06", "00", "70", QRect(8, 31, 79, 13));
     editDetails()->patchPos(1938, 82, "06", "70");
     setEditPages();
-};
+}
 
 void stompbox_fx3::updateSignal()
 {
     updateComboBox("06", "00", "70");
-};
+}
 
 void stompbox_fx3::setEditPages()
 {
@@ -112,4 +112,4 @@ void stompbox_fx3::setEditPages()
     editDetails()->page()->addStackField();
 
     editDetails()->addPage();
-};
+}

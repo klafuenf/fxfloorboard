@@ -3,7 +3,7 @@
 ** Copyright (C) 2007~2012 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag. 
 ** All rights reserved.
-** This file is part of "GT-100B Fx FloorBoard".
+** This file is part of "GT-100 Fx FloorBoard".
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -35,22 +35,31 @@ customControlMasterEQ::customControlMasterEQ(QWidget *parent,
     this->hex3 = hex3;
     this->area = background;
     bool ok;
+    if (this->area != "System") {this->area = "Structure";};
     int x = hex3.toInt(&ok, 16);
     this->hex_1 = QString::number(x+1, 16).toUpper();
     if(hex_1.length() < 2) hex_1.prepend("0");
+    if (this->area != "System"){
     this->hex_2 = QString::number(x+2, 16).toUpper();
     if(hex_2.length() < 2) hex_2.prepend("0");
     this->hex_3 = QString::number(x+3, 16).toUpper();
     if(hex_3.length() < 2) hex_3.prepend("0");
     this->hex_4 = QString::number(x+4, 16).toUpper();
-    if(hex_4.length() < 2) hex_4.prepend("0");
+    if(hex_4.length() < 2) hex_4.prepend("0"); } else {
+        this->hex_2 = QString::number(x+3, 16).toUpper();
+        if(hex_2.length() < 2) hex_2.prepend("0");
+        this->hex_3 = QString::number(x+4, 16).toUpper();
+        if(hex_3.length() < 2) hex_3.prepend("0");
+        this->hex_4 = QString::number(x+2, 16).toUpper();
+        if(hex_4.length() < 2) hex_4.prepend("0");
+    };
     this->hex_5 = QString::number(x+5, 16).toUpper();
     if(hex_5.length() < 2) hex_5.prepend("0");
-    this->hex_6 = QString::number(x, 16).toUpper();
+    if(area != "System"){ this->hex_6 = QString::number(x, 16).toUpper(); }
+    else { this->hex_6 = QString::number(x+1, 16).toUpper(); };
     if(hex_6.length() < 2) hex_6.prepend("0");
 
     MidiTable *midiTable = MidiTable::Instance();
-    if (this->area != "System") {this->area = "Structure";};
 
     Midi items = midiTable->getMidiMap(this->area, hex1, hex2, hex_1);
     this->label_1 = new customControlLabel(this);
@@ -61,7 +70,7 @@ customControlMasterEQ::customControlMasterEQ(QWidget *parent,
     this->display_1 = new QLineEdit(this);
     this->display_1->setObjectName("editdisplay");
     this->display_1->setFixedWidth(lenght);
-    this->display_1->setFixedHeight(13);
+    this->display_1->setFixedHeight(15);
     this->display_1->setAlignment(Qt::AlignCenter);
     this->display_1->setDisabled(true);
     this->display_1->setFixedWidth(lenght);
@@ -83,7 +92,7 @@ customControlMasterEQ::customControlMasterEQ(QWidget *parent,
     this->display_2 = new QLineEdit(this);
     this->display_2->setObjectName("editdisplay");
     this->display_2->setFixedWidth(lenght);
-    this->display_2->setFixedHeight(13);
+    this->display_2->setFixedHeight(15);
     this->display_2->setAlignment(Qt::AlignCenter);
     this->display_2->setDisabled(true);
     this->display_2->setFixedWidth(lenght);
@@ -105,7 +114,7 @@ customControlMasterEQ::customControlMasterEQ(QWidget *parent,
     this->display_3 = new QLineEdit(this);
     this->display_3->setObjectName("editdisplay");
     this->display_3->setFixedWidth(lenght);
-    this->display_3->setFixedHeight(13);
+    this->display_3->setFixedHeight(15);
     this->display_3->setAlignment(Qt::AlignCenter);
     this->display_3->setDisabled(true);
     this->display_3->setFixedWidth(lenght);
@@ -127,7 +136,7 @@ customControlMasterEQ::customControlMasterEQ(QWidget *parent,
     this->display_4 = new QLineEdit(this);
     this->display_4->setObjectName("editdisplay");
     this->display_4->setFixedWidth(lenght);
-    this->display_4->setFixedHeight(13);
+    this->display_4->setFixedHeight(15);
     this->display_4->setAlignment(Qt::AlignCenter);
     this->display_4->setDisabled(true);
     this->display_4->setFixedWidth(lenght);
@@ -149,7 +158,7 @@ customControlMasterEQ::customControlMasterEQ(QWidget *parent,
     this->display_5 = new QLineEdit(this);
     this->display_5->setObjectName("editdisplay");
     this->display_5->setFixedWidth(lenght);
-    this->display_5->setFixedHeight(13);
+    this->display_5->setFixedHeight(15);
     this->display_5->setAlignment(Qt::AlignCenter);
     this->display_5->setDisabled(true);
     this->display_5->setFixedWidth(lenght);
@@ -171,18 +180,11 @@ customControlMasterEQ::customControlMasterEQ(QWidget *parent,
     this->display_6 = new QLineEdit(this);
     this->display_6->setObjectName("editdisplay");
     this->display_6->setFixedWidth(lenght);
-    this->display_6->setFixedHeight(13);
+    this->display_6->setFixedHeight(15);
     this->display_6->setAlignment(Qt::AlignCenter);
     this->display_6->setDisabled(true);
     this->display_6->setFixedWidth(lenght);
 
-    QVBoxLayout *knob_6Layout = new QVBoxLayout;
-    knob_6Layout->setMargin(0);
-    knob_6Layout->setSpacing(0);
-    knob_6Layout->addWidget(this->label_6, 0, Qt::AlignCenter);
-    knob_6Layout->addWidget(this->knob_6, 0, Qt::AlignCenter);
-    knob_6Layout->addWidget(this->display_6, 0, Qt::AlignCenter);
-    knob_6Layout->addStretch(0);
 
 
     QHBoxLayout *knobLayout = new QHBoxLayout;
@@ -193,12 +195,21 @@ customControlMasterEQ::customControlMasterEQ(QWidget *parent,
     knobLayout->addLayout(knob_3Layout);  //MidQ
     knobLayout->addLayout(knob_4Layout);  //MidGain
     knobLayout->addLayout(knob_5Layout);  //HighGain
-    knobLayout->addLayout(knob_6Layout);  //Level
+    if(area != "System"){
+        QVBoxLayout *knob_6Layout = new QVBoxLayout;
+        knob_6Layout->setMargin(0);
+        knob_6Layout->setSpacing(0);
+        knob_6Layout->addWidget(this->label_6, 0, Qt::AlignCenter);
+        knob_6Layout->addWidget(this->knob_6, 0, Qt::AlignCenter);
+        knob_6Layout->addWidget(this->display_6, 0, Qt::AlignCenter);
+        knob_6Layout->addStretch(0);
+
+    knobLayout->addLayout(knob_6Layout); } else {knob_6->hide(); display_6->hide(); label_6->hide(); };  //Level
     knobLayout->addStretch(0);
 
 
     this->frame = new customMasterEQGraph(this);
-    this->frame->setMinimumSize(QSize(500, 180));
+    this->frame->setMinimumSize(QSize(350, 180));
 
     QVBoxLayout *frameLayout = new QVBoxLayout;
     frameLayout->setMargin(0);
@@ -257,7 +268,7 @@ customControlMasterEQ::customControlMasterEQ(QWidget *parent,
 
     QObject::connect(this->frame, SIGNAL(LevelChanged(unsigned short)),
                      this, SLOT(LevelChanged(unsigned short) ));
-};
+}
 
 
 void customControlMasterEQ::paintEvent(QPaintEvent *)
@@ -272,7 +283,7 @@ void customControlMasterEQ::paintEvent(QPaintEvent *)
 	painter.drawPixmap(target, image, source);*/
 
 
-};
+}
 
 void customControlMasterEQ::dialogUpdateSignal()
 {
@@ -322,16 +333,20 @@ void customControlMasterEQ::dialogUpdateSignal()
     valueStr = midiTable->getValue(this->area, hex1, hex2, hex_5, valueHex);
     emit updateDisplay_5(valueStr);
 
+    QString data_6;
+    if(area != "System"){
     value = sysxIO->getSourceValue(this->area, this->hex1, this->hex2, this->hex_6);
     this->knob_6->setValue(value);
     valueHex = QString::number(value, 16).toUpper();
     if(valueHex.length() < 2) valueHex.prepend("0");
-    QString data_6 = valueHex;
+    data_6 = valueHex;
     valueStr = midiTable->getValue(this->area, hex1, hex2, hex_6, valueHex);
     emit updateDisplay_6(valueStr);
+    } else { data_6 = "32"; };
+
 
     emit graphUpdateSignal( data_1, data_2, data_3, data_4, data_5, data_6);
-};
+}
 
 void customControlMasterEQ::LowGainChanged(unsigned short iLowGain)
 {
@@ -340,7 +355,7 @@ void customControlMasterEQ::LowGainChanged(unsigned short iLowGain)
     SysxIO *sysxIO = SysxIO::Instance();
     sysxIO->setFileSource(this->area, hex1, hex2, hex_1, hex);
     emit dialogUpdateSignal();
-};
+}
 
 void customControlMasterEQ::MidFreqChanged(unsigned short iMidFreq)
 {
@@ -349,7 +364,7 @@ void customControlMasterEQ::MidFreqChanged(unsigned short iMidFreq)
     SysxIO *sysxIO = SysxIO::Instance();
     sysxIO->setFileSource(this->area, hex1, hex2, hex_2, hex);
     emit dialogUpdateSignal();
-};
+}
 
 void customControlMasterEQ::MidQChanged(unsigned short iMidQ)
 {
@@ -358,7 +373,7 @@ void customControlMasterEQ::MidQChanged(unsigned short iMidQ)
     SysxIO *sysxIO = SysxIO::Instance();
     sysxIO->setFileSource(this->area, hex1, hex2, hex_3, hex);
     emit dialogUpdateSignal();
-};
+}
 
 void customControlMasterEQ::MidGainChanged(unsigned short iMidGain)
 {
@@ -367,7 +382,7 @@ void customControlMasterEQ::MidGainChanged(unsigned short iMidGain)
     SysxIO *sysxIO = SysxIO::Instance();
     sysxIO->setFileSource(this->area, hex1, hex2, hex_4, hex);
     emit dialogUpdateSignal();
-};
+}
 
 void customControlMasterEQ::HighGainChanged(unsigned short iHighGain)
 {
@@ -376,15 +391,16 @@ void customControlMasterEQ::HighGainChanged(unsigned short iHighGain)
     SysxIO *sysxIO = SysxIO::Instance();
     sysxIO->setFileSource(this->area, hex1, hex2, hex_5, hex);
     emit dialogUpdateSignal();
-};
+}
 
 void customControlMasterEQ::LevelChanged(unsigned short iLevel)
 {
+    if(area != "System"){
     QString hex = QString::number(iLevel, 16).toUpper();
     if (hex.size() < 2) hex.prepend("0");
     SysxIO *sysxIO = SysxIO::Instance();
     sysxIO->setFileSource(this->area, hex1, hex2, hex_6, hex);
-    emit dialogUpdateSignal();
-};
+    emit dialogUpdateSignal(); };
+}
 
 

@@ -35,7 +35,7 @@ stompbox_dd::stompbox_dd(QWidget *parent)
     setButton("05", "00", "60");
     editDetails()->patchPos(1624, 42, "05", "00");
 	setEditPages();
-};
+}
 
 void stompbox_dd::updateSignal()
 {
@@ -44,7 +44,7 @@ void stompbox_dd::updateSignal()
     updateComboBox("05", "00", "61");
     updateButton("05", "00", "60");
     updateSwitch("05", "00", "60");
-};
+}
 
 void stompbox_dd::setEditPages()
 {
@@ -54,7 +54,6 @@ void stompbox_dd::setEditPages()
     editDetails()->page()->addComboBox(1, 0, 1, 1, "05", "00", "61");
 	editDetails()->page()->addStackControl();
 	editDetails()->page()->addGroupBox(0, 0, 2, 1);
-
 	
 	editDetails()->page()->insertStackField(0, 0, 1, 2, 1);
 	// SINGLE 
@@ -283,4 +282,4 @@ void stompbox_dd::setEditPages()
 	editDetails()->page()->addStackField();
 
 	editDetails()->addPage();
-};
+}
