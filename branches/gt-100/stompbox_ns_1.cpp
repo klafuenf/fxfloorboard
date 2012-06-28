@@ -48,7 +48,7 @@ void stompbox_ns_1::setEditPages()
 {
     editDetails()->page()->newGroupBox("Effect");
     editDetails()->page()->addSwitch(0, 0, 1, 1, "06", "00", "63", "middle", Qt::AlignCenter);
-    editDetails()->page()->addComboBox(1, 0, 1, 1, "06", "00", "66");
+    editDetails()->page()->addComboBox(1, 0, 1, 1, "06", "00", "66", "large");
     editDetails()->page()->addGroupBox(0, 0, 1, 1);
 
     editDetails()->page()->newGroupBox("Noise Suppressor");

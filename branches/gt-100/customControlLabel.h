@@ -38,7 +38,9 @@ public:
 	void setButton(bool button);
 	void setImage(QString imagePath);
 	void setOffset(int imageNr);
+    void drawRotatedText(float degrees);
 	int getLabelWidth();
+
 
 protected:
 	void paintEvent(QPaintEvent *event);
@@ -65,6 +67,8 @@ private:
 	int offset;
 	int imageHeight;
 	int labelWidth;
+    QString text;
+    QPainter* painter;
 };
 
 #endif // CUSTOMCONTROLLABEL_H

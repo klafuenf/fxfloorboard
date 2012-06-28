@@ -61,18 +61,12 @@ SysxIODestroyer SysxIO::_destroyer;
 SysxIO* SysxIO::Instance() 
 {
     /* Multi-threading safe */
-    if (!_instance /*_instance == 0*/)  // is it the first call?
+    if (!_instance )  // is it the first call?
     {
         _instance = new SysxIO; // create sole instance
         _destroyer.SetSysxIO(_instance);
     };
     return _instance; // address of sole instance
-
-    /* Single-threading */
-    /*
-    static SysxIO inst;
-    return &inst;
-    */
 }
 
 void SysxIO::setFileSource(QString area, SysxData fileSource)
@@ -933,38 +927,6 @@ void SysxIO::sendSysx(QString sysxMsg)
 ****************************************************************************/
 void SysxIO::receiveSysx(QString sysxMsg)
 {
-    /*DeBugGING OUTPUT */
-    /*	Preferences *preferences = Preferences::Instance(); // Load the preferences.
-    if(preferences->getPreferences("Midi", "DBug", "bool")=="true")
-    {
-    if (sysxMsg.size() > 0){
-            QString snork;
-            snork.append("<font size='-1'>");
-            snork.append(tr("{ size="));
-            snork.append(QString::number(sysxMsg.size()/2, 10));
-            snork.append("}");
-            snork.append(tr("<br> midi data received"));
-            for(int i=0;i<sysxMsg.size();++i)
-            {
-                snork.append(sysxMsg.mid(i, 2));
-                snork.append(" ");
-                i++;
-            };
-            snork.replace("F7", "F7 }<br>");
-            snork.replace("F0", "{ F0");
-          if (sysxMsg == dBug){
-                  snork.append(tr("<br> WARNING: midi data received = data sent"));
-                  snork.append(tr("<br> caused by a midi loopback, port change is required"));
-             };
-
-            QMessageBox *msgBox = new QMessageBox();
-            msgBox->setWindowTitle(tr("dBug Result for received sysx data"));
-            msgBox->setIcon(QMessageBox::Information);
-            msgBox->setText(snork);
-            msgBox->setStandardButtons(QMessageBox::Ok);
-            msgBox->exec();
-        };
-    };	  */
     emit sysxReply(sysxMsg);
 }
 
@@ -998,7 +960,6 @@ void SysxIO::returnPatchName(QString sysxMsg)
     if(sysxMsg.size()/2 == 29)
     {
         int dataStartOffset = sysxNameOffset;   //pointer to start of names in patch file at xxxx bytes.
-        QString hex1, hex2, hex3, hex4;
         for(int i=dataStartOffset*2; i<(dataStartOffset*2)+(nameLength*2);++i)   //read the length of name string.
         {
             QString hexStr = sysxMsg.mid(i, 2);
@@ -1015,7 +976,6 @@ void SysxIO::returnPatchName(QString sysxMsg)
                 bool ok;
                 name.append( (char)(hexStr.toInt(&ok, 16)) );
             };
-
             i++;
         };
     }
@@ -1111,37 +1071,19 @@ void SysxIO::emitStatusdBugMessage(QString dBug)
 void SysxIO::systemWrite()
 {
     setDeviceReady(false);			// Reserve the device for interaction.
-
     QString sysxMsg;
     QList< QList<QString> > systemData = getSystemSource().hex; // Get the loaded system data.
-    //QList<QString> systemAddress = getSystemSource().address;
-
-    //QString addr1 = QString::number(0, 16).toUpper();
-    //QString addr2 = addr1;
-
     for(int i=0;i<systemData.size();++i)
     {
         QList<QString> data = systemData.at(i);
         for(int x=0;x<data.size();++x)
         {
             QString hex;
-            /*if(x == sysxAddressOffset)
-            {
-                hex = addr1;
-            }
-            else if(x == sysxAddressOffset + 1)
-            {
-                hex = addr2;
-            }
-            else
-            { */
             hex = data.at(x);
-            //};
             if (hex.length() < 2) hex.prepend("0");
             sysxMsg.append(hex);
         };
     };
-    //setSyncStatus(true);		// In advance of the actual data transfer we set it already to sync.
     sendSysx(sysxMsg);	// Send the data.
     setDeviceReady(true);
 }
@@ -1343,4 +1285,9 @@ void SysxIO::writeToBuffer()
     SLEEP(150);
     emit setStatusMessage(tr("Ready"));
     setDeviceReady(true);
+}
+
+void SysxIO::relayUpdateSignal()
+{
+    emit updateSignal();
 }

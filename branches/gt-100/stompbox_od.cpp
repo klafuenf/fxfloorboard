@@ -51,7 +51,7 @@ void stompbox_od::setEditPages()
     editDetails()->page()->newGroupBox("Effect");
     editDetails()->page()->addSwitch(0, 0, 1, 1, "00", "00", "30", "middle", Qt::AlignCenter);
     editDetails()->page()->newStackControl(0);
-    editDetails()->page()->addComboBox(1, 0, 1, 1, "00", "00", "31");
+    editDetails()->page()->addComboBox(1, 0, 1, 1, "00", "00", "31", "large");
     editDetails()->page()->addStackControl();
     editDetails()->page()->addGroupBox(0, 0, 1, 1);
 
@@ -69,7 +69,7 @@ void stompbox_od::setEditPages()
     editDetails()->page()->newGroupBox("Solo");
     editDetails()->page()->addSwitch(0, 0, 1, 1, "00", "00", "35", "middle", Qt::AlignCenter);
     editDetails()->page()->addKnob(0, 1, 1, 1, "00", "00", "36");
-    editDetails()->page()->addGroupBox(0, 3, 1, 1);
+    editDetails()->page()->addGroupBox(1, 0, 1, 1);
 
     editDetails()->page()->insertStackField(0, 1, 1, 2, 2);
 

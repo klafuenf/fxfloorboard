@@ -46,7 +46,7 @@ void stompbox_cn_s::setEditPages()
 {
     editDetails()->page()->newGroupBox(tr("Channel Divide"));
     editDetails()->page()->newStackControl(0);
-    editDetails()->page()->addComboBox(2, 0, 1, 1, "06", "00", "40");   //mode
+    editDetails()->page()->addComboBox(2, 0, 1, 1, "06", "00", "40", "large");   //mode
     editDetails()->page()->addStackControl();
     editDetails()->page()->addGroupBox(0, 0, 1, 1);
 
@@ -54,7 +54,7 @@ void stompbox_cn_s::setEditPages()
 
     editDetails()->page()->newStackField(0, Qt::AlignCenter);
     editDetails()->page()->newGroupBox(tr("Channel Select"));
-    editDetails()->page()->addComboBox(0, 0, 1, 1, "06", "00", "41"); // channel select
+    editDetails()->page()->addComboBox(0, 0, 1, 1, "06", "00", "41", "large"); // channel select
     editDetails()->page()->addGroupBox(0, 0, 1, 1);
     editDetails()->page()->addStackField();
 

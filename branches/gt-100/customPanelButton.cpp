@@ -44,7 +44,7 @@ customPanelButton::customPanelButton(bool active, QPoint buttonPos, QWidget *par
     QObject::connect(this, SIGNAL( valueChanged(bool, QString, QString, QString) ),
                      this->parent(), SLOT( valueChanged(bool, QString, QString, QString) ));
 
-};
+}
 
 customPanelButton::customPanelButton(QString text, bool active, QPoint buttonPos, QWidget *parent,
                                      QString imagePath)
@@ -64,10 +64,7 @@ customPanelButton::customPanelButton(QString text, bool active, QPoint buttonPos
     setGeometry(buttonPos.x(), buttonPos.y(), buttonSize.width(), buttonSize.height());
     customPanelLabel(text);
 
-//    QObject::connect(this, SIGNAL( valueChanged(bool, QString, QString, QString) ),
-  //                   this->parent(), SLOT( valueChanged(bool, QString, QString, QString) ));
-
-};
+}
 
 customPanelButton::customPanelButton(int x, bool active, QPoint buttonPos, QWidget *parent,
                                      QString imagePath)
@@ -84,8 +81,7 @@ customPanelButton::customPanelButton(int x, bool active, QPoint buttonPos, QWidg
 
     setOffset(0);
     setGeometry(buttonPos.x(), buttonPos.y(), buttonSize.width(), buttonSize.height());
-
-};
+}
 
 void customPanelButton::customPanelLabel(QString text){
 
@@ -94,7 +90,7 @@ void customPanelButton::customPanelLabel(QString text){
     textLabel->setText(text);
     textLabel->setAlignment(Qt::AlignCenter);
     textLabel->setGeometry(buttonPos.x()-buttonSize.width()+3, buttonPos.y()+(buttonSize.height()-3), textLabel->width(), textLabel->height()-10);
-};
+}
 
 
 
@@ -107,13 +103,13 @@ void customPanelButton::paintEvent(QPaintEvent *)
 
     QPainter painter(this);
     painter.drawPixmap(target, image, source);
-};
+}
 
 void customPanelButton::setOffset(signed int imageNr)
 {
     this->yOffset = imageNr*buttonSize.height();
     this->update();
-};
+}
 
 void customPanelButton::mousePressEvent(QMouseEvent *event)
 {
@@ -131,32 +127,19 @@ void customPanelButton::mousePressEvent(QMouseEvent *event)
         setFocus();
         emitValue(true);
     };
-};
+}
 
 void customPanelButton::mouseReleaseEvent(QMouseEvent *event)
 {
     if ( event->button() == Qt::LeftButton )
     {
-        /*if(active)
-        {
-            setOffset(0);
-            setBlink(false);
-            emitValue(false);
-        }
-        else
-        {
-                        setOffset(1);
-            emitValue(true);
-                };*/
         clearFocus();
     };
-};
+}
 
 void customPanelButton::emitValue(bool value)
 {
     this->active = value;
-    //if (value != m_value) {
-    //    this->m_value = value;
     if(this->hex1.isEmpty() && this->hex2.isEmpty() && this->hex3.isEmpty())
     {
         emit valueChanged((bool)value);
@@ -165,8 +148,7 @@ void customPanelButton::emitValue(bool value)
     {
         emit valueChanged((bool)value, this->hex1, this->hex2, this->hex3);
     };
-    //};
-};
+}
 
 void customPanelButton::mouseMoveEvent(QMouseEvent *event)
 {
@@ -174,15 +156,7 @@ void customPanelButton::mouseMoveEvent(QMouseEvent *event)
     {
         return;
     };
-    /*if(active)
-    {
-        setOffset(2);
-    }
-    else
-    {
-        setOffset(0);
-    };*/
-};
+}
 
 void customPanelButton::setValue(bool value)
 {
@@ -195,9 +169,7 @@ void customPanelButton::setValue(bool value)
     {
         setOffset(0);
     };
-    //clearFocus();
-
-};
+}
 
 void customPanelButton::setBlink(bool value)
 {
@@ -217,7 +189,7 @@ void customPanelButton::setBlink(bool value)
             setOffset(0);
         };
     };
-};
+}
 
 void customPanelButton::blink()
 {
@@ -232,4 +204,4 @@ void customPanelButton::blink()
         setOffset(1);
     };
     clearFocus();
-};
+}

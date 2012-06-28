@@ -362,7 +362,7 @@ customControlGraphicEQ::customControlGraphicEQ(QWidget *parent,
 
     QHBoxLayout *knobLayout = new QHBoxLayout;
     knobLayout->setMargin(0);
-    knobLayout->setSpacing(10);
+    knobLayout->setSpacing(15);
     knobLayout->addLayout(knob_1Layout);  //Band_1
     knobLayout->addLayout(knob_2Layout);  //Band_2
 
@@ -375,7 +375,6 @@ customControlGraphicEQ::customControlGraphicEQ(QWidget *parent,
     knobLayout->addLayout(knob_8Layout);  //Band_8
     knobLayout->addLayout(knob_9Layout);  //Band_9
     knobLayout->addLayout(knob_10Layout); //Band_10
-    knobLayout->addLayout(knob_11Layout); //Level
     knobLayout->addStretch(0);
 
 
@@ -388,7 +387,13 @@ customControlGraphicEQ::customControlGraphicEQ(QWidget *parent,
     frameLayout->addWidget(this->frame, 0, Qt::AlignCenter);
     frameLayout->addLayout(knobLayout);
 
-    this->setLayout(frameLayout);
+    QHBoxLayout *graphLayout = new QHBoxLayout;
+    graphLayout->setMargin(0);
+    graphLayout->setSpacing(10);
+    graphLayout->addLayout(frameLayout);
+    graphLayout->addLayout(knob_11Layout); //Level
+
+    this->setLayout(graphLayout);
 
     QObject::connect(this->parent(), SIGNAL( dialogUpdateSignal() ),
                      this, SLOT( dialogUpdateSignal() ));
@@ -470,7 +475,7 @@ customControlGraphicEQ::customControlGraphicEQ(QWidget *parent,
     QObject::connect(this->frame, SIGNAL(LevelChanged(unsigned short)),
                      this, SLOT(LevelChanged(unsigned short) ));
 
-};
+}
 
 
 void customControlGraphicEQ::paintEvent(QPaintEvent *)
@@ -485,7 +490,7 @@ void customControlGraphicEQ::paintEvent(QPaintEvent *)
 	painter.drawPixmap(target, image, source);*/
 
 
-};
+}
 
 void customControlGraphicEQ::dialogUpdateSignal()
 {
@@ -586,7 +591,7 @@ void customControlGraphicEQ::dialogUpdateSignal()
     emit graphUpdateSignal( data_1, data_2, data_3, data_4, data_5,
                             data_6, data_7, data_8, data_9, data_10, data_11);
 
-};
+}
 
 void customControlGraphicEQ::Band_1Changed(unsigned short iBand_1)
 {
@@ -595,7 +600,7 @@ void customControlGraphicEQ::Band_1Changed(unsigned short iBand_1)
     SysxIO *sysxIO = SysxIO::Instance();
     sysxIO->setFileSource(this->area, addr_1, hex2, hex_1, hex);
     emit dialogUpdateSignal();
-};
+}
 
 void customControlGraphicEQ::Band_2Changed(unsigned short iBand_2)
 {
@@ -604,7 +609,7 @@ void customControlGraphicEQ::Band_2Changed(unsigned short iBand_2)
     SysxIO *sysxIO = SysxIO::Instance();
     sysxIO->setFileSource(this->area, addr_2, hex2, hex_2, hex);
     emit dialogUpdateSignal();
-};
+}
 
 void customControlGraphicEQ::Band_3Changed(unsigned short iBand_3)
 {
@@ -613,7 +618,7 @@ void customControlGraphicEQ::Band_3Changed(unsigned short iBand_3)
     SysxIO *sysxIO = SysxIO::Instance();
     sysxIO->setFileSource(this->area, addr_3, hex2, hex_3, hex);
     emit dialogUpdateSignal();
-};
+}
 
 void customControlGraphicEQ::Band_4Changed(unsigned short iBand_4)
 {
@@ -622,7 +627,7 @@ void customControlGraphicEQ::Band_4Changed(unsigned short iBand_4)
     SysxIO *sysxIO = SysxIO::Instance();
     sysxIO->setFileSource(this->area, addr_4, hex2, hex_4, hex);
     emit dialogUpdateSignal();
-};
+}
 
 void customControlGraphicEQ::Band_5Changed(unsigned short iBand_5)
 {
@@ -631,7 +636,7 @@ void customControlGraphicEQ::Band_5Changed(unsigned short iBand_5)
     SysxIO *sysxIO = SysxIO::Instance();
     sysxIO->setFileSource(this->area, addr_5, hex2, hex_5, hex);
     emit dialogUpdateSignal();
-};
+}
 
 void customControlGraphicEQ::Band_6Changed(unsigned short iBand_6)
 {
@@ -640,7 +645,7 @@ void customControlGraphicEQ::Band_6Changed(unsigned short iBand_6)
     SysxIO *sysxIO = SysxIO::Instance();
     sysxIO->setFileSource(this->area, addr_6, hex2, hex_6, hex);
     emit dialogUpdateSignal();
-};
+}
 
 void customControlGraphicEQ::Band_7Changed(unsigned short iBand_7)
 {
@@ -649,7 +654,7 @@ void customControlGraphicEQ::Band_7Changed(unsigned short iBand_7)
     SysxIO *sysxIO = SysxIO::Instance();
     sysxIO->setFileSource(this->area, addr_7, hex2, hex_7, hex);
     emit dialogUpdateSignal();
-};
+}
 
 void customControlGraphicEQ::Band_8Changed(unsigned short iBand_8)
 {
@@ -658,7 +663,7 @@ void customControlGraphicEQ::Band_8Changed(unsigned short iBand_8)
     SysxIO *sysxIO = SysxIO::Instance();
     sysxIO->setFileSource(this->area, addr_8, hex2, hex_8, hex);
     emit dialogUpdateSignal();
-};
+}
 
 void customControlGraphicEQ::Band_9Changed(unsigned short iBand_9)
 {
@@ -667,7 +672,7 @@ void customControlGraphicEQ::Band_9Changed(unsigned short iBand_9)
     SysxIO *sysxIO = SysxIO::Instance();
     sysxIO->setFileSource(this->area, addr_9, hex2, hex_9, hex);
     emit dialogUpdateSignal();
-};
+}
 
 void customControlGraphicEQ::Band_10Changed(unsigned short iBand_10)
 {
@@ -676,7 +681,7 @@ void customControlGraphicEQ::Band_10Changed(unsigned short iBand_10)
     SysxIO *sysxIO = SysxIO::Instance();
     sysxIO->setFileSource(this->area, addr_10, hex2, hex_10, hex);
     emit dialogUpdateSignal();
-};
+}
 
 void customControlGraphicEQ::LevelChanged(unsigned short iLevel)
 {
@@ -685,6 +690,6 @@ void customControlGraphicEQ::LevelChanged(unsigned short iLevel)
     SysxIO *sysxIO = SysxIO::Instance();
     sysxIO->setFileSource(this->area, addr_11, hex2, hex_11, hex);
     emit dialogUpdateSignal();
-};
+}
 
 

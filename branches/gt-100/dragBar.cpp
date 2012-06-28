@@ -26,75 +26,75 @@
 dragBar::dragBar(QWidget *parent, QString imagePath)
     : QWidget(parent)
 {
-	QObject::connect(this->parent(), SIGNAL( setCollapseState(bool) ),
-                this, SLOT( setCollapseState(bool) ) );
-	QObject::connect(this->parent(), SIGNAL( showDragBar(QPoint) ),
-                this, SLOT( showDragBar(QPoint) ) );
-	QObject::connect(this->parent(), SIGNAL( hideDragBar() ),
-                this, SLOT( hideDragBar() ) );
+    QObject::connect(this->parent(), SIGNAL( setCollapseState(bool) ),
+                     this, SLOT( setCollapseState(bool) ) );
+    QObject::connect(this->parent(), SIGNAL( showDragBar(QPoint) ),
+                     this, SLOT( showDragBar(QPoint) ) );
+    QObject::connect(this->parent(), SIGNAL( hideDragBar() ),
+                     this, SLOT( hideDragBar() ) );
 
-	this->imagePath = imagePath;
-	this->image = QPixmap(imagePath);
-	this->hide();
-};
+    this->imagePath = imagePath;
+    this->image = QPixmap(imagePath);
+    this->hide();
+}
 
 void dragBar::paintEvent(QPaintEvent *)
 {
-	QRectF target(0.0, 0.0, barSize.width(), barSize.height());
-	QRectF source(0.0, 0.0, image.width(), image.height());
+    QRectF target(0.0, 0.0, barSize.width(), barSize.height());
+    QRectF source(0.0, 0.0, image.width(), image.height());
 
-	QPainter painter(this);
-	painter.drawPixmap(target, image, source);
-};
+    QPainter painter(this);
+    painter.drawPixmap(target, image, source);
+}
 
 void dragBar::showDragBar(QPoint newpos)
 {
-	if(newpos.x() < offsetMin)
-	{
-		this->barPos = QPoint(offsetMin - (barSize.width()/2), newpos.y());
-	}
-	else if(newpos.x() > offsetMax)
-	{
-		this->barPos = QPoint(offsetMax - (barSize.width()/2), newpos.y());
-	}
-	else
-	{
-		this->barPos = QPoint(newpos.x() - (barSize.width()/2), newpos.y());
-	};
-	this->setGeometry(barPos.x(), barPos.y(), barSize.width(), barSize.height());
-	this->show();
-};
+    if(newpos.x() < offsetMin)
+    {
+        this->barPos = QPoint(offsetMin - (barSize.width()/2), newpos.y());
+    }
+    else if(newpos.x() > offsetMax)
+    {
+        this->barPos = QPoint(offsetMax - (barSize.width()/2), newpos.y());
+    }
+    else
+    {
+        this->barPos = QPoint(newpos.x() - (barSize.width()/2), newpos.y());
+    };
+    this->setGeometry(barPos.x(), barPos.y(), barSize.width(), barSize.height());
+    this->show();
+}
 
 void dragBar::hideDragBar()
 {
-	this->hide();	
-};
+    this->hide();
+}
 
 void dragBar::setDragBarSize(QSize newsize)
 {
-	this->barSize = newsize;
-};
+    this->barSize = newsize;
+}
 
 void dragBar::setDragBarMinOffset(signed int e_offsetMin, signed int c_offsetMin)
 {
-	this->e_offsetMin = e_offsetMin;
-	this->c_offsetMin = c_offsetMin;
-	this->offsetMin = e_offsetMin;
-};
+    this->e_offsetMin = e_offsetMin;
+    this->c_offsetMin = c_offsetMin;
+    this->offsetMin = e_offsetMin;
+}
 
 void dragBar::setDragBarMaxOffset(signed int maxOffset)
 {
-	this->offsetMax = maxOffset;
-};
+    this->offsetMax = maxOffset;
+}
 
 void dragBar::setCollapseState(bool state)
 {
-	if(state == false)
-	{
-		this->offsetMin = c_offsetMin;
-	}
-	else
-	{
-		this->offsetMin = e_offsetMin;
-	};
-};
+    if(state == false)
+    {
+        this->offsetMin = c_offsetMin;
+    }
+    else
+    {
+        this->offsetMin = e_offsetMin;
+    };
+}

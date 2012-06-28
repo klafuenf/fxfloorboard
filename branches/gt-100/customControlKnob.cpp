@@ -129,7 +129,7 @@ customControlKnob::customControlKnob(QWidget *parent,
 
 	QObject::connect(this, SIGNAL( updateDisplay(QString) ),
                 this->display, SLOT( setText(QString) ));
-};
+}
 
 void customControlKnob::paintEvent(QPaintEvent *)
 {
@@ -141,7 +141,7 @@ void customControlKnob::paintEvent(QPaintEvent *)
 
 	QPainter painter(this);
 	painter.drawPixmap(target, image, source);*/
-};
+}
 
 void customControlKnob::dialogUpdateSignal()
 {
@@ -159,4 +159,4 @@ void customControlKnob::dialogUpdateSignal()
 	//this->display->setText(valueStr);
 	emit updateDisplay(valueStr);
 	//this->valueChanged(value, this->hex1, this->hex2, this->hex3);
-};
+}

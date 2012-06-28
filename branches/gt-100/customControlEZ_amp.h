@@ -27,6 +27,7 @@
 #include <QWidget>
 #include <QtGui>
 #include <QFrame>
+#include <QSlider>
 #include "customEZ_amp.h"
 #include "customKnob.h"
 #include "customControlLabel.h"
@@ -37,66 +38,47 @@ class customControlEZ_amp : public QWidget
 
 public:
     customControlEZ_amp(QWidget *parent = 0,
-		QString hex1 = "void",
-		QString hex2 = "void",
-		QString hex3 = "void",
-		QString background = "normal", 
-		QString direction = "bottom", 
-		int lenght = 34);
+                        QString hex1 = "void",
+                        QString hex2 = "void",
+                        QString hex3 = "void",
+                        QString background = "normal",
+                        QString direction = "bottom",
+                        int lenght = 34);
+
+    QPainter p;
 
 protected:
-        void paintEvent(QPaintEvent *event);
+    void paintEvent(QPaintEvent *event);
+    void dataChanged();
 
 public slots:
-	void dialogUpdateSignal();
-        void LowGainChanged(unsigned short iLowGain);
-        void MidFreqChanged(unsigned short iMidFreq);
-        void MidQChanged(unsigned short iMidQ);
-        void MidGainChanged(unsigned short iMidGain);
-        void HighGainChanged(unsigned short iHighGain);
-        void LevelChanged(unsigned short iLevel);
+    void dialogUpdateSignal();
+    void y_axisChanged(int iy_axis);
+    void x_axisChanged(int ix_axis);
 
 signals:
-	void updateSignal();
-        void updateDisplay(QString text);
-        void updateDisplay_1(QString text);
-        void updateDisplay_2(QString text);
-        void updateDisplay_3(QString text);
-        void updateDisplay_4(QString text);
-        void updateDisplay_5(QString text);
-        void updateDisplay_6(QString text);
-        void graphUpdateSignal(QString hex_1, QString hex_2, QString hex_3, QString hex_4, QString hex_5, QString hex_6 );
+    void updateSignal();
+    void graphUpdateSignal(QString hex_1, QString hex_2);
 
 private:
-  customEZ_amp* frame;
-	customControlLabel* label_1;
-	customControlLabel* label_2;
-	customControlLabel* label_3;
-	customControlLabel* label_4;
-	customControlLabel* label_5;
-	customControlLabel* label_6;
-	QLineEdit* display_1;
-	QLineEdit* display_2;
-	QLineEdit* display_3;
-	QLineEdit* display_4;
-	QLineEdit* display_5;
-	QLineEdit* display_6;
-	customKnob* knob_1;
-	customKnob* knob_2;
-	customKnob* knob_3;
-	customKnob* knob_4;
-	customKnob* knob_5;
-	customKnob* knob_6;
-	QString hex_1;
-	QString hex_2;
-	QString hex_3;
-	QString hex_4;
-	QString hex_5;
-	QString hex_6;
-	QString hex1;
-	QString hex2;
-	QString hex3;
-	QString area;
+    customEZ_amp* frame;
+    QSlider* v_slider;
+    QSlider* h_slider;
+    QString hex_1;
+    QString hex_2;
+    QString hex1;
+    QString hex2;
+    QString hex3;
+    QString hex4;
+    QString hex5;
+    QString use;
+    int y_data;
+    int x_data;
+    customControlLabel* label_1;
+    customControlLabel* label_2;
+    customControlLabel* label_3;
+    customControlLabel* label_4;
+    int toggle;
 };
 
 #endif // customControlEZ_amp_H

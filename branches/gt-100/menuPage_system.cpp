@@ -86,7 +86,7 @@ void menuPage_system::setEditPages()
     editDetails()->page()->addKnob(0, 3, 1, 1, "00", "00", "78", "System"); // revberb level
     editDetails()->page()->addGroupBox(3, 1, 1, 1);
 
-    editDetails()->addPage("00", "00", "02", "00", "System");
+    editDetails()->addPage("00", "00", "2F", "00", "Tables");
 
 
     editDetails()->page()->newGroupBox("User Options " + text);
@@ -118,17 +118,10 @@ void menuPage_system::setEditPages()
 
     editDetails()->page()->newGroupBox("Global Equalizer");
     editDetails()->page()->addMasterEQ(0, 1, 2, 4, "00", "00", "71", "System");
-    /*editDetails()->page()->addKnob(0, 0, 1, 1, "00", "00", "72", "System"); // eq low
-    editDetails()->page()->addLabel(0, 1, 1, 1, "       ");
-    editDetails()->page()->addKnob(0, 2, 1, 1, "00", "00", "73", "System"); // eq mid gain
-    editDetails()->page()->addKnob(0, 3, 1, 1, "00", "00", "75", "System"); // eq mid Q
-    editDetails()->page()->addKnob(0, 4, 1, 1, "00", "00", "74", "System"); // eq mid freq
-    editDetails()->page()->addLabel(0, 5, 1, 1, "       ");
-    editDetails()->page()->addKnob(0, 6, 1, 1, "00", "00", "76", "System"); // eq high*/
     editDetails()->page()->addGroupBox(0, 0, 3, 1);
     editDetails()->page()->addGroupBox(0, 0, 1, 1);
 
-    editDetails()->addPage("00", "00", "02", "01", "System");
+    editDetails()->addPage("00", "00", "2F", "01", "Tables");
 
 
     editDetails()->page()->newGroupBox("Internal Pedals " + text);
@@ -156,7 +149,7 @@ void menuPage_system::setEditPages()
     editDetails()->page()->addGroupBox(2, 0, 1, 1);
 
     editDetails()->page()->addGroupBox(0, 0, 1, 1);
-    editDetails()->addPage("00", "00", "02", "02", "System");
+    editDetails()->addPage("00", "00", "2F", "02", "Tables");
 
     editDetails()->page()->newGroupBox("External pedals " + text);
     editDetails()->page()->newGroupBox("SUB EXP PEDAL");
@@ -180,7 +173,7 @@ void menuPage_system::setEditPages()
     editDetails()->page()->addComboBox(2, 4, 1, 1, "00", "02", "6F", "System"); // sub ctl 2 max
     editDetails()->page()->addGroupBox(2, 0, 1, 1);
     editDetails()->page()->addGroupBox(0, 0, 1, 1);
-    editDetails()->addPage("00", "00", "02", "03", "System");
+    editDetails()->addPage("00", "00", "2F", "03", "Tables");
 
 
     /////////////////////////////////// preamp A #1 ///////////////////////////////////////////
@@ -388,7 +381,7 @@ void menuPage_system::setEditPages()
     editDetails()->page()->newStackField(2);editDetails()->page()->addStackField();
     editDetails()->page()->newStackField(2);editDetails()->page()->addStackField();
 
-    editDetails()->addPage("00", "00", "02", "04", "System");
+    editDetails()->addPage("00", "00", "2F", "04", "Tables");
 
     /////////////////////////////////////////////////// preamp B #1 //////////////////////////////////////////////
     editDetails()->page()->newGroupBox(tr("SYSTEM 1 Channel B"));
@@ -594,7 +587,7 @@ void menuPage_system::setEditPages()
     editDetails()->page()->newStackField(2);editDetails()->page()->addStackField();
     editDetails()->page()->newStackField(2);editDetails()->page()->addStackField();
 
-    editDetails()->addPage("00", "00", "02", "05", "System");
+    editDetails()->addPage("00", "00", "2F", "05", "Tables");
 
     /////////////////////////////////// preamp A #2 ///////////////////////////////////////////
 
@@ -801,7 +794,7 @@ void menuPage_system::setEditPages()
     editDetails()->page()->newStackField(2);editDetails()->page()->addStackField();
     editDetails()->page()->newStackField(2);editDetails()->page()->addStackField();
 
-    editDetails()->addPage("00", "00", "02", "06", "System");
+    editDetails()->addPage("00", "00", "2F", "06", "Tables");
 
 
     /////////////////////////////////////////////////// preamp B #2 //////////////////////////////////////////////
@@ -1008,7 +1001,7 @@ void menuPage_system::setEditPages()
     editDetails()->page()->newStackField(2);editDetails()->page()->addStackField();
     editDetails()->page()->newStackField(2);editDetails()->page()->addStackField();
 
-    editDetails()->addPage("00", "00", "02", "07", "System");
+    editDetails()->addPage("00", "00", "2F", "07", "Tables");
 
     /////////////////////////////////// preamp A #3 ///////////////////////////////////////////
 
@@ -1215,7 +1208,7 @@ void menuPage_system::setEditPages()
     editDetails()->page()->newStackField(2);editDetails()->page()->addStackField();
     editDetails()->page()->newStackField(2);editDetails()->page()->addStackField();
 
-    editDetails()->addPage("00", "00", "02", "08", "System");
+    editDetails()->addPage("00", "00", "2F", "08", "Tables");
 
     /////////////////////////////////////////////////// preamp B #3 //////////////////////////////////////////////
     editDetails()->page()->newGroupBox(tr("SYSTEM 3 Channel B"));
@@ -1421,6 +1414,5 @@ void menuPage_system::setEditPages()
     editDetails()->page()->newStackField(2);editDetails()->page()->addStackField();
     editDetails()->page()->newStackField(2);editDetails()->page()->addStackField();
 
-    editDetails()->addPage("00", "00", "02", "09", "System");
-
+    editDetails()->addPage("00", "00", "2F", "09", "Tables");
 }

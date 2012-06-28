@@ -42,7 +42,7 @@ void stompbox_fv::setEditPages()
 {
 
     editDetails()->page()->newGroupBox("Foot Volume");
-    editDetails()->page()->addComboBox(0, 0, 1, 2, "06", "00", "30");
+    editDetails()->page()->addComboBox(0, 0, 1, 2, "06", "00", "30", "large");
     editDetails()->page()->addKnob(1, 0, 1, 1, "06", "00", "31");
     editDetails()->page()->addKnob(1, 1, 1, 1, "06", "00", "32");
     editDetails()->page()->addKnob(2, 0, 1, 2, "06", "00", "33");

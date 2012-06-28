@@ -1,29 +1,28 @@
 
 GT-100FxFloorBoard Copyright (C) 2007~2012 Colin Willcocks (gumtownbassman@yahoo.com).
  All rights reserved.
-=======
+======================================================================================
 
 
-GT-100FxFloorBoard version 20120511: 11 May 2012
+GT-100FxFloorBoard version 20120523: 23 May 2012
 *****************************************************
-PLEASE FEEL FREE TO DONATE, YOU MAY FREELY USE THIS SOFTWARE, 
+YOU MAY FREELY USE THIS SOFTWARE FOR NON-COMERCIAL USE, BUT PLEASE FEEL FREE TO DONATE, 
  JUST KEEP IN MIND THE 1000's of HOURS SPENT OVER 7 YEARS GETTING IT HERE,
-  I WOULD LOVE A BEER!!!. :-)
-but then patches created by you for sharing with all would be nice too.
-you can email patches and custom system settings saved files to the above address.
+  I WOULD LOVE A BEER !!!. :-)
 ***********************************************************************************
-*
+
+
  ********* LATEST FEATURES ADDED****************************************************
- *Most GT-100 patch parameters are ready for realtime editing, 
- *yet to obtain a GT-100 to test the program on, currently built to GT-100 midi implimentation only.  
+ *Added GT-10, GT-8, GT-10B and GT-6B patch file compatability/conversion.
+ *Auto connect, auto load current GT-100 patch on startup. 
+ *File saving is still disabled.    
+
  
 ********* FIRST USE CONNECTION HINTS ************** 
- 
 a.) Connect the GT-100 via a USB cable, 
-ensure the Boss usb driver software is installed and the SYSTEM>USB>Driver setting on the GT100 is set to 'advanced'.
+ensure the Boss usb driver software is installed..
 
-b.) In most cases the program should select GT-100 device and connect automaticaly, if not, then follow the next two steps.
-Start the FxFloorBoard program, for the Menu select Preferences/Midi and select the GT100 midi device for midi input and output.
+b.) Start the FxFloorBoard program, for the Menu select Preferences/Midi and select the GT100 midi device for midi input and output.
 
 c.) Select the editor program "Connect" button, it should stay "on" if all connections are correct.
 
@@ -43,25 +42,21 @@ when the desired sound is achieved, you can either save the patch to the GT100 o
 h.) To save the patch to the GT-100, select a location with a 'single-click' on the Patch-Tree,
 then press the "write/sync" button. 
 
-****************** If there is a problem 'connecting' ensure the GT-100 UNIT ID is set to "1" (factory default) 
+****************** If there is a problem 'connecting' ensure the GT-100 MIDI UNIT ID is set to "1" (factory default) 
 * and the midi channel is set to "1".*************************************************************************
 
 GT100-FxFloorBoard: 
-NOTE: THIS IS AN UNPAID PROJECT, SO FAR INVESTING OVER 7000 HOURS OF MY TIME OVER 5 YEARS, 
-also I WILL NOT ACCEPT LIABILITY FOR ANY DATA LOSS, even though TO THE BEST OF MY KNOWLEDGE EVERYTHING SHOULD WORK CORRECTLY. 
+NOTE: THIS IS AN UNPAID PROJECT, SO FAR INVESTING MANY 1000's HOURS OF MY TIME OVER 7 YEARS.
+I am not employed by Roland, nor is Roland affiliated with the software.
+ 
+I WILL NOT ACCEPT LIABILITY FOR ANY DATA LOSS, TO THE BEST OF MY KNOWLEDGE EVERYTHING SHOULD WORK CORRECTLY. 
 
-files can be saved/loaded as syx or mid (SMF) or gxg (Librarian) formats.
-the GT-100FxFloorBoard will also open GT-10 *.gxg & *.mid files, and translate GT-8 patch files (*.syx single patch type).
+files can be saved/loaded as syx or mid (SMF) or gcl (Librarian) formats.
+the GT-100FxFloorBoard will eventually be able open GT-10 *.gxg & *.mid files, and translate GT-8 patch files (*.syx single patch type).
 
-layout increased, which may be a problem for low screen resolutions. (i use 1280 X 800 minimum)
+layout increased, which may be a problem for low screen resolutions. (i use 1366 X 782 minimum)
 
 This project is a continuing session of evolution.........
-
-patch tree to the left side should give patch change on single click and (when 'connected' button active),
- double click should request patch transfer.
-opening each bank node should request patch names (while 'connected').
-
-patch rename by doubleclicking name display panel.
 
 IF YOU FIND A BUG OR HAVE SOME ISSUES......
 reply email to gumtownbassman@yahoo.com
@@ -76,6 +71,10 @@ This program is distributed in the hope that it will be useful, but WITHOUT
 ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
 FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more 
 details.
+
+This software is not for sale - if you paid for it, there seller has comitted 
+an act of piracy and is subject to software piracy laws. For commercial use, 
+a commercial licence must be obtained from the software author.
 
 You should have received a copy of the GNU General Public License along with 
 this program; if not, write to the Free Software Foundation, Inc., 675 Mass 

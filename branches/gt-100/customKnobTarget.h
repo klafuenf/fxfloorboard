@@ -68,6 +68,6 @@ private:
 	QString background;
 	int range;
 	int rangeMin;
-	};
+};
 
 #endif // CUSTOMKNOBTARGET_H

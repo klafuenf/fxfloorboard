@@ -206,14 +206,6 @@ RETRY:
             wait = wait + 1;
             p=p+s;
             emit setStatusProgress(wait);
-            /*                 if(hex == "F7")
-             {
-                midiMsgOut->sendMessage(&message);  // send the midi data as a std::vector
-                SLEEP(wait/8);
-                message.clear();
-                close = wait;
-                wait = 0;
-             };    */
             ptr++; i++;
         };
         midiMsgOut->sendMessage(&message);
@@ -239,7 +231,6 @@ void midiIO::sendMidiMsg(QString sysxOutMsg, int midiOutPort)
 {
     RtMidiOut *midiMsgOut = 0;
     const std::string clientName = "FxFloorBoard";
-    //midiMsgOut = new RtMidiOut(clientName);
     try { midiMsgOut = new RtMidiOut(clientName);
         unsigned int nPorts = midiMsgOut->getPortCount();   // Check available ports.
         if ( nPorts < 1 ){ goto cleanup; }

@@ -696,7 +696,7 @@ void bankTreeList::updatePatch(QString replyMsg)
         /* END WARNING */
     };
 
-     /*   Preferences *preferences = Preferences::Instance(); // Load the preferences.
+    /*   Preferences *preferences = Preferences::Instance(); // Load the preferences.
         if(preferences->getPreferences("Midi", "DBug", "bool")=="true")
         {
         if (replyMsg.size() > 0){
@@ -830,8 +830,8 @@ void bankTreeList::updatePatchNames(QString name)
                     emit setStatusSymbol(1);
                     emit setStatusMessage(tr("Ready"));
                     emit setStatusProgress(0);
-                      QObject::disconnect(sysxIO, SIGNAL(patchName(QString)),
-                                this, SLOT(updatePatchNames(QString)));
+                    QObject::disconnect(sysxIO, SIGNAL(patchName(QString)),
+                                        this, SLOT(updatePatchNames(QString)));
                 };
             }
             else {SysxIO *sysxIO = SysxIO::Instance();
@@ -840,7 +840,8 @@ void bankTreeList::updatePatchNames(QString name)
                 emit setStatusMessage(tr("Ready"));
                 
                 QObject::disconnect(sysxIO, SIGNAL(patchName(QString)),
-                            this, SLOT(updatePatchNames(QString)));
+                                    this, SLOT(updatePatchNames(QString)));
+                sysxIO->writeToBuffer();
             };
 }
 

@@ -115,9 +115,8 @@ floorBoard::floorBoard(QWidget *parent,
     this->editDialog->hide();
     this->oldDialog = this->editDialog;
 
-    /*floorBoardDisplay *display2 = new floorBoardDisplay(this);
-        display2->setPos(liberainPos); */
-
+    SysxIO *sysxIO = SysxIO::Instance();
+    QObject::connect(sysxIO, SIGNAL(updateSignal()), this, SIGNAL(updateSignal()));
 
     QObject::connect(this, SIGNAL( resizeSignal(QRect) ), bankList, SLOT( updateSize(QRect) ) );
     QObject::connect(display, SIGNAL(connectedSignal()), bankList, SLOT(connectedSignal()));
@@ -766,18 +765,18 @@ void floorBoard::centerEditDialog()
 
 void floorBoard::initMenuPages()
 {
-    QVector<menuPage *> initMenuPages(14);
+    QVector<menuPage *> initMenuPages(12);
     this->menuPages = initMenuPages.toList();;
 
     /* MENU_PAGES */
     menuPage *ez_edit = new menuPage_ez_edit(this);
     ez_edit->setId(31);
 
-    menuPage *system = new menuPage_system(this);
-    system->setId(30);
-    
-    menuPage *midi = new menuPage_midi(this);
-    midi->setId(29);
+   // menuPage *system = new menuPage_system(this);
+   // system->setId(30);
+
+   // menuPage *midi = new menuPage_midi(this);
+    //midi->setId(29);
 
     menuPage *assign8 = new menuPage_assign8(this);
     assign8->setId(28);
@@ -811,10 +810,13 @@ void floorBoard::menuButtonSignal()
 {
     Preferences *preferences = Preferences::Instance();
     if(preferences->getPreferences("Window", "Single", "bool")=="true")
-    { this->oldDialog->hide();
-    this->editDialog->show(); };
-    emit updateSignal();
+    {
+        this->oldDialog->hide();
+        this->editDialog->show();
+    };
 }
+
+
 
 
 

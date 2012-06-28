@@ -30,44 +30,41 @@
 renameWidget::renameWidget(QWidget *parent)
     : QWidget(parent)
 {
-	QObject::connect(this, SIGNAL(nameChanged(QString)), 
-		this->parentWidget(), SLOT(setPatchDisplay(QString)));
-};
+    QObject::connect(this, SIGNAL(nameChanged(QString)),
+                     this->parentWidget(), SLOT(setPatchDisplay(QString)));
+}
 
 void renameWidget::mouseReleaseEvent(QMouseEvent *event)
 {
-	if ( event->button() == Qt::LeftButton )
-	{	
-		renameDialog *dialog = new renameDialog;
-		connect(dialog, SIGNAL(nameChanged(QString)), this, SLOT(updateName(QString)));
-		dialog->exec();
-	};
-};
+    if ( event->button() == Qt::LeftButton )
+    {
+        renameDialog *dialog = new renameDialog;
+        connect(dialog, SIGNAL(nameChanged(QString)), this, SLOT(updateName(QString)));
+        dialog->exec();
+    };
+}
 
 void renameWidget::updateName(QString name)
 {
-	SysxIO *sysxIO = SysxIO::Instance();
+    SysxIO *sysxIO = SysxIO::Instance();
 
-	QList<QString> hexData;
-	for(int i=0; i<16; ++i)
-	{
-		if(i<name.size())
-		{
-				char asciiChar = name.at(i).toAscii();
-				int asciiValue = (int)asciiChar;
-				QString nameHexValue = QString::number(asciiValue, 16).toUpper();
-				if(nameHexValue.length() < 2) nameHexValue.prepend("0");
-				hexData.append(nameHexValue);
-		}
-		else
-		{
-			hexData.append("20");
-		};
-	};
-	sysxIO->setFileSource("Structure", nameAddress, "00", "00", hexData);
-	
-	
-	sysxIO->setCurrentPatchName(name);
-
-	emit nameChanged(name);
-};
+    QList<QString> hexData;
+    for(int i=0; i<16; ++i)
+    {
+        if(i<name.size())
+        {
+            char asciiChar = name.at(i).toAscii();
+            int asciiValue = (int)asciiChar;
+            QString nameHexValue = QString::number(asciiValue, 16).toUpper();
+            if(nameHexValue.length() < 2) nameHexValue.prepend("0");
+            hexData.append(nameHexValue);
+        }
+        else
+        {
+            hexData.append("20");
+        };
+    };
+    sysxIO->setFileSource("Structure", nameAddress, "00", "00", hexData);
+    sysxIO->setCurrentPatchName(name);
+    emit nameChanged(name);
+}

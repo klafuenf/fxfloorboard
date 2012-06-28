@@ -50,7 +50,7 @@ void stompbox_lp::setEditPages()
 {
     editDetails()->page()->newGroupBox("Effect");
     editDetails()->page()->addSwitch(0, 0, 1, 1, "06", "00", "55", "middle", Qt::AlignCenter);
-    editDetails()->page()->addComboBox(1, 0, 1, 1, "06", "00", "56");
+    editDetails()->page()->addComboBox(1, 0, 1, 1, "06", "00", "56", "large");
     editDetails()->page()->addGroupBox(0, 0, 1, 1);
 
     editDetails()->page()->newGroupBox("Level");

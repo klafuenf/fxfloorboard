@@ -426,7 +426,6 @@
 						<xs:enumeration value="00/0A/05/15"/>
 						<xs:enumeration value="00/0F/1/16"/>
 						<xs:enumeration value="00/14/-10/+10"/>
-						<xs:enumeration value="00/24/1664/1700"/>
 						<xs:enumeration value="00/28/-20/+20"/>
 						<xs:enumeration value="00/2C/256/300"/>
 						<xs:enumeration value="00/30/-24/+24"/>
@@ -434,8 +433,8 @@
 						<xs:enumeration value="00/31/01/50"/>
 						<xs:enumeration value="00/31/100/2"/>
 						<xs:enumeration value="00/47/3328/3400"/>
-						<xs:enumeration value="00/48/3328/3400"/>
 						<xs:enumeration value="00/50/0.0/40.0"/>
+						<xs:enumeration value="00/50/1920/2000"/>
 						<xs:enumeration value="00/63/0.1/10.0"/>
 						<xs:enumeration value="00/64/-50/+50"/>
 						<xs:enumeration value="00/64/0/100"/>
@@ -1522,6 +1521,8 @@
 						<xs:enumeration value="Custom #1"/>
 						<xs:enumeration value="Custom #2"/>
 						<xs:enumeration value="Custom #3"/>
+						<xs:enumeration value="Custom Amp"/>
+						<xs:enumeration value="Custom OD/DS"/>
 						<xs:enumeration value="D"/>
 						<xs:enumeration value="D (Bm)"/>
 						<xs:enumeration value="D-Comp"/>
@@ -2109,7 +2110,6 @@
 						<xs:enumeration value="MASTER: Patch Level"/>
 						<xs:enumeration value="METAL-1"/>
 						<xs:enumeration value="METAL-2"/>
-						<xs:enumeration value="MIDI PAGE"/>
 						<xs:enumeration value="MIDI Port"/>
 						<xs:enumeration value="MIDI Program Table BANK 0"/>
 						<xs:enumeration value="MIDI Program Table BANK 1"/>
@@ -2132,6 +2132,7 @@
 						<xs:enumeration value="Metal Zone"/>
 						<xs:enumeration value="Mid Boost"/>
 						<xs:enumeration value="Middle"/>
+						<xs:enumeration value="Midi Page Select"/>
 						<xs:enumeration value="Midi Start"/>
 						<xs:enumeration value="Mild"/>
 						<xs:enumeration value="Mixer: CH A/B Balance"/>
@@ -2647,6 +2648,7 @@
 						<xs:enumeration value="System 7"/>
 						<xs:enumeration value="System 8"/>
 						<xs:enumeration value="System 9"/>
+						<xs:enumeration value="System page select"/>
 						<xs:enumeration value="T"/>
 						<xs:enumeration value="T-Amp Lead"/>
 						<xs:enumeration value="T.WAH "/>
@@ -2930,7 +2932,6 @@
 						<xs:enumeration value="oo:1"/>
 						<xs:enumeration value="open"/>
 						<xs:enumeration value="p"/>
-						<xs:enumeration value="page select"/>
 						<xs:enumeration value="q"/>
 						<xs:enumeration value="quarter note"/>
 						<xs:enumeration value="quarter note triplet"/>
@@ -3062,6 +3063,8 @@
 						<xs:enumeration value="05"/>
 						<xs:enumeration value="06"/>
 						<xs:enumeration value="07"/>
+						<xs:enumeration value="08"/>
+						<xs:enumeration value="09"/>
 						<xs:enumeration value="1"/>
 						<xs:enumeration value="1 (7th string, open to 1st string, 24th fret)"/>
 						<xs:enumeration value="1/1"/>
@@ -3200,7 +3203,9 @@
 						<xs:enumeration value="Crunch"/>
 						<xs:enumeration value="Custom"/>
 						<xs:enumeration value="Custom A"/>
+						<xs:enumeration value="Custom Amp"/>
 						<xs:enumeration value="Custom B"/>
+						<xs:enumeration value="Custom OD/DS"/>
 						<xs:enumeration value="D (Bm)"/>
 						<xs:enumeration value="D-Comp"/>
 						<xs:enumeration value="DF:"/>
@@ -3906,6 +3911,7 @@
 						<xs:enumeration value="enable"/>
 						<xs:enumeration value="ms"/>
 						<xs:enumeration value="open"/>
+						<xs:enumeration value="page select"/>
 						<xs:enumeration value="same as RX  "/>
 					</xs:restriction>
 				</xs:simpleType>
@@ -3915,6 +3921,7 @@
 				<xs:simpleType>
 					<xs:restriction base="xs:string">
 						<xs:enumeration value=""/>
+						<xs:enumeration value="page select"/>
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:attribute>
@@ -4277,6 +4284,7 @@
 						<xs:enumeration value="Master High"/>
 						<xs:enumeration value="Master Low"/>
 						<xs:enumeration value="Master Mid"/>
+						<xs:enumeration value="Midi Page Select"/>
 						<xs:enumeration value="Mixer"/>
 						<xs:enumeration value="NS1 release"/>
 						<xs:enumeration value="NS1 threshold"/>
@@ -4339,6 +4347,7 @@
 						<xs:enumeration value="S/R return level"/>
 						<xs:enumeration value="S/R send level"/>
 						<xs:enumeration value="Send/Return"/>
+						<xs:enumeration value="System page select"/>
 						<xs:enumeration value="Text"/>
 					</xs:restriction>
 				</xs:simpleType>
@@ -4401,8 +4410,6 @@
 						<xs:enumeration value="DF:"/>
 						<xs:enumeration value="DIV CH SELECT"/>
 						<xs:enumeration value="DIV:"/>
-						<xs:enumeration value="Delay 1 Time"/>
-						<xs:enumeration value="Delay 2 Time"/>
 						<xs:enumeration value="Delay Time"/>
 						<xs:enumeration value="EQ H mid"/>
 						<xs:enumeration value="EQ Hi cut"/>
@@ -4685,6 +4692,7 @@
 						<xs:enumeration value="On/Off"/>
 						<xs:enumeration value="Open/Close"/>
 						<xs:enumeration value="Output Select"/>
+						<xs:enumeration value="PAGE SELECT"/>
 						<xs:enumeration value="Patch Level"/>
 						<xs:enumeration value="Patch Mode Output Select"/>
 						<xs:enumeration value="Pattern"/>
@@ -4715,7 +4723,6 @@
 						<xs:enumeration value="Reverb Time"/>
 						<xs:enumeration value="Ring Level"/>
 						<xs:enumeration value="Rise Time"/>
-						<xs:enumeration value="SELECT"/>
 						<xs:enumeration value="Send Level"/>
 						<xs:enumeration value="Sens"/>
 						<xs:enumeration value="Separ"/>
@@ -4744,6 +4751,7 @@
 						<xs:enumeration value="Treble"/>
 						<xs:enumeration value="Trig.Sens"/>
 						<xs:enumeration value="Type"/>
+						<xs:enumeration value="Variation"/>
 						<xs:enumeration value="Vibe Depth"/>
 						<xs:enumeration value="Vibe Rate"/>
 						<xs:enumeration value="Voice"/>
@@ -4766,6 +4774,7 @@
 						<xs:enumeration value="high freq"/>
 						<xs:enumeration value="low freq"/>
 						<xs:enumeration value="mid freq"/>
+						<xs:enumeration value="nul"/>
 						<xs:enumeration value="phrase"/>
 					</xs:restriction>
 				</xs:simpleType>

@@ -26,95 +26,102 @@
 #include "SysxIO.h"
 
 customControlListMenu::customControlListMenu(QWidget *parent,
-                                                                         QString hex1, QString hex2, QString hex3,
-                                                                         QString direction)
-        : QWidget(parent)
+                                             QString hex1, QString hex2, QString hex3,
+                                             QString direction)
+    : QWidget(parent)
 {
-        this->label = new customControlLabel(this);
-        this->controlListComboBox = new customComboBox(this);
+    this->direction = direction;
+    this->label = new customControlLabel(this);
+    this->controlListComboBox = new customComboBox(this);
 
+    if(direction.contains("Tables") || direction.contains("large"))
+    {
+        this->controlListComboBox->setObjectName("largecombo");
+    }
+    else
+    {
         this->controlListComboBox->setObjectName("smallcombo");
-        this->hex1 = hex1;
-        this->hex2 = hex2;
-        this->hex3 = hex3;
-        if (direction.contains("System")) {this->area = "System"; }
-        else {this->area = "Structure"; };
+    };
+    this->hex1 = hex1;
+    this->hex2 = hex2;
+    this->hex3 = hex3;
+    if (direction.contains("System")) {this->area = "System"; }
+    if (direction.contains("Tables")) {this->area = "Tables"; }
+    else {this->area = "Structure"; };
 
-        MidiTable *midiTable = MidiTable::Instance();
-        Midi items;
+    MidiTable *midiTable = MidiTable::Instance();
+    Midi items;
 
-        items = midiTable->getMidiMap(this->area, hex1, hex2, hex3);
+    items = midiTable->getMidiMap(this->area, hex1, hex2, hex3);
 
-        QString labeltxt = items.customdesc;
+    QString labeltxt = items.customdesc;
 
-        this->label->setUpperCase(true);
-        this->label->setText(labeltxt);
+    this->label->setUpperCase(true);
+    this->label->setText(labeltxt);
 
-        setComboBox();
+    setComboBox();
 
-        //QPoint labelPos, comboboxPos;
-        if(direction == "left")
-        {
+    if(direction == "left")
+    {
 
-        }
-        else if(direction == "right")
-        {
+    }
+    else if(direction == "right")
+    {
 
-        }
-        else if(direction == "top")
-        {
+    }
+    else if(direction == "top")
+    {
 
-        }
-        else if(direction == "bottom")
-        {
-                this->label->setAlignment(Qt::AlignLeft);
+    }
+    else if(direction == "bottom")
+    {
+        this->label->setAlignment(Qt::AlignLeft);
 
-                QVBoxLayout *mainLayout = new QVBoxLayout;
-                mainLayout->setMargin(0);
-                mainLayout->setSpacing(0);
-                mainLayout->addStretch(0);
-                mainLayout->addWidget(this->label, 0, Qt::AlignLeft);
-                mainLayout->addWidget(this->controlListComboBox, 0, Qt::AlignLeft);
+        QVBoxLayout *mainLayout = new QVBoxLayout;
+        mainLayout->setMargin(0);
+        mainLayout->setSpacing(0);
+        mainLayout->addStretch(0);
+        mainLayout->addWidget(this->label, 0, Qt::AlignLeft);
+        mainLayout->addWidget(this->controlListComboBox, 0, Qt::AlignLeft);
 
-                this->setLayout(mainLayout);
-                this->setFixedHeight(12 + 16);
+        this->setLayout(mainLayout);
+    }
+    else
+    {
+        this->label->setAlignment(Qt::AlignLeft);
 
-        }
-  else
-        {
-                this->label->setAlignment(Qt::AlignLeft);
+        QVBoxLayout *mainLayout = new QVBoxLayout;
+        mainLayout->setMargin(0);
+        mainLayout->setSpacing(0);
+        mainLayout->addStretch(0);
+        mainLayout->addWidget(this->label, 0, Qt::AlignLeft);
+        mainLayout->addWidget(this->controlListComboBox, 0, Qt::AlignLeft);
 
-                QVBoxLayout *mainLayout = new QVBoxLayout;
-                mainLayout->setMargin(0);
-                mainLayout->setSpacing(0);
-                mainLayout->addStretch(0);
-                mainLayout->addWidget(this->label, 0, Qt::AlignLeft);
-                mainLayout->addWidget(this->controlListComboBox, 0, Qt::AlignLeft);
+        this->setLayout(mainLayout);
+    };
+    if(direction.contains("Tables") || direction.contains("large"))
+    { this->setFixedHeight(12 + 25); }
+    else
+    { this->setFixedHeight(12 + 16); };
 
-                this->setLayout(mainLayout);
-                this->setFixedHeight(12 + 16);
+    QObject::connect(this->parent(), SIGNAL( dialogUpdateSignal() ), this, SLOT( dialogUpdateSignal() ));
 
-        };
+    QObject::connect(this, SIGNAL( updateSignal() ), this->parent(), SIGNAL( updateSignal() ));
 
-  QObject::connect(this->parent(), SIGNAL( dialogUpdateSignal() ), this, SLOT( dialogUpdateSignal() ));
+    QObject::connect(this->controlListComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(valueChanged(int)));
 
-  QObject::connect(this, SIGNAL( updateSignal() ), this->parent(), SIGNAL( updateSignal() ));
+    QObject::connect(this->controlListComboBox, SIGNAL(currentIndexChanged(int)), this, SIGNAL(currentIndexChanged(int)));
 
-  QObject::connect(this->controlListComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(valueChanged(int)));
-
-  QObject::connect(this->controlListComboBox, SIGNAL(currentIndexChanged(int)), this, SIGNAL(currentIndexChanged(int)));
-
-  QObject::connect(this->controlListComboBox, SIGNAL(highlighted(int)), this, SLOT(valueChanged(int)));
-
-  QObject::connect(this->controlListComboBox, SIGNAL(highlighted(int)), this, SIGNAL(currentIndexChanged(int)));
-
-
-};
+    if(this->direction.contains("Tables"))
+    {
+        QObject::connect(this->controlListComboBox, SIGNAL(activated(int)), this->parent(), SLOT(select_patch()));
+    };
+}
 
 void customControlListMenu::paintEvent(QPaintEvent *)
 {
-        /*DRAWS RED BACKGROUND FOR DeBugGING PURPOSE */
-        /*QPixmap image(":images/dragbar.png");
+    /*DRAWS RED BACKGROUND FOR DeBugGING PURPOSE */
+    /*QPixmap image(":images/dragbar.png");
 
         QRectF target(0.0, 0.0, this->width(), this->height());
         QRectF source(0.0, 0.0, this->width(), this->height());
@@ -125,81 +132,96 @@ void customControlListMenu::paintEvent(QPaintEvent *)
 
 void customControlListMenu::setComboBox()
 {
-        this->hex1 = hex1;
-        this->hex2 = hex2;
-        this->hex3 = hex3;
+    this->hex1 = hex1;
+    this->hex2 = hex2;
+    this->hex3 = hex3;
 
-        MidiTable *midiTable = MidiTable::Instance();
-        Midi items;
-        items = midiTable->getMidiMap(this->area, hex1, hex2, hex3);
+    MidiTable *midiTable = MidiTable::Instance();
+    Midi items;
+    items = midiTable->getMidiMap(this->area, hex1, hex2, hex3);
 
-        QString longestItem = "";
-        int itemcount;
-        for(itemcount=0;itemcount<items.level.size();itemcount++ )
+    QString longestItem = "";
+    int itemcount;
+    for(itemcount=0;itemcount<items.level.size();itemcount++ )
+    {
+        QString item;
+        QString desc = items.level.at(itemcount).desc;
+        QString customdesc = items.level.at(itemcount).customdesc;
+        if(!customdesc.isEmpty())
         {
-                QString item;
-                QString desc = items.level.at(itemcount).desc;
-                QString customdesc = items.level.at(itemcount).customdesc;
-                if(!customdesc.isEmpty())
-                {
-                        item = customdesc;
-                }
-                else
-                {
-                        item = desc;
-                };
-                if(longestItem.size() < item.size()) longestItem = item;
-                this->controlListComboBox->addItem(item);
+            item = customdesc;
+        }
+        else
+        {
+            item = desc;
         };
-        int maxWidth = QFontMetrics( this->font() ).width( longestItem );
-        if(maxWidth < 20) { maxWidth = 20; };
-
+        if(longestItem.size() < item.size()) longestItem = item;
+        this->controlListComboBox->addItem(item);
+    };
+    int maxWidth = QFontMetrics( this->font() ).width( longestItem );
+    if(maxWidth < 20) { maxWidth = 20; };
+    if(this->direction.contains("Tables") || this->direction.contains("large"))
+    {
+        this->controlListComboBox->setFixedWidth(maxWidth + 70);
+        this->controlListComboBox->setFixedHeight(25);
+    }
+    else
+    {
         this->controlListComboBox->setFixedWidth(maxWidth + 25);
         this->controlListComboBox->setFixedHeight(16);
-        this->controlListComboBox->setEditable(false);
-        this->controlListComboBox->setFrame(false);
-        this->controlListComboBox->setMaxVisibleItems(itemcount);
+    };
+
+    this->controlListComboBox->setEditable(false);
+    this->controlListComboBox->setFrame(false);
+    this->controlListComboBox->setMaxVisibleItems(itemcount);
 }
 
 void customControlListMenu::valueChanged(int index)
 {
+    if(!this->direction.contains("Tables"))
+    {
         QString valueHex = QString::number(index, 16).toUpper();
         if(valueHex.length() < 2) valueHex.prepend("0");
 
         SysxIO *sysxIO = SysxIO::Instance();
         MidiTable *midiTable = MidiTable::Instance();
         bool ok;
-                if(midiTable->isData(this->area, hex1, hex2, hex3))
+        if(midiTable->isData(this->area, hex1, hex2, hex3))
         {
-                int maxRange = QString("7F").toInt(&ok, 16) + 1;
-                int value = valueHex.toInt(&ok, 16);
-                int dif = value/maxRange;
-                QString valueHex1 = QString::number(dif, 16).toUpper();
-                if(valueHex1.length() < 2) valueHex1.prepend("0");
-                QString valueHex2 = QString::number(value - (dif * maxRange), 16).toUpper();
-                if(valueHex2.length() < 2) valueHex2.prepend("0");
+            int maxRange = QString("7F").toInt(&ok, 16) + 1;
+            int value = valueHex.toInt(&ok, 16);
+            int dif = value/maxRange;
+            QString valueHex1 = QString::number(dif, 16).toUpper();
+            if(valueHex1.length() < 2) valueHex1.prepend("0");
+            QString valueHex2 = QString::number(value - (dif * maxRange), 16).toUpper();
+            if(valueHex2.length() < 2) valueHex2.prepend("0");
 
-                sysxIO->setFileSource(this->area, hex1, hex2, hex3, valueHex1, valueHex2);
+            sysxIO->setFileSource(this->area, hex1, hex2, hex3, valueHex1, valueHex2);
         }
         else
         {
-                sysxIO->setFileSource(this->area, hex1, hex2, hex3, valueHex);
+            sysxIO->setFileSource(this->area, hex1, hex2, hex3, valueHex);
         };
 
         //emit updateDisplay(valueStr);
         emit updateSignal();
+    };
 }
 
 void customControlListMenu::dialogUpdateSignal()
 {
+    if(!this->direction.contains("Tables"))
+    {
         SysxIO *sysxIO = SysxIO::Instance();
         int index = sysxIO->getSourceValue(this->area, this->hex1, this->hex2, this->hex3);
         this->controlListComboBox->setCurrentIndex(index);
         this->valueChanged(index);
+    };
 }
 
-
-
-
+void customControlListMenu::set_index(int index)
+{
+    this->controlListComboBox->setCurrentIndex(index);
+}
 
 
