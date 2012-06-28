@@ -87,7 +87,7 @@ customKnobTarget::customKnobTarget(QWidget *parent,
   QObject::connect(this->parent(), SIGNAL( updateHex(QString, QString, QString) ),
                 this, SIGNAL( updateHex(QString, QString, QString) ));
  
-};
+}
 
 void customKnobTarget::paintEvent(QPaintEvent *)
 {
@@ -99,7 +99,7 @@ void customKnobTarget::paintEvent(QPaintEvent *)
 
 	QPainter painter(this);
 	painter.drawPixmap(target, image, source);*/
-};
+}
 
 void customKnobTarget::knobSignal(QString hexMsb, QString hex2, QString hexLsb)
  {
@@ -108,12 +108,12 @@ void customKnobTarget::knobSignal(QString hexMsb, QString hex2, QString hexLsb)
 	  this->hexMsb = hexMsb;
 	  this->hexLsb = hexLsb;
 	 }; 
- };
+ }
  
 void customKnobTarget::setValue(int value)
 {
 	this->knob->setValue(value);     // on initialisation only
-};
+}
 
 void customKnobTarget::valueChanged(int value, QString hex1, QString hex2, QString hex3)
 {
@@ -186,5 +186,5 @@ void customKnobTarget::valueChanged(int value, QString hex1, QString hex2, QStri
   emit updateTarget(hexMsb, hex2, hexLsb);                       // hexMsb & hexLsb are lookup address for label value
   //emit updateTarget(hexMsb, hex2, hexLsb);   
   };                                                             // updates on knob value change                                            
-};
+}
 

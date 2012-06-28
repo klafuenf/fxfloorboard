@@ -64,7 +64,7 @@ void stompbox_ch_b::setEditPages()
 
     editDetails()->page()->newGroupBox(tr("Pre Amp"));
     editDetails()->page()->newStackControl(0);
-    editDetails()->page()->addComboBox(0, 0, 1, 1, "01", "00", "01");  // pre type
+    editDetails()->page()->addComboBox(0, 0, 1, 1, "01", "00", "01", "large");  // pre type
     editDetails()->page()->addStackControl();
     editDetails()->page()->addComboBox(1, 0, 1, 1, "01", "00", "0A", "bottom", Qt::AlignLeft); // gain sw
     editDetails()->page()->addKnob(0, 1, 2, 1, "01", "00", "02", "turbo");  //gain
@@ -82,7 +82,7 @@ void stompbox_ch_b::setEditPages()
 
     editDetails()->page()->newGroupBox(tr("Speaker"));
     editDetails()->page()->newStackControl(1);
-    editDetails()->page()->addComboBox(0, 0, 1, 1, "01", "00", "0D");   // speaker type
+    editDetails()->page()->addComboBox(0, 0, 1, 1, "01", "00", "0D", "large");   // speaker type
     editDetails()->page()->addStackControl();
     editDetails()->page()->addComboBox(0, 1, 1, 1, "01", "00", "0E", "bottom", Qt::AlignRight);  // mic type
     editDetails()->page()->addComboBox(0, 2, 1, 1, "01", "00", "0F");  // mic dis

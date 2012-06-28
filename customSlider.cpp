@@ -26,172 +26,172 @@
 #include "customSlider.h"
 
 customSlider::customSlider(double value, double min, double max, double single, double page, 
-						QPoint sliderPos, QWidget *parent, QString hex1, QString hex2, QString hex3, 
-						QString slideImagePath, QString sliderButtonImagePath)
+                           QPoint sliderPos, QWidget *parent, QString hex1, QString hex2, QString hex3,
+                           QString slideImagePath, QString sliderButtonImagePath)
     : QWidget(parent)
 {
-	this->hex1 = hex1;
-	this->hex2 = hex2;
-	this->hex3 = hex3;	
-	this->value = value;
-	this->min = min;
-	this->max = max;
-	this->single = single;
-	this->page = page;
-	this->slideImagePath = slideImagePath;
-	this->sliderButtonImagePath = sliderButtonImagePath;
-	this->slideSize = QPixmap(slideImagePath).size();
-	this->sliderButtonSize = QPixmap(sliderButtonImagePath).size();
-	this->sliderPos = sliderPos;
+    this->hex1 = hex1;
+    this->hex2 = hex2;
+    this->hex3 = hex3;
+    this->value = value;
+    this->min = min;
+    this->max = max;
+    this->single = single;
+    this->page = page;
+    this->slideImagePath = slideImagePath;
+    this->sliderButtonImagePath = sliderButtonImagePath;
+    this->slideSize = QPixmap(slideImagePath).size();
+    this->sliderButtonSize = QPixmap(sliderButtonImagePath).size();
+    this->sliderPos = sliderPos;
 
-	setOffset(value);
+    setOffset(value);
     setGeometry(sliderPos.x(), sliderPos.y(), slideSize.width(), slideSize.height());
 
-	QObject::connect(this, SIGNAL( valueChanged(int, QString, QString, QString) ),
-                this->parent(), SLOT( valueChanged(int, QString, QString, QString) ));
-};
+    QObject::connect(this, SIGNAL( valueChanged(int, QString, QString, QString) ),
+                     this->parent(), SLOT( valueChanged(int, QString, QString, QString) ));
+}
 
 void customSlider::paintEvent(QPaintEvent *)
 {
-	QPixmap slide(slideImagePath);
-	QPixmap sliderButton(sliderButtonImagePath);
+    QPixmap slide(slideImagePath);
+    QPixmap sliderButton(sliderButtonImagePath);
 
-	QRectF target(0.0 , yOffset, sliderButtonSize.width(), sliderButtonSize.height());
-	QRectF source(0.0 , 0.0, sliderButtonSize.width(), sliderButtonSize.height());
-	QRectF screen(0.0 , 0.0, slideSize.width(), slideSize.height());
+    QRectF target(0.0 , yOffset, sliderButtonSize.width(), sliderButtonSize.height());
+    QRectF source(0.0 , 0.0, sliderButtonSize.width(), sliderButtonSize.height());
+    QRectF screen(0.0 , 0.0, slideSize.width(), slideSize.height());
 
-	QPixmap buffer = slide;
-	QPainter painterBuffer(&buffer);
-	painterBuffer.drawPixmap(target, sliderButton, source);
-	painterBuffer.end();
+    QPixmap buffer = slide;
+    QPainter painterBuffer(&buffer);
+    painterBuffer.drawPixmap(target, sliderButton, source);
+    painterBuffer.end();
 
-	QPainter painter(this);
-	painter.drawPixmap(screen, buffer, screen);
-};
+    QPainter painter(this);
+    painter.drawPixmap(screen, buffer, screen);
+}
 
 void customSlider::setOffset(double _newValue)
 {
-	double dataRange = max - min;
-	double range = slideSize.height()  - sliderButtonSize.height();
-	double result = (max - _newValue) * (range / dataRange); 
-	
-	this->value = _newValue;	
-	this->yOffset = result;
-	this->update();
-};
+    double dataRange = max - min;
+    double range = slideSize.height()  - sliderButtonSize.height();
+    double result = (max - _newValue) * (range / dataRange);
+
+    this->value = _newValue;
+    this->yOffset = result;
+    this->update();
+}
 
 void customSlider::mouseTrigger(QPoint mousePos)
 {
-	this->_lastValue = value;
-	
-	double dataRange = max - min;
-	double range = slideSize.height() - sliderButtonSize.height();
-	double result = mousePos.y() - (sliderButtonSize.height() / 2);
-	double _newValue = max - (result / (range / dataRange));
+    this->_lastValue = value;
 
-	QPoint buttonCenter = QPoint(0, (sliderButtonSize.height()/2));
-	QPoint relativePos = mousePos - buttonCenter;
-	int minY = 0;
-	int maxY = slideSize.height() - sliderButtonSize.height();
-	
-	if(relativePos.y() <= minY)
-	{
-		_newValue = max;		
-	}
-	else if(relativePos.y() >= maxY)
-	{
-		_newValue = min;
-				
-	};
-	setOffset(_newValue);
-	emitValue(_newValue);
-};
+    double dataRange = max - min;
+    double range = slideSize.height() - sliderButtonSize.height();
+    double result = mousePos.y() - (sliderButtonSize.height() / 2);
+    double _newValue = max - (result / (range / dataRange));
+
+    QPoint buttonCenter = QPoint(0, (sliderButtonSize.height()/2));
+    QPoint relativePos = mousePos - buttonCenter;
+    int minY = 0;
+    int maxY = slideSize.height() - sliderButtonSize.height();
+
+    if(relativePos.y() <= minY)
+    {
+        _newValue = max;
+    }
+    else if(relativePos.y() >= maxY)
+    {
+        _newValue = min;
+
+    };
+    setOffset(_newValue);
+    emitValue(_newValue);
+}
 
 void customSlider::mousePressEvent(QMouseEvent *event)
 {
-	if ( event->button() == Qt::LeftButton )
-	{	
-		setFocus();
-		mouseTrigger(event->pos());
-		emitValue(value);
-	};
-};
+    if ( event->button() == Qt::LeftButton )
+    {
+        setFocus();
+        mouseTrigger(event->pos());
+        emitValue(value);
+    };
+}
 
 void customSlider::mouseMoveEvent(QMouseEvent *event)
 {
-	mouseTrigger(event->pos());
-};
+    mouseTrigger(event->pos());
+}
 
 void customSlider::wheelEvent(QWheelEvent *event)
 {
     double numDegrees = (double)(event->delta() / 8);
     double numSteps = numDegrees / 15;
 
-    if (event->orientation() == Qt::Vertical) 
-	{
-		this->_lastValue = value;
-		
-		double _newValue = _lastValue + (numSteps * single);
+    if (event->orientation() == Qt::Vertical)
+    {
+        this->_lastValue = value;
 
-		if(_newValue < min)
-		{
-			_newValue = min;
-		}
-		else if(_newValue > max)
-		{
-			_newValue = max;
-		};
-		setOffset(_newValue);
-		emitValue(_newValue);	
+        double _newValue = _lastValue + (numSteps * single);
+
+        if(_newValue < min)
+        {
+            _newValue = min;
+        }
+        else if(_newValue > max)
+        {
+            _newValue = max;
+        };
+        setOffset(_newValue);
+        emitValue(_newValue);
     };
-};
+}
 
 void customSlider::keyPressEvent(QKeyEvent *event)
 {
-	double numSteps = 0;
-	this->_lastValue = value;
-	
-	switch(event->key())
-	{
-		case Qt::Key_Up: numSteps = -single;break;
-		case Qt::Key_Down: numSteps = single;break;
-		case Qt::Key_Plus: numSteps = -single;break;
-		case Qt::Key_Minus: numSteps = single;break;
+    double numSteps = 0;
+    this->_lastValue = value;
 
-		case Qt::Key_PageUp: numSteps = -page;break;
-		case Qt::Key_PageDown: numSteps = page;break;
+    switch(event->key())
+    {
+    case Qt::Key_Up: numSteps = -single;break;
+    case Qt::Key_Down: numSteps = single;break;
+    case Qt::Key_Plus: numSteps = -single;break;
+    case Qt::Key_Minus: numSteps = single;break;
 
-		case Qt::Key_Right: numSteps = -(max-min);break;
-		case Qt::Key_Left: numSteps = max-min;break;
-	};
+    case Qt::Key_PageUp: numSteps = -page;break;
+    case Qt::Key_PageDown: numSteps = page;break;
 
-	if (numSteps!=0) 
-	{
-		double _newValue = _lastValue - numSteps;
-		if(_newValue < min)
-		{
-			_newValue = min;
-			this->_lastValue = value;
-		}
-		else if(_newValue > max)
-		{
-			_newValue = max;
-			this->_lastValue = value;
-		};
-		setOffset(_newValue);
-		emitValue(_newValue);
-	};
-};
+    case Qt::Key_Right: numSteps = -(max-min);break;
+    case Qt::Key_Left: numSteps = max-min;break;
+    };
+
+    if (numSteps!=0)
+    {
+        double _newValue = _lastValue - numSteps;
+        if(_newValue < min)
+        {
+            _newValue = min;
+            this->_lastValue = value;
+        }
+        else if(_newValue > max)
+        {
+            _newValue = max;
+            this->_lastValue = value;
+        };
+        setOffset(_newValue);
+        emitValue(_newValue);
+    };
+}
 
 void customSlider::emitValue(double value)
 {
     if (value != m_value) {
         this->m_value = value;
     };
-	emit valueChanged((int)value, this->hex1, this->hex2, this->hex3);
-};
+    emit valueChanged((int)value, this->hex1, this->hex2, this->hex3);
+}
 
 void customSlider::setValue(int value)
 {
-	setOffset((double)value);
-};
+    setOffset((double)value);
+}

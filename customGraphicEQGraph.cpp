@@ -240,7 +240,7 @@ void customGraphicEQGraph::paintEvent ( QPaintEvent *pPaintEvent )
     int spacer = w/9;
     poly.putPoints(0, 13,
                    0,    h,
-                   0,    b1+lev,
+                   4,    b1+lev,
                    spacer*1, b2+lev,
                    spacer*2, b3+lev,
                    spacer*3, b4+lev,
@@ -250,7 +250,7 @@ void customGraphicEQGraph::paintEvent ( QPaintEvent *pPaintEvent )
                    spacer*7, b8+lev,
                    spacer*8, b9+lev,
                    spacer*9, b10+lev,
-                   w,    b10+lev,
+                   w-4,    b10+lev,
                    w,    h     );
 
     QPainterPath path;

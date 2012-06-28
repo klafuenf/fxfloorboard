@@ -50,7 +50,7 @@ void stompbox_pdl::setEditPages()
 
     editDetails()->page()->newGroupBox("EXP Pedal Func");
     editDetails()->page()->newStackControl(0);
-    editDetails()->page()->addComboBox(1, 0, 1, 1, "08", "00", "10");
+    editDetails()->page()->addComboBox(1, 0, 1, 1, "08", "00", "10", "large");
     editDetails()->page()->addStackControl();
     editDetails()->page()->addGroupBox(1, 0, 1, 1);
 

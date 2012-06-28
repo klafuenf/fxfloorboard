@@ -46,7 +46,7 @@ void stompbox_fx1::setEditPages()
 {
     editDetails()->page()->newGroupBox("Select");
     editDetails()->page()->newStackControl(0);
-    editDetails()->page()->addComboBox(0, 0, 1, 1, "01", "00", "41");
+    editDetails()->page()->addComboBox(0, 0, 1, 1, "01", "00", "41", "large");
     editDetails()->page()->addStackControl();
     editDetails()->page()->addGroupBox(0, 0, 2, 1);
     editDetails()->page()->insertStackField(0, 0, 1, 3, 1);

@@ -34,30 +34,19 @@ class customEZ_amp : public QFrame
 public:
     customEZ_amp(QWidget *parent = 0);
     ~customEZ_amp();
-    unsigned short LowGain() const;
-    unsigned short MidFreq() const;
-    unsigned short MidQ() const;
-    unsigned short MidGain() const;
-    unsigned short HighGain() const;
-    unsigned short Level() const;
+    int Y_axis() const;
+    int X_axis() const;
 
 public slots:
-    void setLowGain(unsigned short iLowGain);
-    void setMidFreq(unsigned short iMidFreq);
-    void setMidQ(unsigned short iMidQ);
-    void setMidGain(unsigned short iMidGain);
-    void setHighGain(unsigned short iHighGain);
-    void setLevel(unsigned short iLevel);
-    void updateSlot(  QString hex_1, QString hex_2, QString hex_3,
-                      QString hex_4, QString hex_5, QString hex_6 );
+    void setY_axis(int iy_axis);
+    void setX_axis(int ix_axis);
+    void updateSlot(  QString hex_1, QString hex_2);
+    void syncResult(QString sysxMsg);
 
 signals:
-    void LowGainChanged(unsigned short iLowGain);
-    void MidFreqChanged(unsigned short iMidFreq);
-    void MidQChanged(unsigned short iMidQ);
-    void MidGainChanged(unsigned short iMidGain);
-    void HighGainChanged(unsigned short iHighGain);
-    void LevelChanged(unsigned short iLevel);
+    void y_axisChanged(int iy_axis);
+    void x_axisChanged(int ix_axis);
+    void updateSignal();
 
 protected:
     void paintEvent(QPaintEvent *);
@@ -69,26 +58,22 @@ protected:
     void dragNode(const QPoint& pos);
 
 private:
+    void sync();
     QString hex1;
     QString hex2;
     QString hex_1;
     QString hex_2;
     QString hex_3;
     QString hex_4;
-    QString hex_5;
-    QString hex_6;
-    unsigned short m_iLowGain;
-    unsigned short m_iMidFreq;
-    unsigned short m_iMidQ;
-    unsigned short m_iMidGain;
-    unsigned short m_iHighGain;
-    unsigned short m_iLevel;
+    int m_iy_axis;
+    int m_ix_axis;
+    int m_iLevel;
+    int m_iMidQ;
+    int m_iHighGain;
 
     QPoint m_posDrag;
-
     QPolygon poly;
     int    m_iDragNode;
-
 };
 
 #endif	//customEZ_amp_H

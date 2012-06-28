@@ -51,7 +51,7 @@ void stompbox_rv::setEditPages()
     editDetails()->page()->newGroupBox("Effect");
     editDetails()->page()->addSwitch(0, 0, 1, 1, "06", "00", "10", "middle", Qt::AlignCenter);
     editDetails()->page()->newStackControl(0);
-    editDetails()->page()->addComboBox(1, 0, 1, 1, "06", "00", "11");
+    editDetails()->page()->addComboBox(1, 0, 1, 1, "06", "00", "11", "large");
     editDetails()->page()->addStackControl();
     editDetails()->page()->addGroupBox(0, 0, 1, 1);
 

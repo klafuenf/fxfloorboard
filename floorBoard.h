@@ -178,9 +178,7 @@ private:
     QList<int> fx;
     bool colapseState;
     QList<menuPage*> menuPages;
-
     QList<QString> stompNames;
-
 };
 
 #endif // FLOORBOARD_H

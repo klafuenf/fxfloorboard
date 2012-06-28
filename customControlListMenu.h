@@ -48,20 +48,22 @@ protected:
 public slots:
 	void valueChanged(int index);
 	void dialogUpdateSignal();
+    void set_index(int index);
 
 signals:
 	void updateSignal();
 	void updateDisplay(QString text);
 	void currentIndexChanged(int index);
+    void mouseReleasedSignal();
 
 private:
 	void setComboBox();
 	customControlLabel* label;
-
 	QString hex1;
 	QString hex2;
 	QString hex3;
 	QString area;
+    QString direction;
 	int comboWidth;
 };
 

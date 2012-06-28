@@ -28,32 +28,30 @@
 statusBarSymbol::statusBarSymbol(QWidget *parent, QString imagePath)
     : QWidget(parent)
 {
-	this->imagePath = imagePath;
-	QSize imageSize = QPixmap(imagePath).size();
-	this->symbolSize =  QSize(imageSize.width()/4, imageSize.height());
-	this->setFixedSize(symbolSize);
-
-	setOffset(0);
-};
+    this->imagePath = imagePath;
+    QSize imageSize = QPixmap(imagePath).size();
+    this->symbolSize =  QSize(imageSize.width()/4, imageSize.height());
+    this->setFixedSize(symbolSize);
+    setOffset(0);
+}
 
 void statusBarSymbol::paintEvent(QPaintEvent *)
 {
-	QRectF target(0.0 , 0.0, symbolSize.width(), symbolSize.height());
-	QRectF source(xOffset, 0.0, symbolSize.width(), symbolSize.height());
-	QPixmap image(imagePath);
-
-	QPainter painter(this);
-	painter.drawPixmap(target, image, source);
-};
+    QRectF target(0.0 , 0.0, symbolSize.width(), symbolSize.height());
+    QRectF source(xOffset, 0.0, symbolSize.width(), symbolSize.height());
+    QPixmap image(imagePath);
+    QPainter painter(this);
+    painter.drawPixmap(target, image, source);
+}
 
 void statusBarSymbol::setOffset(int imageNr)
 {
-	this->xOffset = imageNr*symbolSize.width();
-	this->update();
-};
+    this->xOffset = imageNr*symbolSize.width();
+    this->update();
+}
 
 void statusBarSymbol::setValue(int value)
 {
-	setOffset(value);
-};
+    setOffset(value);
+}
 

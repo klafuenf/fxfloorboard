@@ -50,7 +50,7 @@ void stompbox_ce::setEditPages()
 {
     editDetails()->page()->newGroupBox(tr("Effect"));
     editDetails()->page()->addSwitch(0, 0, 1, 1, "06", "00", "00", "middle", Qt::AlignCenter);
-    editDetails()->page()->addComboBox(1, 0, 1, 1, "06", "00", "01");
+    editDetails()->page()->addComboBox(1, 0, 1, 1, "06", "00", "01", "large");
 	editDetails()->page()->addGroupBox(0, 0, 2, 1);
 
 	editDetails()->page()->newGroupBox(tr("Chorus"));

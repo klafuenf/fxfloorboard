@@ -92,7 +92,7 @@ customControlSwitch::customControlSwitch(QWidget *parent,
 
 	QObject::connect(this, SIGNAL( updateSignal() ),
                 this->parent(), SIGNAL( updateSignal() ));
-};
+}
 
 void customControlSwitch::paintEvent(QPaintEvent *)
 {
@@ -104,7 +104,7 @@ void customControlSwitch::paintEvent(QPaintEvent *)
 
 	QPainter painter(this);
 	painter.drawPixmap(target, image, source);*/
-};
+}
 
 void customControlSwitch::valueChanged(bool value, QString hex1, QString hex2, QString hex3)
 {
@@ -123,7 +123,7 @@ void customControlSwitch::valueChanged(bool value, QString hex1, QString hex2, Q
 
 	//emit updateDisplay(valueStr);
 	emit updateSignal();
-};
+}
 
 void customControlSwitch::dialogUpdateSignal()
 {
@@ -138,4 +138,4 @@ void customControlSwitch::dialogUpdateSignal()
 		this->switchbutton->setValue(true);
 	};
 	//this->valueChanged(value, this->hex1, this->hex2, this->hex3);
-};
+}

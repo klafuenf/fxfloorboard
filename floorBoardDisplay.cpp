@@ -1366,6 +1366,7 @@ void floorBoardDisplay::autosyncSignal(bool value)
 void floorBoardDisplay::autosync()
 {
     SysxIO *sysxIO = SysxIO::Instance();
+    //if(autosyncButtonActive == true) { emit sysxIO->relayUpdateSignal(); };
     if(autosyncButtonActive == true && sysxIO->deviceReady() && sysxIO->isConnected())
     {
 
@@ -1485,13 +1486,13 @@ void floorBoardDisplay::autosyncResult(QString sysxMsg)
                 current_data.append(hex);
             };
         };
-        if(sysxMsg != current_data)
-        {
+        //if(sysxMsg != current_data)
+        //{
             sysxIO->setFileSource("Structure", sysxMsg);		// Set the source to the data received.
             sysxIO->setDevice(true);				// Patch received from the device so this is set to true.
             sysxIO->setSyncStatus(true);			// We can't be more in sync than right now! :)
             emit updateSignal();
-        };
+        //};
     };
 }
 
@@ -1515,20 +1516,18 @@ void floorBoardDisplay::resetDevice(QString sysxMsg)
     };
 
     emit setStatusProgress(33); // time wasting sinusidal statusbar progress
-    SLEEP(50);
+    SLEEP(100);
     emit setStatusProgress(66);
-    SLEEP(50);
+    SLEEP(100);
     emit setStatusProgress(100);
-    SLEEP(50);
+    SLEEP(100);
     emit setStatusProgress(75);
-    SLEEP(50);
+    SLEEP(100);
     emit setStatusProgress(42);
-    SLEEP(50);
+    SLEEP(100);
     emit setStatusProgress(25);
-    SLEEP(50);
+    SLEEP(100);
     sysxIO->setDeviceReady(true);	// Free the device after finishing interaction.
-
-    sysxIO->requestPatchChange(sysxIO->getBank(), sysxIO->getPatch());
     emit connectedSignal();			// Emit this signal to tell we are still connected and to update the patch names in case they have changed.
     sysxIO->setDeviceReady(true);
 }
@@ -1633,5 +1632,6 @@ void floorBoardDisplay::valueChanged(bool value, QString hex1, QString hex2, QSt
 {
 
 }
+
 
 

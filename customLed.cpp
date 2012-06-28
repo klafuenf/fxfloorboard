@@ -26,51 +26,51 @@
 #include "customLed.h"
 
 customLed::customLed(bool active, QPoint ledPos, QWidget *parent,
-					 QString imagePath)
+                     QString imagePath)
     : QWidget(parent)
 {
-	this->active = active;
-	this->imagePath = imagePath;
-	QSize imageSize = QPixmap(imagePath).size();
-	this->ledSize = QSize(imageSize.width(), imageSize.height()/2);
-	this->ledPos = ledPos;
+    this->active = active;
+    this->imagePath = imagePath;
+    QSize imageSize = QPixmap(imagePath).size();
+    this->ledSize = QSize(imageSize.width(), imageSize.height()/2);
+    this->ledPos = ledPos;
 
-	setOffset(0);
-	setGeometry(ledPos.x(), ledPos.y(), ledSize.width(), ledSize.height());
-};
+    setOffset(0);
+    setGeometry(ledPos.x(), ledPos.y(), ledSize.width(), ledSize.height());
+}
 
 void customLed::paintEvent(QPaintEvent *)
 {
-	QRectF target(0.0 , 0.0, ledSize.width(), ledSize.height());
-	QRectF source(0.0, yOffset, ledSize.width(), ledSize.height());
-	QPixmap image(imagePath);
+    QRectF target(0.0 , 0.0, ledSize.width(), ledSize.height());
+    QRectF source(0.0, yOffset, ledSize.width(), ledSize.height());
+    QPixmap image(imagePath);
     //image.setMask(image.mask());
 
-	QPainter painter(this);
-	//painter.setRenderHint(QPainter::Antialiasing, true);
-	painter.drawPixmap(target, image, source);
-};
+    QPainter painter(this);
+    //painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.drawPixmap(target, image, source);
+}
 
 void customLed::setOffset(signed int imageNr)
 {
-	this->yOffset = imageNr*ledSize.height();
-	this->update();
-};
+    this->yOffset = imageNr*ledSize.height();
+    this->update();
+}
 
 void customLed::setValue(bool value)
 {
-	this->active = value;
-	if(active)
-	{
-		setOffset(1);
-	}
-	else
-	{
-		setOffset(0);
-	};
-};
+    this->active = value;
+    if(active)
+    {
+        setOffset(1);
+    }
+    else
+    {
+        setOffset(0);
+    };
+}
 
 void customLed::changeValue(bool value)
 {
-	setValue(value);
-};
+    setValue(value);
+}

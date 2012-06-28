@@ -79,6 +79,7 @@ public slots:
     void valueChanged(bool value, QString hex1, QString hex2, QString hex3); // Not used.
     void autosync();
 
+
 signals:
     void updateSignal();
     void dialogUpdateSignal();

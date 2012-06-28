@@ -477,8 +477,6 @@ unsigned int stompBox::getId()
 
 void stompBox::setLSB(QString hex1, QString hex2)
 {
-    //this->hex1 = hex1;
-    //this->hex2 = hex2;
     this->editDialog->setLSB(hex1, hex2);
 }
 

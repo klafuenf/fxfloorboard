@@ -470,7 +470,7 @@ customControlParaEQ::customControlParaEQ(QWidget *parent,
     QObject::connect(this->frame, SIGNAL(LevelChanged(unsigned short)),
                      this, SLOT(LevelChanged(unsigned short) ));
 
-};
+}
 
 
 void customControlParaEQ::paintEvent(QPaintEvent *)
@@ -485,7 +485,7 @@ void customControlParaEQ::paintEvent(QPaintEvent *)
 	painter.drawPixmap(target, image, source);*/
 
 
-};
+}
 
 void customControlParaEQ::dialogUpdateSignal()
 {
@@ -586,7 +586,7 @@ void customControlParaEQ::dialogUpdateSignal()
     emit graphUpdateSignal( data_1, data_2, data_3, data_4, data_5,
                             data_6, data_7, data_8, data_9, data_10, data_11);
 
-};
+}
 
 void customControlParaEQ::LowCutChanged(unsigned short iLowCut)
 {
@@ -595,7 +595,7 @@ void customControlParaEQ::LowCutChanged(unsigned short iLowCut)
     SysxIO *sysxIO = SysxIO::Instance();
     sysxIO->setFileSource(this->area, hex1, hex2, hex_1, hex);
     emit dialogUpdateSignal();
-};
+}
 
 void customControlParaEQ::LowGainChanged(unsigned short iLowGain)
 {
@@ -604,7 +604,7 @@ void customControlParaEQ::LowGainChanged(unsigned short iLowGain)
     SysxIO *sysxIO = SysxIO::Instance();
     sysxIO->setFileSource(this->area, addr_2, hex2, hex_2, hex);
     emit dialogUpdateSignal();
-};
+}
 
 void customControlParaEQ::LowMidFreqChanged(unsigned short iLowMidFreq)
 {
@@ -613,7 +613,7 @@ void customControlParaEQ::LowMidFreqChanged(unsigned short iLowMidFreq)
     SysxIO *sysxIO = SysxIO::Instance();
     sysxIO->setFileSource(this->area, addr_3, hex2, hex_3, hex);
     emit dialogUpdateSignal();
-};
+}
 
 void customControlParaEQ::LowMidQChanged(unsigned short iLowMidQ)
 {
@@ -622,7 +622,7 @@ void customControlParaEQ::LowMidQChanged(unsigned short iLowMidQ)
     SysxIO *sysxIO = SysxIO::Instance();
     sysxIO->setFileSource(this->area, addr_4, hex2, hex_4, hex);
     emit dialogUpdateSignal();
-};
+}
 
 void customControlParaEQ::LowMidGainChanged(unsigned short iLowMidGain)
 {
@@ -631,7 +631,7 @@ void customControlParaEQ::LowMidGainChanged(unsigned short iLowMidGain)
     SysxIO *sysxIO = SysxIO::Instance();
     sysxIO->setFileSource(this->area, addr_5, hex2, hex_5, hex);
     emit dialogUpdateSignal();
-};
+}
 
 void customControlParaEQ::HighMidFreqChanged(unsigned short iHighMidFreq)
 {
@@ -640,7 +640,7 @@ void customControlParaEQ::HighMidFreqChanged(unsigned short iHighMidFreq)
     SysxIO *sysxIO = SysxIO::Instance();
     sysxIO->setFileSource(this->area, addr_6, hex2, hex_6, hex);
     emit dialogUpdateSignal();
-};
+}
 
 void customControlParaEQ::HighMidQChanged(unsigned short iHighMidQ)
 {
@@ -649,7 +649,7 @@ void customControlParaEQ::HighMidQChanged(unsigned short iHighMidQ)
     SysxIO *sysxIO = SysxIO::Instance();
     sysxIO->setFileSource(this->area, addr_7, hex2, hex_7, hex);
     emit dialogUpdateSignal();
-};
+}
 
 void customControlParaEQ::HighMidGainChanged(unsigned short iHighMidGain)
 {
@@ -658,7 +658,7 @@ void customControlParaEQ::HighMidGainChanged(unsigned short iHighMidGain)
     SysxIO *sysxIO = SysxIO::Instance();
     sysxIO->setFileSource(this->area, addr_8, hex2, hex_8, hex);
     emit dialogUpdateSignal();
-};
+}
 
 void customControlParaEQ::HighGainChanged(unsigned short iHighGain)
 {
@@ -667,7 +667,7 @@ void customControlParaEQ::HighGainChanged(unsigned short iHighGain)
     SysxIO *sysxIO = SysxIO::Instance();
     sysxIO->setFileSource(this->area, addr_9, hex2, hex_9, hex);
     emit dialogUpdateSignal();
-};
+}
 
 void customControlParaEQ::HighCutChanged(unsigned short iHighCut)
 {
@@ -676,7 +676,7 @@ void customControlParaEQ::HighCutChanged(unsigned short iHighCut)
     SysxIO *sysxIO = SysxIO::Instance();
     sysxIO->setFileSource(this->area, addr_10, hex2, hex_10, hex);
     emit dialogUpdateSignal();
-};
+}
 
 void customControlParaEQ::LevelChanged(unsigned short iLevel)
 {
@@ -685,6 +685,6 @@ void customControlParaEQ::LevelChanged(unsigned short iLevel)
     SysxIO *sysxIO = SysxIO::Instance();
     sysxIO->setFileSource(this->area, addr_11, hex2, hex_11, hex);
     emit dialogUpdateSignal();
-};
+}
 
 

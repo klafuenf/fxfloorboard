@@ -44,7 +44,7 @@ void stompbox_cn_m::setEditPages()
 
 
     editDetails()->page()->newGroupBox(tr("Channel Mixer"));
-    editDetails()->page()->addComboBox(0, 0, 1, 1, "06", "00", "50"); //mix mode
+    editDetails()->page()->addComboBox(0, 0, 1, 1, "06", "00", "50", "large"); //mix mode
     editDetails()->page()->addKnob(0, 1, 1, 1, "06", "00", "51");   // balance
     editDetails()->page()->addKnob(0, 2, 1, 1, "06", "00", "52");   // spread
     editDetails()->page()->addGroupBox(0, 0, 1, 1);

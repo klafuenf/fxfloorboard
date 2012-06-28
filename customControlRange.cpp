@@ -114,7 +114,7 @@ customControlRange::customControlRange(QWidget *parent,
 
     QObject::connect(this, SIGNAL( updateDisplayMax(QString) ),
                      this->displayMax, SLOT( setText(QString) ));
-};
+}
 
 void customControlRange::paintEvent(QPaintEvent *)
 {
@@ -126,7 +126,7 @@ void customControlRange::paintEvent(QPaintEvent *)
 
         QPainter painter(this);
         painter.drawPixmap(target, image, source);*/
-};
+}
 
 void customControlRange::dialogUpdateSignal()
 {
@@ -147,4 +147,4 @@ void customControlRange::dialogUpdateSignal()
     if(valueHex.length() < 2) valueHex.prepend("0");
     valueStr = midiTable->getValue(this->area, hex1, hex2, this->hexMax, valueHex);
     emit updateDisplayMax(valueStr);
-};
+}

@@ -546,7 +546,7 @@ void menuPage::emitValueChanged(QString hex1, QString hex2, QString hex3, QStrin
         }
         else
         {
-            if (this->id == 31){this->fxName = tr("EZ-Edit");           this->area_mode = "Structure";};
+            if (this->id == 31){this->fxName = tr("EZ-Tone");           this->area_mode = "Structure";};
             if (this->id == 30){this->fxName = tr("System settings");   this->area_mode = "System";   };
             if (this->id == 29){this->fxName = tr("System Midi");       this->area_mode = "System";   };
             if (this->id == 20){this->fxName = tr("Master");            this->area_mode = "Structure";};

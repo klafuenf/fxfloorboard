@@ -100,5 +100,8 @@
         <file>qss/white.qss</file>
         <file>qss/default.qss</file>
         <file>gt10b_default.syx</file>
+        <file>images/EZ_Tone.png</file>
+        <file>images/EZ_Patch.png</file>
+        <file>EZ-Tone.syx</file>
     </qresource>
 </RCC>

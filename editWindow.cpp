@@ -44,12 +44,12 @@ editWindow::editWindow(QWidget *parent)
     this->title = new QLabel;
     this->title->setObjectName("title");
 
-    this->comboBoxLabel = new QLabel(tr("Select"));
+    this->comboBoxLabel = new QLabel(tr("PAGE SELECT"));
     this->comboBoxLabel->setObjectName("selectlabel");
     this->comboBoxLabel->setVisible(false);
 
     this->pageComboBox = new QComboBox;
-    this->pageComboBox->setObjectName("smallcombo");
+    this->pageComboBox->setObjectName("largecombo");
     this->pageComboBox->setEditable(false);
     this->pageComboBox->setFrame(false);
     this->pageComboBox->setVisible(false);
@@ -260,8 +260,16 @@ editWindow::editWindow(QWidget *parent)
 
     QObject::connect(this, SIGNAL( dialogUpdateSignal() ), this, SLOT( pageUpdateSignal() ));
 
+    //QObject::connect(this, SIGNAL( updateSignal() ), this, SLOT( pageUpdateSignal() ));
+
     QObject::connect(this->pageComboBox, SIGNAL(activated(int)), this, SLOT(valueChanged(int)));
 
+    SysxIO *sysxIO = SysxIO::Instance();
+    sysxIO->eztone_page = 0;
+    sysxIO->system_page = 0;
+    sysxIO->midi_page =0;
+
+    emit pageUpdateSignal();
 }
 
 void editWindow::paintEvent(QPaintEvent *)
@@ -315,7 +323,7 @@ void editWindow::addPage(QString hex1, QString hex2, QString hex3, QString hex4,
                      this, SIGNAL( updateSignal() ));
 
     bool assign_check = false;
-    if(area == "Structure" ) {assign_check = true; };
+    if(this->area == "Structure" ) {assign_check = true; };
 
     if (this->area != "Structure" || this->temp_hex1.isEmpty() || this->temp_hex1.contains("void") || this->position == 0)
     {
@@ -396,29 +404,33 @@ void editWindow::addPage(QString hex1, QString hex2, QString hex3, QString hex4,
 
 void editWindow::valueChanged(int index)
 {
-    QString valueName, valueStr;
     if(hex1 != "void" && hex2 != "void")
     {
         QString valueHex = QString::number(index, 16).toUpper();
         if(valueHex.length() < 2) valueHex.prepend("0");
-        //QString area = "Structure";
-
         SysxIO *sysxIO = SysxIO::Instance();
-        sysxIO->setFileSource(this->area, this->hex1, this->hex2, this->hex3, valueHex);
+        if (this->hex3 == "30") {sysxIO->eztone_page = index; }
+        else if (this->hex3 == "75") {sysxIO->system_page = index; }
+        else if (this->hex3 == "74"){sysxIO->midi_page = index; };
+       // sysxIO->setFileSource("Structure", this->hex1, this->hex2, this->hex3, valueHex);
     };
 }
 
 void editWindow::pageUpdateSignal()
-{ /*
+{
         if(this->pages > 1 && hex1 != "void" && hex2 != "void")
         {
                 SysxIO *sysxIO = SysxIO::Instance();
-                int index = sysxIO->getSourceValue(this->hex1, this->hex2, this->hex3);
+                int index;
+                if (this->hex3 == "30") {index = sysxIO->eztone_page; }
+                else if (this->hex3 == "75") {index = sysxIO->system_page; }
+                else if (this->hex3 == "74"){index = sysxIO->midi_page; };
+                //int index = sysxIO->getSourceValue("Structure", this->hex1, this->hex2, this->hex3);
                 this->pageComboBox->setCurrentIndex(index);
                 this->pagesWidget->setCurrentIndex(index);
-                //this->valueChanged(index);
+                this->valueChanged(index);
 
-        }; */
+        };
     emit updateSignal();
 }
 

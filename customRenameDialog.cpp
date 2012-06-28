@@ -108,10 +108,10 @@ customRenameDialog::customRenameDialog(QWidget *parent, QString hex1, QString he
     mainLayout->addLayout(buttonsLayout);
     setLayout(mainLayout);
     this->setMinimumWidth(dialogLength);
-};
+}
 
 void customRenameDialog::emitValue()
 {
     emit nameChanged(nameEdit->text());
     this->accept();
-};
+}

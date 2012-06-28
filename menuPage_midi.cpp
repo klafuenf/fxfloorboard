@@ -26,8 +26,7 @@
 menuPage_midi::menuPage_midi(QWidget *parent)
     : menuPage(parent)
 {
-  //setImage(":/images/midi_pushbutton.png");
-  setLSB("0B", "00");
+  //setLSB("00", "00");
 	setEditPages();
 }
 
@@ -37,8 +36,7 @@ void menuPage_midi::updateSignal()
 }
 
 void menuPage_midi::setEditPages()
-{
-               
+{               
 	editDetails()->page()->newGroupBox("SYSTEM MIDI.  Caution: Changes are automatically written to the GT-100.");
     editDetails()->page()->addComboBox(0, 0, 1, 1, "02", "00", "00", "System"); // rx channel
     editDetails()->page()->addComboBox(0, 1, 1, 1, "02", "00", "01", "System"); // omni mode
@@ -46,8 +44,7 @@ void menuPage_midi::setEditPages()
     editDetails()->page()->addComboBox(0, 3, 1, 1, "02", "00", "03", "System"); // sync clock
     editDetails()->page()->addComboBox(0, 4, 1, 1, "02", "00", "04", "System"); // midi port
     editDetails()->page()->addComboBox(0, 5, 1, 1, "02", "00", "05", "System"); // pc out
-	
-	
+		
     editDetails()->page()->addComboBox(1, 0, 1, 1, "02", "00", "06", "System"); // PH loop out
     editDetails()->page()->addComboBox(1, 1, 1, 1, "02", "00", "07", "System"); // Accel/CTL out
     editDetails()->page()->addComboBox(1, 2, 1, 1, "02", "00", "08", "System"); // EXP out
@@ -58,25 +55,25 @@ void menuPage_midi::setEditPages()
 	editDetails()->page()->addComboBox(2, 3, 1, 1, "02", "00", "0D", "System"); // map select
 	
 	editDetails()->page()->addGroupBox(0, 0, 1, 1);
-    editDetails()->addPage("02", "00", "7F", "00", "System");
-
+    editDetails()->addPage("00", "02", "74", "00", "System");
+/*
     editDetails()->page()->newGroupBox("MIDI PROGRAM TABLE - BANK 0.            Caution: Changes are automatically written to the GT-100.");
     editDetails()->page()->addMultiComboBox(0, 0, 1, 1, "02", "01", "00", "System"); // 1
     editDetails()->page()->addGroupBox(0, 0, 1, 1);
-    editDetails()->addPage("02", "00", "7F", "01", "System");
+    editDetails()->addPage("00", "02", "74", "01", "System");
 
     editDetails()->page()->newGroupBox("MIDI PROGRAM TABLE - BANK 1.            Caution: Changes are automatically written to the GT-100.");
     editDetails()->page()->addMultiComboBox(0, 0, 1, 1, "02", "03", "00", "System"); // 1
     editDetails()->page()->addGroupBox(0, 0, 1, 1);
-    editDetails()->addPage("02", "00", "7F", "02", "System");
+    editDetails()->addPage("00", "02", "74", "02", "System");
 
     editDetails()->page()->newGroupBox("MIDI PROGRAM TABLE - BANK 2.            Caution: Changes are automatically written to the GT-100.");
     editDetails()->page()->addMultiComboBox(0, 0, 1, 1, "02", "05", "00", "System"); // 1
     editDetails()->page()->addGroupBox(0, 0, 1, 1);
-    editDetails()->addPage("02", "00", "7F", "03", "System");
+    editDetails()->addPage("00", "02", "74", "03", "System");
 
     editDetails()->page()->newGroupBox("MIDI PROGRAM TABLE - BANK 3.            Caution: Changes are automatically written to the GT-100.");
     editDetails()->page()->addMultiComboBox(0, 0, 1, 1, "02", "07", "00", "System"); // 1
     editDetails()->page()->addGroupBox(0, 0, 1, 1);
-    editDetails()->addPage("02", "00", "7F", "04", "System");
+    editDetails()->addPage("00", "02", "74", "04", "System");*/
 }

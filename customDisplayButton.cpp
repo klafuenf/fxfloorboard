@@ -36,7 +36,7 @@ customDisplayButton::customDisplayButton(QString text, bool active, QPoint butto
     textLabel->setAlignment(Qt::AlignCenter);
     textLabel->setGeometry(buttonPos.x()-buttonSize.width()+3, buttonPos.y()+buttonSize.height()/2, textLabel->width(), textLabel->height());
     this->button = new customPanelButton(0, active, buttonPos, this, imagePath);
-};
+}
 
 void customDisplayButton::mousePressEvent(QMouseEvent *event)
 {
@@ -46,7 +46,7 @@ void customDisplayButton::mousePressEvent(QMouseEvent *event)
         setFocus();
         emitValue(true);
     };
-};
+}
 
 void customDisplayButton::mouseReleaseEvent(QMouseEvent *event)
 {
@@ -54,13 +54,13 @@ void customDisplayButton::mouseReleaseEvent(QMouseEvent *event)
     {
         clearFocus();
     };
-};
+}
 
 void customDisplayButton::emitValue(bool value)
 {
     this->active = value;
     emit valueChanged((bool)value);
-};
+}
 
 void customDisplayButton::mouseMoveEvent(QMouseEvent *event)
 {
@@ -68,11 +68,10 @@ void customDisplayButton::mouseMoveEvent(QMouseEvent *event)
     {
         return;
     };
-};
-
+}
 
 void customDisplayButton::setValue(bool value)
- {
-     this->button->setValue(value);
- };
+{
+    this->button->setValue(value);
+}
 

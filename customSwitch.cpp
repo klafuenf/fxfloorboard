@@ -42,7 +42,7 @@ customSwitch::customSwitch(bool active, QWidget *parent, QString hex1, QString h
 
 	QObject::connect(this, SIGNAL( valueChanged(bool, QString, QString, QString) ),
                 this->parent(), SLOT( valueChanged(bool, QString, QString, QString) ));
-};
+}
 
 void customSwitch::paintEvent(QPaintEvent *)
 {
@@ -52,13 +52,13 @@ void customSwitch::paintEvent(QPaintEvent *)
 
 	QPainter painter(this);
 	painter.drawPixmap(target, image, source);
-};
+}
 
 void customSwitch::setOffset(signed int imageNr)
 {
 	this->yOffset = imageNr*switchSize.height();
 	this->update();
-};
+}
 
 void customSwitch::mousePressEvent(QMouseEvent *event)
 {
@@ -67,7 +67,7 @@ void customSwitch::mousePressEvent(QMouseEvent *event)
 		this->dragStartPosition = event->pos();
 		setFocus();
 	};
-};
+}
 
 void customSwitch::mouseReleaseEvent(QMouseEvent *event)
 {
@@ -85,7 +85,7 @@ void customSwitch::mouseReleaseEvent(QMouseEvent *event)
 		};
 		clearFocus();
 	};
-};
+}
 
 void customSwitch::emitValue(bool value)
 {
@@ -95,7 +95,7 @@ void customSwitch::emitValue(bool value)
 
     };
         emit valueChanged((bool)value, this->hex1, this->hex2, this->hex3);
-};
+}
 
 void customSwitch::mouseMoveEvent(QMouseEvent *event)
 {
@@ -103,7 +103,7 @@ void customSwitch::mouseMoveEvent(QMouseEvent *event)
 	{
         return;
 	};
-};
+}
 
 void customSwitch::setValue(bool value)
 {
@@ -117,4 +117,4 @@ void customSwitch::setValue(bool value)
 		setOffset(0);
 	};
 	clearFocus();
-};
+}

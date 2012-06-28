@@ -22,6 +22,8 @@
 ****************************************************************************/
 
 #include "customEZ_amp.h"
+#include "SysxIO.h"
+#include "globalVariables.h"
 #include <QPainter>
 #include <QMouseEvent>
 #include <QGraphicsPathItem>
@@ -30,111 +32,46 @@ customEZ_amp::customEZ_amp (QWidget *parent)
 {
     QFrame::setFrameShape(QFrame::Panel);
     QFrame::setFrameShadow(QFrame::Sunken);
-
 }
 
 customEZ_amp::~customEZ_amp (void)
 {
 }
 
-void customEZ_amp::setLowGain ( unsigned short iLowGain )
+void customEZ_amp::setY_axis ( int iy_axis )
 {
-    if (iLowGain > 40) iLowGain = 40;
-    if (m_iLowGain != iLowGain) {
-        m_iLowGain  = iLowGain;
+    if (iy_axis > 100) iy_axis = 100;
+    if (m_iy_axis != iy_axis) {
+        m_iy_axis  = iy_axis;
         update();
-        emit LowGainChanged(LowGain());
+        emit y_axisChanged(Y_axis());
     };
 }
 
-unsigned short customEZ_amp::LowGain (void) const
+int customEZ_amp::Y_axis (void) const
 {
-    return m_iLowGain;
+    return m_iy_axis;
 }
 
-
-void customEZ_amp::setMidFreq ( unsigned short iMidFreq )
+void customEZ_amp::setX_axis ( int ix_axis )
 {
-    if (iMidFreq > 27) iMidFreq = 27;
-    if (m_iMidFreq != iMidFreq) {
-        m_iMidFreq  = iMidFreq;
+    if (ix_axis > 100) ix_axis = 100;
+    if (m_ix_axis != ix_axis) {
+        m_ix_axis  = ix_axis;
         update();
-        emit MidFreqChanged(MidFreq());
+        emit x_axisChanged(X_axis());
     };
 }
 
-unsigned short customEZ_amp::MidFreq (void) const
+int customEZ_amp::X_axis (void) const
 {
-    return m_iMidFreq;
+    return m_ix_axis;
 }
-
-
-void customEZ_amp::setMidQ ( unsigned short iMidQ )
-{
-    if (iMidQ > 5) iMidQ = 5;
-    if (m_iMidQ != iMidQ) {
-        m_iMidQ  = iMidQ;
-        update();
-        emit MidQChanged(MidQ());
-    }
-}
-
-unsigned short customEZ_amp::MidQ (void) const
-{
-    return m_iMidQ;
-}
-
-
-void customEZ_amp::setMidGain ( unsigned short iMidGain )
-{
-    if (iMidGain > 40) iMidGain = 40;
-    if (m_iMidGain != iMidGain) {
-        m_iMidGain  = iMidGain;
-        update();
-        emit MidGainChanged(MidGain());
-    }
-}
-
-unsigned short customEZ_amp::MidGain (void) const
-{
-    return m_iMidGain;
-}
-
-void customEZ_amp::setHighGain ( unsigned short iHighGain )
-{
-    if (iHighGain > 40) iHighGain = 40;
-    if (m_iHighGain != iHighGain) {
-        m_iHighGain  = iHighGain;
-        update();
-        emit HighGainChanged(HighGain());
-    };
-}
-
-unsigned short customEZ_amp::HighGain (void) const
-{
-    return m_iHighGain;
-}
-
-void customEZ_amp::setLevel ( unsigned short iLevel )
-{
-    if (iLevel > 100) iLevel = 100;
-    if (m_iLevel != iLevel) {
-        m_iLevel  = iLevel;
-        update();
-        emit LevelChanged(Level());
-    };
-}
-
-unsigned short customEZ_amp::Level (void) const
-{
-    return m_iLevel;
-}
-
 
 void customEZ_amp::paintEvent ( QPaintEvent *pPaintEvent )
 {
-    QPixmap image = QPixmap(":images/EQ_graph.png");
-    QRectF target(0.0, 0.0, image.width()*55/100, image.height()*43/100);
+    QPixmap image = QPixmap(":images/EZ_Tone.png");
+    QRectF target(0.0, 0.0, image.width(), image.height());
     QRectF source(0.0, 0.0, image.width(), image.height());
 
     QPainter painter(this);
@@ -142,79 +79,52 @@ void customEZ_amp::paintEvent ( QPaintEvent *pPaintEvent )
 
     int h   =     height();
     int w   =     width();
-    int lg  = h - (m_iLowGain*3);
-    int mf  =     (m_iMidFreq*12) + 12;
-    int mq  = h - (m_iMidQ*18)-80;
-    int mg  = h - (m_iMidGain+60);
-    int hg  = h - (m_iHighGain*3);
-    int lev = h/2 - (m_iLevel);
+    int ver =     20+(100-m_iy_axis)*110/100;
+    int hor  =    20+(m_ix_axis*260/100);
 
     QLinearGradient grad(0, 0, w << 1, h << 1);
     grad.setColorAt(0.0f, Qt::yellow);
     grad.setColorAt(1.0f, Qt::black);
 
     painter.setBrush(grad);
-                // horizonal, vertical
-    poly.putPoints(0,           11,
-                   0,           h,                         // [0]
-                   0,          (lg)+lev-70,              // [1]
-                   (w/10)*2,    lg+lev-70,                 // [2]
-                   (w/10)*4,    lev+52,                    // [3]
-                   mf-mq,       mg+m_iMidGain-25,              // [4]
-                   mf,         (h*100/82)-(m_iMidGain*7)+10,  // [5]
-                   mf+mq,       mg+m_iMidGain-25,                 // [6]
-                   (w/10)*6,    lev+52,                    // [7]
-                   (w/10)*8,   (hg+lev-70),                // [8]
-                   w,          (hg)+lev-70,              // [9]
-                   w,           h  );                      // [10]
+                // horizonal,      vertical
+    poly.putPoints(0,              9,
+                   20,              ver,                // [0]
+                   w-20,            ver,                // [1]
+                   w-20,            ver+2,              // [2]
+                   20,              ver+2,              // [3]
+                   hor,            20,                  // [4]
+                   hor,            h-20,                // [5]
+                   hor+2,          h-20,                // [6]
+                   hor+2,          20,                  // [7]
+                   hor+1,          ver+1);              // [8]
 
-    QPainterPath loHi;
-    loHi.moveTo(poly.at(1));
-    loHi.cubicTo(poly.at(1), poly.at(2), poly.at(3));
-    loHi.lineTo(poly.at(7));
-    loHi.cubicTo(poly.at(7), poly.at(8), poly.at(9));
-    loHi.cubicTo(poly.at(9), poly.at(8), poly.at(7));
-    loHi.lineTo(poly.at(3));
-    loHi.cubicTo(poly.at(3), poly.at(2), poly.at(1));
 
-    QPainterPath Mid;
-    Mid.moveTo(poly.at(4));
-    Mid.cubicTo(poly.at(4), poly.at(5), poly.at(6));
-    Mid.cubicTo(poly.at(6), poly.at(5), poly.at(4));
+    QPainterPath vert;
+    vert.moveTo(poly.at(0));
+    vert.lineTo(poly.at(1));
+    vert.lineTo(poly.at(2));
+    vert.lineTo(poly.at(3));
+    vert.lineTo(poly.at(0));
+
+    QPainterPath hori;
+    hori.moveTo(poly.at(4));
+    hori.lineTo(poly.at(5));
+    hori.lineTo(poly.at(6));
+    hori.lineTo(poly.at(7));
+    hori.lineTo(poly.at(4));
 
     painter.setPen(Qt::black);
-    QPainterPath graph;
-    graph.moveTo(0, h);
-    bool intersect = false;
-    int x = 0;
-    int a = 0;
-    int b = 0;
-    for(x=0; x<w; ++x)
-    {
-        for( a=0; a<h&&intersect!=true; ++a)
-        {
-            intersect = loHi.intersects(QRectF(x, a, 1, 1));
-        };
-        intersect = false;
-
-        for( b=0; b<h&&intersect!=true; ++b)
-        {
-            intersect = Mid.intersects(QRectF(x, b-(h/2), 1, 1));
-        };
-        intersect = false;
-        graph.lineTo(x, a+b-h );
-        //x=x+19;
-    };
-    graph.lineTo(w, a+b-h);
-    graph.lineTo(w, h);
-
     painter.setBrush(grad);
-    painter.drawPath(graph);
+    painter.drawPath(vert);
+    painter.drawPath(hori);
+
+    painter.setBrush(Qt::blue);
+    painter.drawRect(nodeRect(1));
     painter.end();
 
     QFrame::paintEvent(pPaintEvent);
 }
-
 
 // Mouse interaction.
 void customEZ_amp::mousePressEvent ( QMouseEvent *pMouseEvent )
@@ -222,17 +132,12 @@ void customEZ_amp::mousePressEvent ( QMouseEvent *pMouseEvent )
     if (pMouseEvent->button() == Qt::LeftButton) {
         const QPoint& pos = pMouseEvent->pos();
         int iDragNode = nodeIndex(pos);
-        if (iDragNode >= 0) {
-            if (iDragNode == 1 || iDragNode == 5) {setCursor(Qt::SizeVerCursor); };
-            if (iDragNode == 2 || iDragNode == 4) {setCursor(Qt::SizeHorCursor); };
-            if (iDragNode == 3) {setCursor(Qt::SizeAllCursor); };
+        if (iDragNode >= 0) {setCursor(Qt::SizeAllCursor);
             m_iDragNode = iDragNode;
             m_posDrag = pos;
-        }
-    }
-
+        };
+    };
     QFrame::mousePressEvent(pMouseEvent);
-
 }
 
 
@@ -252,64 +157,33 @@ void customEZ_amp::mouseReleaseEvent ( QMouseEvent *pMouseEvent )
     if (m_iDragNode >= 0) {
         m_iDragNode = -1;
         unsetCursor();
+        sync();
+        //emit updateSignal();
     }
 }
-
-
 
 // Draw rectangular point.
 QRect customEZ_amp::nodeRect ( int iNode ) const
 {
-    const QPoint& pos = poly.at(iNode);
+    const QPoint& pos = poly.at(8);
     return QRect(pos.x() - 4, pos.y() - 4, 8, 8);
 }
-
 
 int customEZ_amp::nodeIndex ( const QPoint& pos ) const
 {     
     if (nodeRect(8).contains(pos))
-        return 5; // HighGain
-
-    if (nodeRect(6).contains(pos))
-        return 4; // MidQ
-
-    if (nodeRect(5).contains(pos))
-        return 3; // MidFreq/MidGain
-
-    if (nodeRect(4).contains(pos))
-        return 2; // MidQ
-
-    if (nodeRect(2).contains(pos))
-        return 1; //LowGain
-
+        return 1;
     return -1;
 }
 
 void customEZ_amp::dragNode ( const QPoint& pos )
 {
-    static unsigned short m_iLevel0 = 0; // Dummy!
-    unsigned short *piRate  = NULL;
-    unsigned short *piLevel = NULL;
+    int *piRate  = NULL;
+    int *piLevel = NULL;
     switch (m_iDragNode) {
-    case 1: // LowGain
-        piRate  = &m_iLevel0;
-        piLevel = &m_iLowGain;
-        break;
-    case 2: // MidQ
-        piRate  = &m_iMidQ;
-        piLevel = &m_iLevel0;
-        break;
-    case 3: // MidFreq/MidGain
-        piRate  = &m_iMidFreq;
-        piLevel = &m_iMidGain;
-        break;
-    case 4: // MidQ
-        piRate  = &m_iMidQ;
-        piLevel = &m_iLevel0;
-        break;
-    case 5: // HighGain
-        piRate  = &m_iLevel0;
-        piLevel = &m_iHighGain;
+    case 1: // Y_axis
+        piRate  = &m_ix_axis;
+        piLevel = &m_iy_axis;
         break;
     }
 
@@ -318,61 +192,157 @@ void customEZ_amp::dragNode ( const QPoint& pos )
         int iLevel = int(*piLevel) + ((m_posDrag.y() - pos.y()) << 7) / height();
         if (iLevel < 0) iLevel = 0;
         else
-            if (iLevel > 40) iLevel = 40;
+            if (iLevel > 100) iLevel = 100;
         if (iRate < 0) iRate = 0;
         else
-            if (iRate > 30) iRate = 30;
-        if (*piRate  != (unsigned short) iRate ||
-                *piLevel != (unsigned short) iLevel) {
+            if (iRate > 100) iRate = 100;
+        if (*piRate  != (int) iRate ||
+                *piLevel != (int) iLevel) {
             m_posDrag = pos;
             switch (m_iDragNode) {
-            case 1: // LowGain
-                setLowGain(iLevel);
+            case 1: // Y_axis
+                setY_axis(iLevel);
+                setX_axis(iRate);
                 break;
-            case 2: // MidQ
-                setMidQ(iRate);
-                break;
-            case 3: // MidFreq/MidGain
-                setMidFreq(iRate);
-                setMidGain(iLevel);
-                break;
-            case 4: // MidQ
-                setMidQ(iRate);
-                break;
-            case 5: // HighGain
-                setHighGain(iLevel);
-                break;
-
             }
         }
-    } else if (nodeIndex(pos) >= 0) {
-        setCursor(Qt::PointingHandCursor);
-    } else {
-        unsetCursor();
-    }
+    } else if (nodeIndex(pos) >= 0) { setCursor(Qt::PointingHandCursor); }
+      else { unsetCursor(); };
 }
 
-void customEZ_amp::updateSlot(  QString hex_1, QString hex_2, QString hex_3,
-                                       QString hex_4, QString hex_5, QString hex_6 )
+void customEZ_amp::updateSlot(  QString hex_1, QString hex_2)
 {
     this->hex_1 = hex_1;
     this->hex_2 = hex_2;
-    this->hex_3 = hex_3;
-    this->hex_4 = hex_4;
-    this->hex_5 = hex_5;
-    this->hex_6 = hex_6;
     bool ok;
-    setLowGain(this->hex_1.toShort(&ok, 16));
-    setMidFreq(this->hex_2.toShort(&ok, 16));
-    setMidQ(this->hex_3.toShort(&ok, 16));
-    setMidGain(this->hex_4.toShort(&ok, 16));
-    setHighGain(this->hex_5.toShort(&ok, 16));
-    setLevel(this->hex_6.toShort(&ok, 16));
-
+    setY_axis(this->hex_1.toInt(&ok, 16));
+    setX_axis(this->hex_2.toInt(&ok, 16));
 }
 
+void customEZ_amp::sync()
+{
 
+    SysxIO *sysxIO = SysxIO::Instance();
+    emit sysxIO->relayUpdateSignal();
+   /* if( sysxIO->isConnected())
+    {
+        //sysxIO->setsetStatusSymbol(2);
+        //sysxIO->setStatusMessage(tr("Patch Sync"));
+        sysxIO->setDeviceReady(false); // Reserve the device for interaction.
 
+        QObject::disconnect(sysxIO, SIGNAL(sysxReply(QString)));
+        QObject::connect(sysxIO, SIGNAL(sysxReply(QString)),
+                         this, SLOT(syncResult(QString)));
 
+        sysxIO->requestPatch(0, 0); // GT100 patch request from temorary buffer memory.
+    };*/
+}
 
+void customEZ_amp::syncResult(QString sysxMsg)
+{
+    SysxIO *sysxIO = SysxIO::Instance();
+    QObject::disconnect(sysxIO, SIGNAL(sysxReply(QString)),
+                        this, SLOT(syncResult(QString)));
 
+    sysxIO->setDeviceReady(true); // Free the device after finishing interaction.
+    sysxMsg = sysxMsg.remove(" ").toUpper();       /* TRANSLATE SYSX MESSAGE FORMAT to 128 byte data blocks */
+    if (sysxMsg.size()/2 == patchReplySize){
+        QString header = "F0410000006012";
+        QString footer ="00F7";
+        QString addressMsb = sysxMsg.mid(14,4);
+        QString part1 = sysxMsg.mid(22, 256); //y
+        part1.prepend("0000").prepend(addressMsb).prepend(header).append(footer);
+        QString part2 = sysxMsg.mid(278, 228); //y
+        QString part2B = sysxMsg.mid(532, 28); //y
+        part2.prepend("0100").prepend(addressMsb).prepend(header).append(part2B).append(footer);
+        QString part3 = sysxMsg.mid(560, 256); //y
+        part3.prepend("0200").prepend(addressMsb).prepend(header).append(footer);
+        QString part4 = sysxMsg.mid(816, 200); //y
+        QString part4B = sysxMsg.mid(1042, 56); //y
+        part4.prepend("0300").prepend(addressMsb).prepend(header).append(part4B).append(footer);
+        QString part5 = sysxMsg.mid(1098, 256); //y
+        part5.prepend("0400").prepend(addressMsb).prepend(header).append(footer);
+        QString part6 = sysxMsg.mid(1354, 172); //y
+        QString part6B = sysxMsg.mid(1552, 84); //y
+        part6.prepend("0500").prepend(addressMsb).prepend(header).append(part6B).append(footer);
+        QString part7 = sysxMsg.mid(1636, 256); //y
+        part7.prepend("0600").prepend(addressMsb).prepend(header).append(footer);
+        QString part8 = sysxMsg.mid(1892, 144);  //y
+        QString part8B = sysxMsg.mid(2072, 16); //spacer
+        QString part8C = sysxMsg.mid(2062, 96); //y
+        part8.prepend("0700").prepend(addressMsb).prepend(header).append(part8B).append(part8C).append(footer);
+        QString part9 = sysxMsg.mid(2158, 256); //y
+        part9.prepend("0800").prepend(addressMsb).prepend(header).append(footer);
+        QString part10 = sysxMsg.mid(2414,132); //y
+        QString part10B = sysxMsg.mid(2072, 14); //spacer added twice
+        QString part10C = sysxMsg.mid(2572,96); //y
+        part10.prepend("0900").prepend(addressMsb).prepend(header).append(part10B).append(part10B).append(part10C).append(footer);
+        QString part11 = sysxMsg.mid(2668, 256); //y
+        part11.prepend("0A00").prepend(addressMsb).prepend(header).append(footer);
+        QString part12 = sysxMsg.mid(2924, 132); //y
+        QString part12B = sysxMsg.mid(3082, 124);//y
+        part12.prepend("0B00").prepend(addressMsb).prepend(header).append(part12B).append(footer);
+        QString part13 = sysxMsg.mid(3206, 256); //y
+        part13.prepend("0C00").prepend(addressMsb).prepend(header).append(footer);
+        QString part14 = sysxMsg.mid(3462, 104); //y
+        QString part14B = sysxMsg.mid(3592, 152);//y
+        part14.prepend("0D00").prepend(addressMsb).prepend(header).append(part14B).append(footer);
+        QString part15 = sysxMsg.mid(3744, 256); //y
+        part15.prepend("0E00").prepend(addressMsb).prepend(header).append(footer);
+        QString part16 = sysxMsg.mid(4000, 48); //y
+        part16.prepend("0F00").prepend(addressMsb).prepend(header).append(footer);
+
+        sysxMsg.clear();
+        sysxMsg.append(part1).append(part2).append(part3).append(part4).append(part5).append(part6)
+                .append(part7).append(part8).append(part9).append(part10).append(part11).append(part12)
+                .append(part13).append(part14).append(part15).append(part16);
+
+        QString reBuild = "";       /* Add correct checksum to patch strings */
+        QString sysxEOF = "";
+        QString hex = "";
+        int msgLength = sysxMsg.length()/2;
+        for(int i=0;i<msgLength*2;++i)
+        {
+            hex.append(sysxMsg.mid(i*2, 2));
+            sysxEOF = (sysxMsg.mid((i*2)+4, 2));
+            if (sysxEOF == "F7")
+            {
+                int dataSize = 0; bool ok;
+                for(int h=checksumOffset;h<hex.size()-1;++h)
+                { dataSize += hex.mid(h*2, 2).toInt(&ok, 16); };
+                QString base = "80";                       // checksum calculate.
+                unsigned int sum = dataSize % base.toInt(&ok, 16);
+                if(sum!=0) { sum = base.toInt(&ok, 16) - sum; };
+                QString checksum = QString::number(sum, 16).toUpper();
+                if(checksum.length()<2) {checksum.prepend("0");};
+                hex.append(checksum);
+                hex.append("F7");
+                reBuild.append(hex);
+
+                hex = "";
+                sysxEOF = "";
+                i=i+2;
+            };
+        };
+        sysxMsg = reBuild.simplified().toUpper().remove("0X").remove(" ");
+
+        QList< QList<QString> > patchData = sysxIO->getFileSource().hex; // Get the loaded patch data.
+        QString current_data;
+        for(int i=0;i<patchData.size();++i)
+        {
+            QList<QString> data = patchData.at(i);
+            for(int x=0;x<data.size();++x)
+            {
+                QString hex = data.at(x);
+                if (hex.length() < 2) hex.prepend("0");
+                current_data.append(hex);
+            };
+        };
+        if(sysxMsg != current_data)
+        {
+            sysxIO->setFileSource("Structure", sysxMsg);		// Set the source to the data received.
+            sysxIO->setDevice(true);				// Patch received from the device so this is set to true.
+            sysxIO->setSyncStatus(true);			// We can't be more in sync than right now! :)
+        };
+    };
+}

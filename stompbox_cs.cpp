@@ -50,7 +50,7 @@ void stompbox_cs::setEditPages()
 {
     editDetails()->page()->newGroupBox("Effect");
     editDetails()->page()->addSwitch(0, 0, 1, 1, "00", "00", "20", "middle", Qt::AlignCenter);
-    editDetails()->page()->addComboBox(1, 0, 1, 1, "00", "00", "21");
+    editDetails()->page()->addComboBox(1, 0, 1, 1, "00", "00", "21", "large");
 	editDetails()->page()->addGroupBox(0, 0, 1, 1);
 
 	editDetails()->page()->newGroupBox("Compressor");
