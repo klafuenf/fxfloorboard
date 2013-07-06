@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2012 Colin Willcocks.
+** Copyright (C) 2007~2013 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag. 
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -128,7 +128,7 @@ void customButton::emitValue(bool value)
     this->active = value;
 	//if (value != m_value) {
     //    this->m_value = value;
-		if(this->hex1 == 0 && this->hex2 == 0 && this->hex3 == 0)
+		if(this->hex1.isEmpty() && this->hex2.isEmpty() && this->hex3.isEmpty())
 		{
 			emit valueChanged((bool)value);
 		}

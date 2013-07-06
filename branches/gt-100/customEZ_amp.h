@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2012 Colin Willcocks.
+** Copyright (C) 2007~2013 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag.
 ** All rights reserved.
 ** This file is part of "GT-100B Fx FloorBoard".
@@ -41,7 +41,6 @@ public slots:
     void setY_axis(int iy_axis);
     void setX_axis(int ix_axis);
     void updateSlot(  QString hex_1, QString hex_2);
-    void syncResult(QString sysxMsg);
 
 signals:
     void y_axisChanged(int iy_axis);

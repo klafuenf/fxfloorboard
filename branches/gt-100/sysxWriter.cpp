@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2012 Colin Willcocks.
+** Copyright (C) 2007~2013 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag.
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -434,6 +434,7 @@ bool sysxWriter::readFile()
         msgBox->exec();
         return false;
     };
+  return false;
 }
 
 void sysxWriter::patchIndex(int listIndex)
@@ -1119,13 +1120,28 @@ void sysxWriter::translate10to100()
     GT100_default.replace(581, 1, midiTable->getArrayValue("Tables", "00", "00", "06", data.mid(1292, 1))); //convert GEQ
     GT100_default.replace(812, 1, data.mid(1351, 1));  //copy DD sw
     GT100_default.replace(813, 1, midiTable->getArrayValue("Tables", "00", "00", "07", data.mid(1352, 1))); //convert DD type
-    GT100_default.replace(814, 2, data.mid(1353, 2));  //copy DD time
+    int d = ArrayToInt(data.mid(1353, 2));    //copy DD time
+    if(d>2000 && d<3400){d=d/2; };
+    if(d>3400){d=d-1400; };
+    GT100_default.replace(814, 2, IntToArray(d));
+
     GT100_default.replace(820, 1, data.mid(1355, 1));  //copy DD tap
     GT100_default.replace(816, 1, data.mid(1356, 1));  //copy DD fb
     GT100_default.replace(817, 1, midiTable->getArrayValue("Tables", "00", "00", "04", data.mid(1357, 1))); //convert hi cut
-    GT100_default.replace(821, 10, data.mid(1358, 10));  //copy DD
-    GT100_default.replace(824, 1, midiTable->getArrayValue("Tables", "00", "00", "03", data.mid(1361, 1))); //convert lo cut
-    GT100_default.replace(829, 1, midiTable->getArrayValue("Tables", "00", "00", "04", data.mid(1366, 1))); //convert hi cut
+    d = ArrayToInt(data.mid(1358, 2));   //copy DD
+    if(d>1000 && d<1700){d=d/2; };
+    if(d>1700 && d<1707){d=d-700; };
+    if(d>1706){d=1007; };
+    GT100_default.replace(821, 2, IntToArray(d));
+    GT100_default.replace(823, 3, data.mid(1360, 3));  //copy dual DD 1
+    d = ArrayToInt(data.mid(1363, 2));
+    if(d>1000 && d<1700){d=d/2; };
+    if(d>1700 && d<1707){d=d-700; };
+    if(d>1706){d=1007; };
+    GT100_default.replace(826, 2, IntToArray(d));
+    GT100_default.replace(828, 3, data.mid(1365, 3));  //copy dual DD 2
+    GT100_default.replace(824, 1, midiTable->getArrayValue("Tables", "00", "00", "04", data.mid(1361, 1))); //convert D1 hi cut
+    GT100_default.replace(829, 1, midiTable->getArrayValue("Tables", "00", "00", "04", data.mid(1366, 1))); //convert D2 hi cut
     GT100_default.replace(831, 2, data.mid(1372, 2));  //copy DD mod
     GT100_default.replace(818, 2, data.mid(1374, 2));  //copy DD level
     GT100_default.replace(857, 5, data.mid(1383, 5));  //copy CE
@@ -1574,8 +1590,8 @@ void sysxWriter::convertFromGT10B()
         if (file.open(QIODevice::ReadOnly))
         {	data = file.readAll(); };
         QByteArray temp;                         // TRANSLATION of GT-10B SMF PATCHES, data read from smf patch **************
-        bool isGT10B = false;
-        if ( smf_data.at(37) != data.at(5) ){ isGT10B = true; };    // check if a valid GT-10B file.
+        //bool isGT10B = false;
+        //if ( smf_data.at(37) != data.at(5) ){ isGT10B = true; };    // check if a valid GT-10B file.
         index = 1;
         int patchCount = (smf_data.size()-32)/1806;
         if (patchCount>1)
@@ -2364,4 +2380,37 @@ void sysxWriter::convertFromGT6B()
 
 
     translate10Bto100();
+}
+
+int sysxWriter::ArrayToInt(QByteArray Array)
+{
+    bool ok;
+    char a = Array.at(0);
+    QString val = QString::number(a, 16).toUpper();
+    int msb = val.toInt(&ok, 16);
+
+     a = Array.at(1);
+     val = QString::number(a, 16).toUpper();
+     int lsb = val.toInt(&ok, 16);
+     int value = (msb*128) + lsb;
+
+    return value;
+}
+
+QByteArray sysxWriter::IntToArray(int value)
+{
+    QByteArray Array;
+  /*  if(value<128)
+    {
+        Array.append((char)value);
+    }
+    else
+    {*/
+       int msb = value/128;
+       int lsb = value-(msb*128);
+       Array.append((char)msb);
+       Array.append((char)lsb);
+    //};
+
+    return Array;
 }

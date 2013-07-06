@@ -1,6 +1,6 @@
 #############################################################################
 ##
-## Copyright (C) 2007~2012 Colin Willcocks.
+## Copyright (C) 2007~2013 Colin Willcocks.
 ## Copyright (C) 2005~2007 Uco Mesdag. 
 ## All rights reserved.
 ##
@@ -52,8 +52,8 @@ QT += xml
 
 #Platform dependent file(s)
 win32 {
-        exists("C:/Progra~1/MS_SDKs/Windows/v6.1/Lib/WinMM.Lib") {	# <-- Change the path to WinMM.Lib here!
-                LIBS += C:/Progra~1/MS_SDKs/Windows/v6.1/Lib/WinMM.Lib	# <-- Change the path here also!
+        exists("C:/FxFloorBoard/GT-100_sauce/windows/WinMM.Lib") {	# <-- Change the path to WinMM.Lib here!
+                LIBS += C:/FxFloorBoard/GT-100_sauce/windows/WinMM.Lib	# <-- Change the path here also!
     } else { 
         exists("c:/PROGRA~1/MICROS~3/VC/PLATFO~1/Lib/WinMM.Lib") { # Path vs2005 (Vista)
         	LIBS += c:/PROGRA~1/MICROS~3/VC/PLATFO~1/Lib/WinMM.Lib
@@ -68,7 +68,7 @@ win32 {
 	}
 	 HEADERS += 
 	 SOURCES += ./windows/RtMidi.cpp                        
-	 INCLUDEPATH += ./windows
+         INCLUDEPATH += ./windows \ ./windows/Lib
 	message(Including Windows specific headers and sources...)
 }
 linux-g++ {

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2012 Colin Willcocks.
+** Copyright (C) 2007~2013 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag. 
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -274,10 +274,10 @@ void bulkLoadDialog::sendData()
     startList = this->startPatchCombo->currentIndex();
     finishList = this->finishPatchCombo->currentIndex();
     startButton->hide();
-    cancelButton->hide();
+    //cancelButton->hide();
     progress = 0;
     patch = 1;
-    range = (100)/((finishList-startList)+1);
+    range = (200)/((finishList-startList));
 
     int z = (this->bankStart);
     QString q;
@@ -338,6 +338,9 @@ void bulkLoadDialog::sendData()
 
 void bulkLoadDialog::sendPatch(QString data)
 {
+    progress=progress+range;
+    bulkStatusProgress(progress);                         // advance the progressbar.
+
     SysxIO *sysxIO = SysxIO::Instance();
     QObject::connect(sysxIO, SIGNAL(sysxReply(QString)), this, SLOT(sendSequence(QString)));
     sysxIO->sendSysx(data);
@@ -350,10 +353,7 @@ void bulkLoadDialog::sendSequence(QString value)
     sysxIO->setDeviceReady(true); // Free the device after finishing interaction.
     msg=bulk.mid(steps*(patchSize*2), (patchSize*2));
 
-    progress=progress+range;
-    bulkStatusProgress(this->progress);                         // advance the progressbar.
-
-    if (steps<((finishList-startList)+2) )
+    if (steps<((finishList-startList)+1) )
     {
         bool ok;
         QString patchText;
@@ -462,6 +462,7 @@ void bulkLoadDialog::updatePatch()
 
 void bulkLoadDialog::bulkStatusProgress(int value)
 {
+    value=value/2;
     if (value >100) {value = 100;};
     if (value<0) {value = 0; };
     this->progressBar->setValue(value);

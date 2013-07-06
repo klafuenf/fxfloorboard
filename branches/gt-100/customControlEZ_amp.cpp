@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2012 Colin Willcocks.
+** Copyright (C) 2007~2013 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag. 
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -115,12 +115,12 @@ customControlEZ_amp::customControlEZ_amp(QWidget *parent,
     this->v_slider = new QSlider(Qt::Vertical, this);
     this->v_slider->setMinimum(0);
     this->v_slider->setMaximum(100);
-    this->v_slider->setMinimumHeight(120);
+    this->v_slider->setMinimumHeight(160);
 
     this->h_slider = new QSlider(Qt::Horizontal, this);
     this->h_slider->setMinimum(0);
     this->h_slider->setMaximum(100);
-    this->h_slider->setMinimumWidth(260);
+    this->h_slider->setMinimumWidth(160);
 
     QHBoxLayout *h_slider_Layout = new QHBoxLayout;
     h_slider_Layout->setMargin(0);
@@ -129,7 +129,7 @@ customControlEZ_amp::customControlEZ_amp(QWidget *parent,
     h_slider_Layout->addStretch(0);
 
     this->frame = new customEZ_amp(this);
-    this->frame->setMinimumSize(QSize(300, 150));
+    this->frame->setMinimumSize(QSize(200, 200));
 
     QHBoxLayout *knobLayout = new QHBoxLayout;
     knobLayout->setMargin(0);
@@ -155,8 +155,8 @@ customControlEZ_amp::customControlEZ_amp(QWidget *parent,
     QObject::connect(this->parent(), SIGNAL( dialogUpdateSignal() ),
                      this, SLOT( dialogUpdateSignal() ));
 
-    QObject::connect(this, SIGNAL( updateSignal() ),
-                     this->parent(), SIGNAL( updateSignal() ));
+    //QObject::connect(this, SIGNAL( updateSignal() ),
+                    // this->parent(), SIGNAL( updateSignal() ));
 
     QObject::connect(this->v_slider, SIGNAL(valueChanged(int)),
                      this, SLOT(y_axisChanged(int)));

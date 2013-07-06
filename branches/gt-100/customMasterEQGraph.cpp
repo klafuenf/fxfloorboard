@@ -1,9 +1,9 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2012 Colin Willcocks.
+** Copyright (C) 2007~2013 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag.
 ** All rights reserved.
-** This file is part of "GT-100B Fx FloorBoard".
+** This file is part of "GT-10 Fx FloorBoard".
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by
@@ -28,113 +28,114 @@
 
 customMasterEQGraph::customMasterEQGraph (QWidget *parent)
 {
-    QFrame::setFrameShape(QFrame::Panel);
-    QFrame::setFrameShadow(QFrame::Sunken);
+	QFrame::setFrameShape(QFrame::Panel);
+        QFrame::setFrameShadow(QFrame::Sunken);
 
 }
 
 customMasterEQGraph::~customMasterEQGraph (void)
 {
+
 }
 
 void customMasterEQGraph::setLowGain ( unsigned short iLowGain )
 {
-    if (iLowGain > 40) iLowGain = 40;
-    if (m_iLowGain != iLowGain) {
-        m_iLowGain  = iLowGain;
-        update();
-        emit LowGainChanged(LowGain());
-    };
+     //if (iLowGain > 24) iLowGain = 24;
+        if (m_iLowGain != iLowGain) {
+                m_iLowGain  = iLowGain;
+                update();
+                emit LowGainChanged(LowGain());
+        };
 }
 
 unsigned short customMasterEQGraph::LowGain (void) const
 {
-    return m_iLowGain;
+        return m_iLowGain;
 }
 
 
 void customMasterEQGraph::setMidFreq ( unsigned short iMidFreq )
 {
-    if (iMidFreq > 27) iMidFreq = 27;
-    if (m_iMidFreq != iMidFreq) {
-        m_iMidFreq  = iMidFreq;
-        update();
-        emit MidFreqChanged(MidFreq());
-    };
+     //if (iMidFreq > 27) iMidFreq = 27;
+        if (m_iMidFreq != iMidFreq) {
+                m_iMidFreq  = iMidFreq;
+                update();
+                emit MidFreqChanged(MidFreq());
+        };
 }
 
 unsigned short customMasterEQGraph::MidFreq (void) const
 {
-    return m_iMidFreq;
+        return m_iMidFreq;
 }
 
 
 void customMasterEQGraph::setMidQ ( unsigned short iMidQ )
 {
-    if (iMidQ > 5) iMidQ = 5;
-    if (m_iMidQ != iMidQ) {
-        m_iMidQ  = iMidQ;
-        update();
-        emit MidQChanged(MidQ());
-    }
+    //if (iMidQ > 5) iMidQ = 5;
+        if (m_iMidQ != iMidQ) {
+                m_iMidQ  = iMidQ;
+                update();
+                emit MidQChanged(MidQ());
+        }
 }
 
 unsigned short customMasterEQGraph::MidQ (void) const
 {
-    return m_iMidQ;
+        return m_iMidQ;
 }
 
 
 void customMasterEQGraph::setMidGain ( unsigned short iMidGain )
 {
-    if (iMidGain > 40) iMidGain = 40;
-    if (m_iMidGain != iMidGain) {
-        m_iMidGain  = iMidGain;
-        update();
-        emit MidGainChanged(MidGain());
-    }
+    //if (iMidGain > 24) iMidGain = 24;
+        if (m_iMidGain != iMidGain) {
+                m_iMidGain  = iMidGain;
+                update();
+                emit MidGainChanged(MidGain());
+        }
 }
 
 unsigned short customMasterEQGraph::MidGain (void) const
 {
-    return m_iMidGain;
+        return m_iMidGain;
 }
 
 void customMasterEQGraph::setHighGain ( unsigned short iHighGain )
 {
-    if (iHighGain > 40) iHighGain = 40;
-    if (m_iHighGain != iHighGain) {
-        m_iHighGain  = iHighGain;
-        update();
-        emit HighGainChanged(HighGain());
-    };
+    //if (iHighGain > 24) iHighGain = 24;
+        if (m_iHighGain != iHighGain) {
+                m_iHighGain  = iHighGain;
+                update();
+                emit HighGainChanged(HighGain());
+        };
 }
 
 unsigned short customMasterEQGraph::HighGain (void) const
 {
-    return m_iHighGain;
+        return m_iHighGain;
 }
 
 void customMasterEQGraph::setLevel ( unsigned short iLevel )
 {
-    if (iLevel > 100) iLevel = 100;
-    if (m_iLevel != iLevel) {
-        m_iLevel  = iLevel;
-        update();
-        emit LevelChanged(Level());
-    };
+    //if (iLevel > 100) iLevel = 100;
+        if (m_iLevel != iLevel) {
+                m_iLevel  = iLevel;
+                update();
+                emit LevelChanged(Level());
+        };
 }
 
 unsigned short customMasterEQGraph::Level (void) const
 {
-    return m_iLevel;
+        return m_iLevel;
 }
 
 
 void customMasterEQGraph::paintEvent ( QPaintEvent *pPaintEvent )
 {
     QPixmap image = QPixmap(":images/EQ_graph.png");
-    QRectF target(0.0, 0.0, image.width()*55/100, image.height()*43/100);
+    QRectF target(0.0, 0.0, image.width()*85/100, image.height()*43/100);
     QRectF source(0.0, 0.0, image.width(), image.height());
 
     QPainter painter(this);
@@ -142,31 +143,36 @@ void customMasterEQGraph::paintEvent ( QPaintEvent *pPaintEvent )
 
     int h   =     height();
     int w   =     width();
-    int lg  = h - (m_iLowGain*3);
+    
+    int lg  = h - (m_iLowGain*2)+5;
+    
     int mf  =     (m_iMidFreq*12) + 12;
     int mq  = h - (m_iMidQ*18)-80;
-    int mg  = h - (m_iMidGain+60);
-    int hg  = h - (m_iHighGain*3);
-    int lev = h/2 - (m_iLevel);
+    int mg  = h - (m_iMidGain)-29;
+    
+    int hg  = h - (m_iHighGain*2)+5;
+    
+    int lev = 80 - (m_iLevel);
 
     QLinearGradient grad(0, 0, w << 1, h << 1);
     grad.setColorAt(0.0f, Qt::yellow);
     grad.setColorAt(1.0f, Qt::black);
 
     painter.setBrush(grad);
-                // horizonal, vertical
+                // horizonal,    vertical
+
     poly.putPoints(0,           11,
-                   0,           h,                         // [0]
-                   0,          (lg)+lev-70,              // [1]
-                   (w/10)*2,    lg+lev-70,                 // [2]
-                   (w/10)*4,    lev+52,                    // [3]
-                   mf-mq,       mg+m_iMidGain-25,              // [4]
-                   mf,         (h*100/82)-(m_iMidGain*7)+10,  // [5]
-                   mf+mq,       mg+m_iMidGain-25,                 // [6]
-                   (w/10)*6,    lev+52,                    // [7]
-                   (w/10)*8,   (hg+lev-70),                // [8]
-                   w,          (hg)+lev-70,              // [9]
-                   w,           h  );                      // [10]
+                   0,           h,                       // [0]
+                   0,          (lg)+lev-93,              // [1]
+                   (w/10)*2,    lg+lev-93,               // [2]
+                   (w/10)*4,    lev+52,                  // [3]
+                   mf-mq,       mg+m_iMidGain-40,        // [4]
+                   mf,         (270)-(m_iMidGain*6)-40,  // [5]
+                   mf+mq,       mg+m_iMidGain-40,        // [6]
+                   (w/10)*6,    lev+52,                  // [7]
+                   (w/10)*8,   (hg+lev-93),              // [8]
+                   w+5,          (hg)+lev-93,            // [9]
+                   w+5,           h  );                  // [10]
 
     QPainterPath loHi;
     loHi.moveTo(poly.at(1));
@@ -183,29 +189,36 @@ void customMasterEQGraph::paintEvent ( QPaintEvent *pPaintEvent )
     Mid.cubicTo(poly.at(6), poly.at(5), poly.at(4));
 
     painter.setPen(Qt::black);
+    QPen pen;
+    pen.setWidth(3);
+    painter.setPen(pen);
+    painter.setRenderHint(QPainter::Antialiasing, true);
     QPainterPath graph;
     graph.moveTo(0, h);
     bool intersect = false;
     int x = 0;
     int a = 0;
     int b = 0;
-    for(x=0; x<w; ++x)
+    int c = 0;
+    for(x=0; x<400; ++x)
     {
-        for( a=0; a<h&&intersect!=true; ++a)
+        for( a=0; a<220&&intersect!=true; ++a)
         {
             intersect = loHi.intersects(QRectF(x, a, 1, 1));
         };
         intersect = false;
 
-        for( b=0; b<h&&intersect!=true; ++b)
+        for( b=0; b<220&&intersect!=true; ++b)
         {
-            intersect = Mid.intersects(QRectF(x, b-(h/2), 1, 1));
+            intersect = Mid.intersects(QRectF(x, b, 1, 1));
         };
+        if(b>=220){b=110;};
         intersect = false;
-        graph.lineTo(x, a+b-h );
-        //x=x+19;
+        c = a+b-100;
+        graph.lineTo(x, c);
+        x=x+4;
     };
-    graph.lineTo(w, a+b-h);
+
     graph.lineTo(w, h);
 
     painter.setBrush(grad);
@@ -219,141 +232,40 @@ void customMasterEQGraph::paintEvent ( QPaintEvent *pPaintEvent )
 // Mouse interaction.
 void customMasterEQGraph::mousePressEvent ( QMouseEvent *pMouseEvent )
 {
-    if (pMouseEvent->button() == Qt::LeftButton) {
-        const QPoint& pos = pMouseEvent->pos();
-        int iDragNode = nodeIndex(pos);
-        if (iDragNode >= 0) {
-            if (iDragNode == 1 || iDragNode == 5) {setCursor(Qt::SizeVerCursor); };
-            if (iDragNode == 2 || iDragNode == 4) {setCursor(Qt::SizeHorCursor); };
-            if (iDragNode == 3) {setCursor(Qt::SizeAllCursor); };
-            m_iDragNode = iDragNode;
-            m_posDrag = pos;
-        }
-    }
-
-    QFrame::mousePressEvent(pMouseEvent);
 
 }
-
 
 void customMasterEQGraph::mouseMoveEvent ( QMouseEvent *pMouseEvent )
 {
 
-    dragNode(pMouseEvent->pos());
+
 }
 
 
 void customMasterEQGraph::mouseReleaseEvent ( QMouseEvent *pMouseEvent )
 {
-    QFrame::mouseReleaseEvent(pMouseEvent);
 
-    dragNode(pMouseEvent->pos());
-
-    if (m_iDragNode >= 0) {
-        m_iDragNode = -1;
-        unsetCursor();
-    }
 }
-
-
 
 // Draw rectangular point.
 QRect customMasterEQGraph::nodeRect ( int iNode ) const
 {
-    const QPoint& pos = poly.at(iNode);
-    return QRect(pos.x() - 4, pos.y() - 4, 8, 8);
+        const QPoint& pos = poly.at(iNode);
+        return QRect(pos.x() - 4, pos.y() - 4, 8, 8);
 }
-
 
 int customMasterEQGraph::nodeIndex ( const QPoint& pos ) const
 {     
-    if (nodeRect(8).contains(pos))
-        return 5; // HighGain
-
-    if (nodeRect(6).contains(pos))
-        return 4; // MidQ
-
-    if (nodeRect(5).contains(pos))
-        return 3; // MidFreq/MidGain
-
-    if (nodeRect(4).contains(pos))
-        return 2; // MidQ
-
-    if (nodeRect(2).contains(pos))
-        return 1; //LowGain
-
-    return -1;
+        return -1;
 }
 
 void customMasterEQGraph::dragNode ( const QPoint& pos )
 {
-    static unsigned short m_iLevel0 = 0; // Dummy!
-    unsigned short *piRate  = NULL;
-    unsigned short *piLevel = NULL;
-    switch (m_iDragNode) {
-    case 1: // LowGain
-        piRate  = &m_iLevel0;
-        piLevel = &m_iLowGain;
-        break;
-    case 2: // MidQ
-        piRate  = &m_iMidQ;
-        piLevel = &m_iLevel0;
-        break;
-    case 3: // MidFreq/MidGain
-        piRate  = &m_iMidFreq;
-        piLevel = &m_iMidGain;
-        break;
-    case 4: // MidQ
-        piRate  = &m_iMidQ;
-        piLevel = &m_iLevel0;
-        break;
-    case 5: // HighGain
-        piRate  = &m_iLevel0;
-        piLevel = &m_iHighGain;
-        break;
-    }
 
-    if (piRate && piLevel) {
-        int iRate = int(*piRate) + ((pos.x() - m_posDrag.x()) << 6) / (width() >> 2);
-        int iLevel = int(*piLevel) + ((m_posDrag.y() - pos.y()) << 7) / height();
-        if (iLevel < 0) iLevel = 0;
-        else
-            if (iLevel > 40) iLevel = 40;
-        if (iRate < 0) iRate = 0;
-        else
-            if (iRate > 30) iRate = 30;
-        if (*piRate  != (unsigned short) iRate ||
-                *piLevel != (unsigned short) iLevel) {
-            m_posDrag = pos;
-            switch (m_iDragNode) {
-            case 1: // LowGain
-                setLowGain(iLevel);
-                break;
-            case 2: // MidQ
-                setMidQ(iRate);
-                break;
-            case 3: // MidFreq/MidGain
-                setMidFreq(iRate);
-                setMidGain(iLevel);
-                break;
-            case 4: // MidQ
-                setMidQ(iRate);
-                break;
-            case 5: // HighGain
-                setHighGain(iLevel);
-                break;
-
-            }
-        }
-    } else if (nodeIndex(pos) >= 0) {
-        setCursor(Qt::PointingHandCursor);
-    } else {
-        unsetCursor();
-    }
 }
 
 void customMasterEQGraph::updateSlot(  QString hex_1, QString hex_2, QString hex_3,
-                                       QString hex_4, QString hex_5, QString hex_6 )
+                               QString hex_4, QString hex_5, QString hex_6 )
 {
     this->hex_1 = hex_1;
     this->hex_2 = hex_2;
@@ -370,9 +282,4 @@ void customMasterEQGraph::updateSlot(  QString hex_1, QString hex_2, QString hex
     setLevel(this->hex_6.toShort(&ok, 16));
 
 }
-
-
-
-
-
 

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2012 Colin Willcocks.
+** Copyright (C) 2007~2013 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag.
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -264,12 +264,14 @@ editWindow::editWindow(QWidget *parent)
 
     QObject::connect(this->pageComboBox, SIGNAL(activated(int)), this, SLOT(valueChanged(int)));
 
-    SysxIO *sysxIO = SysxIO::Instance();
+    /*SysxIO *sysxIO = SysxIO::Instance();
     sysxIO->eztone_page = 0;
     sysxIO->system_page = 0;
     sysxIO->midi_page =0;
 
-    emit pageUpdateSignal();
+    emit pageUpdateSignal();    */
+    
+    this->pageIndex = 0;
 }
 
 void editWindow::paintEvent(QPaintEvent *)
@@ -288,8 +290,8 @@ editWindow::~editWindow()
 
 void editWindow::setLSB(QString hex1, QString hex2)
 {
-    //this->hex1 = hex1;
-    //this->hex2 = hex2;
+    this->hex1 = hex1;
+    this->hex2 = hex2;
 }
 
 void editWindow::setWindow(QString title)
@@ -406,13 +408,13 @@ void editWindow::valueChanged(int index)
 {
     if(hex1 != "void" && hex2 != "void")
     {
-        QString valueHex = QString::number(index, 16).toUpper();
+      /*  QString valueHex = QString::number(index, 16).toUpper();
         if(valueHex.length() < 2) valueHex.prepend("0");
         SysxIO *sysxIO = SysxIO::Instance();
         if (this->hex3 == "30") {sysxIO->eztone_page = index; }
         else if (this->hex3 == "75") {sysxIO->system_page = index; }
-        else if (this->hex3 == "74"){sysxIO->midi_page = index; };
-       // sysxIO->setFileSource("Structure", this->hex1, this->hex2, this->hex3, valueHex);
+        else if (this->hex3 == "74"){sysxIO->midi_page = index; };*/
+       this->pageIndex = index;
     };
 }
 
@@ -420,15 +422,16 @@ void editWindow::pageUpdateSignal()
 {
         if(this->pages > 1 && hex1 != "void" && hex2 != "void")
         {
-                SysxIO *sysxIO = SysxIO::Instance();
+                int index = this->pageIndex;
+               /* SysxIO *sysxIO = SysxIO::Instance();
                 int index;
                 if (this->hex3 == "30") {index = sysxIO->eztone_page; }
                 else if (this->hex3 == "75") {index = sysxIO->system_page; }
-                else if (this->hex3 == "74"){index = sysxIO->midi_page; };
+                else if (this->hex3 == "74"){index = sysxIO->midi_page; };   */
                 //int index = sysxIO->getSourceValue("Structure", this->hex1, this->hex2, this->hex3);
                 this->pageComboBox->setCurrentIndex(index);
                 this->pagesWidget->setCurrentIndex(index);
-                this->valueChanged(index);
+                //this->valueChanged(index);
 
         };
     emit updateSignal();
