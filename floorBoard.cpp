@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2012 Colin Willcocks.
+** Copyright (C) 2007~2013 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag.
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -329,7 +329,7 @@ void floorBoard::dropEvent(QDropEvent *event)
         };
 
 
-        if((destIndex > -1 && destIndex < fx.size() + 1) && (stompId != 17) && (stompId != 18) && (stompId != 19) && (stompId != 2) && (stompId != 3))
+        if((destIndex > -1 && destIndex < fx.size() + 1) && (stompId != 17) && (stompId != 18) && (stompId != 19)/* && (stompId != 2) && (stompId != 3)*/)
             // Make sure we are not dropping the stomp out of range.
         {
             if( orgIndex < destIndex )
@@ -537,7 +537,7 @@ void floorBoard::initStomps()
 {
     QList<signed int> fx;
     fx << 0 << 1 << 2 << 3 << 4 << 5 << 6 << 7 << 8 << 9 << 10 << 11 << 12 << 13 << 14 << 15 << 16 << 17 << 18 << 19;
-    /*   FX1   CS  PDL  LP   OD   CH_A  EQ  FX2  DD    CE   RV    NS1    FV   FX3   CH_B  NS2   cn_s  cn_m  usb :depend on midi.xml   */
+    /*   FX1  CS   PDL   LP   OD   CH_A EQ   FX2  DD   CE   RV    NS1   FV    FX3   CH_B  NS2   cn_s  cn_m  usb      :depend on midi.xml   */
     this->fx = fx;
 
     QVector<QString> initStompNames(20);
@@ -772,11 +772,11 @@ void floorBoard::initMenuPages()
     menuPage *ez_edit = new menuPage_ez_edit(this);
     ez_edit->setId(31);
 
-   // menuPage *system = new menuPage_system(this);
-   // system->setId(30);
+    menuPage *system = new menuPage_system(this);
+    system->setId(30);
 
-   // menuPage *midi = new menuPage_midi(this);
-    //midi->setId(29);
+    menuPage *midi = new menuPage_midi(this);
+    midi->setId(29);
 
     menuPage *assign8 = new menuPage_assign8(this);
     assign8->setId(28);

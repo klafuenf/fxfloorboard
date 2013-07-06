@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2012 Colin Willcocks.
+** Copyright (C) 2007~2013 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag. 
 ** All rights reserved.
 ** This file is part of "GT-100B Fx FloorBoard".
@@ -380,7 +380,7 @@ customControlParaEQ::customControlParaEQ(QWidget *parent,
 
 
     this->frame = new customParaEQGraph(this);
-    this->frame->setMinimumSize(QSize(600, 180));
+    this->frame->setMinimumSize(QSize(700, 200));
 
     QVBoxLayout *frameLayout = new QVBoxLayout;
     frameLayout->setMargin(0);
@@ -437,7 +437,7 @@ customControlParaEQ::customControlParaEQ(QWidget *parent,
                      this->frame, SLOT( updateSlot(QString, QString, QString, QString, QString,
                                                    QString, QString, QString, QString, QString, QString) ));
 
-    QObject::connect(this->frame, SIGNAL(LowCutChanged(unsigned short)),
+  /*  QObject::connect(this->frame, SIGNAL(LowCutChanged(unsigned short)),
                      this, SLOT(LowCutChanged(unsigned short) ));
 
     QObject::connect(this->frame, SIGNAL(LowGainChanged(unsigned short)),
@@ -468,7 +468,7 @@ customControlParaEQ::customControlParaEQ(QWidget *parent,
                      this, SLOT(HighCutChanged(unsigned short) ));
 
     QObject::connect(this->frame, SIGNAL(LevelChanged(unsigned short)),
-                     this, SLOT(LevelChanged(unsigned short) ));
+                     this, SLOT(LevelChanged(unsigned short) ));     */
 
 }
 

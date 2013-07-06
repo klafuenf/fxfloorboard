@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2012 Colin Willcocks.
+** Copyright (C) 2007~2013 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag. 
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -61,6 +61,8 @@ private:
     void translate10Bto100();
     void convertFromGT6B();
     QString headerType;
+    int ArrayToInt(QByteArray Array);
+    QByteArray IntToArray(int value);
 };
 
 #endif // SYSXWRITER_H

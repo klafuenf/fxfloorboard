@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2012 Colin Willcocks.
+** Copyright (C) 2007~2013 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag.
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -38,17 +38,17 @@
 
 mainWindow::mainWindow()
 {
-    reg = false;
+  /*  reg = false;
     if(QFile("registare.bin").exists())
     {
         QFile file("registare.bin");
         file.open(QFile::ReadOnly);
         QString registry = QLatin1String(file.readAll());
         if(registry.contains("registered"))
-        {
+        {*/
             reg = true;
-        };
-    };
+        //};
+    //};
     createActions();
     createMenus();
 
@@ -87,6 +87,14 @@ mainWindow::mainWindow()
 
     QObject::connect(fxsBoard, SIGNAL( sizeChanged(QSize, QSize) ),
                      this, SLOT( updateSize(QSize, QSize) ) );
+                     
+    int count = (preferences->getPreferences("General", "Start", "count").toInt(&ok, 10));
+    if(count == 0 && preferences->getPreferences("General", "Donate", "url")!="true")
+    { donate(); };
+    count++;
+    if(count >= 8) {count = 0; };
+    QString index = QString::number(count, 10).toUpper();
+    preferences->setPreferences("General", "Start", "count", index);
 }
 
 mainWindow::~mainWindow()

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2012 Colin Willcocks.
+** Copyright (C) 2007~2013 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag. 
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -253,31 +253,10 @@ void bulkSaveDialog::updatePatch(QString replyMsg)
         QString part16 = replyMsg.mid(4000, 48); //y
         part16.prepend("0F00").prepend(addressMsb).prepend(header).append(footer);
 
-        QString QFX = "false";
-        if (replyMsg.contains("F041000000601230") || replyMsg.contains("F041000000601240")) // if a QFX patch
-        {QFX = "true"; };                                                     // update the temp buffer
-
         replyMsg.clear();
         replyMsg.append(part1).append(part2).append(part3).append(part4).append(part5).append(part6)
                 .append(part7).append(part8).append(part9).append(part10).append(part11).append(part12)
                 .append(part13).append(part14).append(part15).append(part16);
-        /*QByteArray data;
-        QFile file(":default.syx");   // Read the default GT-100 sysx file so we don't start empty handed.
-        if (file.open(QIODevice::ReadOnly))
-        {	data = file.readAll(); };
-        QByteArray temp;
-        temp = data.mid(1763, 282);           // copy patch description from default.syx  address 00 0D 00 00
-
-        QString sysxBuffer;
-        for(int i=0;i<temp.size();i++)
-        {
-        unsigned char byte = (char)temp[i];
-        unsigned int n = (int)byte;
-        QString hex = QString::number(n, 16).toUpper();     // convert QByteArray to QString
-        if (hex.length() < 2) hex.prepend("0");
-        sysxBuffer.append(hex);
-  };
-        replyMsg.append(sysxBuffer);   */
 
         QString reBuild;       // Add correct checksum to patch strings
         QString sysxEOF;
@@ -308,8 +287,9 @@ void bulkSaveDialog::updatePatch(QString replyMsg)
         };
         replyMsg = reBuild.simplified().toUpper();
         bulk.append(replyMsg); 	                                           // add patch to the bulk string.
-    };
     ++patch;
+    };
+
     if(patch>4) {patch=1; bank=bank+4;};	                      // increment patch.
     progress=progress+range;
     bulkStatusProgress(this->progress);                         // advance the progressbar.
@@ -411,48 +391,42 @@ void bulkSaveDialog::writeGCL()         // ************************************ 
             for (int x=0;x<patchCount;x++)
             {
                 int a = 172;
-                temp = out.mid(11, 128);
+                temp = out.mid(b+11, 128);
                 GCL_default.replace(a, 128, temp);         //address "00"
-                temp = out.mid(152, 128);
+                temp = out.mid(b+152, 128);
                 GCL_default.replace(a+128, 128, temp);     //address "01"
-                temp = out.mid(293, 128);
+                temp = out.mid(b+293, 128);
                 GCL_default.replace(a+256, 128, temp);     //address "02"
-                temp = out.mid(434, 128);
+                temp = out.mid(b+434, 128);
                 GCL_default.replace(a+384, 128, temp);     //address "03"
-                temp = out.mid(575, 128);
+                temp = out.mid(b+575, 128);
                 GCL_default.replace(a+512, 128, temp);     //address "04"
-                temp = out.mid(716, 128);
+                temp = out.mid(b+716, 128);
                 GCL_default.replace(a+640, 128, temp);      //address "05"
-                temp = out.mid(857, 128);
+                temp = out.mid(b+857, 128);
                 GCL_default.replace(a+768, 128, temp);     //address "06"
-                temp = out.mid(998, 128);
+                temp = out.mid(b+998, 128);
                 GCL_default.replace(a+896, 128, temp);     //address "07"
-                temp = out.mid(1139, 128);
+                temp = out.mid(b+1139, 128);
                 GCL_default.replace(a+1024, 128, temp);    //address "08"
-                temp = out.mid(1280, 128);
+                temp = out.mid(b+1280, 128);
                 GCL_default.replace(a+1152, 128, temp);    //address "09"
-                temp = out.mid(1421, 128);
+                temp = out.mid(b+1421, 128);
                 GCL_default.replace(a+1280, 128, temp);    //address "0A"
-                temp = out.mid(1562, 128);
+                temp = out.mid(b+1562, 128);
                 GCL_default.replace(a+1408, 128, temp);    //address "0B"
-                temp = out.mid(1703, 128);
+                temp = out.mid(b+1703, 128);
                 GCL_default.replace(a+1536, 128, temp);    //address "0C"
-                temp = out.mid(1844, 128);
+                temp = out.mid(b+1844, 128);
                 GCL_default.replace(a+1664, 128, temp);    //address "0D"
-                temp = out.mid(1985, 128);
+                temp = out.mid(b+1985, 128);
                 GCL_default.replace(a+1792, 128, temp);    //address "0E"
-                temp = out.mid(2126, 24);
+                temp = out.mid(b+2126, 24);
                 GCL_default.replace(a+1920, 24, temp);    //address "0F"
                 temp.clear();
-                //QString hexStr = "06";
-                //temp.append((char)(hexStr.toInt(&ok, 16)));
-                //hexStr = "B1";
-                //temp.append((char)(hexStr.toInt(&ok, 16)));
-                //GCL_default.replace(162, 2, temp);     // replace patch size index
 
-                b=b+patchSize;                                  // increment point to next *.syx patch in bulk.
-                bulkFile.append(GCL_default.mid(160, 1713)); // copy most of the patch + index except for 4 text chars on end.
-                bulkFile.append(GCL_default.mid(80, 4));     // copy 4 bytes of "00" from no-where special.
+                b=b+patchSize;
+                bulkFile.append(GCL_default.mid(160, 2194));
             };
             QString hex = QString::number(patchCount, 16).toUpper();     // convert integer to QString.
             if (hex.length() < 2) hex.prepend("0");
@@ -506,7 +480,6 @@ void bulkSaveDialog::writeSMF()    // **************************** SMF FILE FORM
     Preferences *preferences = Preferences::Instance();
     QString dir = preferences->getPreferences("General", "Files", "dir");
     QByteArray bulkFile;
-    QByteArray footer;
     int a = 0;
     QString fileName = QFileDialog::getSaveFileName(
                 this,
@@ -520,12 +493,12 @@ void bulkSaveDialog::writeSMF()    // **************************** SMF FILE FORM
             fileName.append(".mid");
         };
 
-
         QFile file(fileName);
         if (file.open(QIODevice::WriteOnly))
         {
             bool ok;
             QByteArray patches;
+            QByteArray patch_address;
             int size = this->bulk.size()/2;
             int patchCount = size/patchSize;
             for (int x=0;x<size*2;x++)
@@ -540,9 +513,10 @@ void bulkSaveDialog::writeSMF()    // **************************** SMF FILE FORM
             if (hexfile.open(QIODevice::ReadOnly))
             { GT100_default = hexfile.readAll(); };
             QByteArray header(GT100_default.mid(0,29));
-            footer.append(GT100_default.mid(2351,4));
+            QByteArray footer(GT100_default.mid(2351,4));
             for(int x=0; x<patchCount; ++x)
             {
+                patch_address = patches.mid(a+7, 2);
                 temp = patches.mid(a+11, 128);
                 temp.append(patches.mid(a+152, 114));
                 GT100_default.replace(43, 242, temp);         // replace SMF address "0000"#
@@ -585,11 +559,25 @@ void bulkSaveDialog::writeSMF()    // **************************** SMF FILE FORM
                 temp = patches.mid(a+2142,8);
                 GT100_default.replace(2107, 8, temp);         // replace SMF address "0F10"#
 
-                GT100_default.remove(0,29);
-                GT100_default.remove(2351,4);
+                GT100_default.replace(39, 2, patch_address); // replace patch addresses
+                GT100_default.replace(297, 2, patch_address);
+                GT100_default.replace(555, 2, patch_address);
+                GT100_default.replace(813, 2, patch_address);
+                GT100_default.replace(1071, 2, patch_address);
+                GT100_default.replace(1329, 2, patch_address);
+                GT100_default.replace(1587, 2, patch_address);
+                GT100_default.replace(1845, 2, patch_address);
+                GT100_default.replace(2103, 2, patch_address);
+
+                GT100_default.remove(2351,4);   // remove footer
+                GT100_default.remove(0,29);     // remove header
+                QByteArray Q;
+                Q.append((char)20);
+                if(a>0) {GT100_default.replace(0, 1, Q); };
 
                 QByteArray sysxBuffer;
-                int dataSize = 0; int offset = 0;
+                int dataSize = 0;
+                int offset = 0;
                 for(int i=0;i<GT100_default.size();i++)
                 {
                     unsigned char byte = (char)GT100_default[i];
@@ -602,45 +590,45 @@ void bulkSaveDialog::writeSMF()    // **************************** SMF FILE FORM
                     unsigned int nextn = (int)nextbyte;
                     QString nexthex = QString::number(nextn, 16).toUpper();
                     if (nexthex.length() < 2) nexthex.prepend("0");
-                    if(offset >= checksumOffset+3 && nexthex != "F7")   // smf offset is 8 bytes + previous byte
+                    if((offset >= checksumOffset+3) && (nexthex != "F7"))   // smf offset is 8 bytes + previous byte
                     {
                         dataSize += n;
                     };
                     if(nexthex == "F7")
                     {
-                        QString checksum;
                         bool ok;
-                        int dataSize = 0;
-                        for(int i=checksumOffset+3;i<sysxBuffer.size()-1;++i)
-                        {
-                            QString hexStr = sysxBuffer.mid(i, 2);
-                            dataSize += ( (char)(hexStr.toInt(&ok, 16)) );
-                        };
                         QString base = "80";
                         int sum = dataSize % base.toInt(&ok, 16);
-                        if(sum!=0) sum = base.toInt(&ok, 16) - sum;
-                        checksum = QString::number(sum, 16).toUpper();
-                        if(checksum.length()<2) checksum.prepend("0");
-                        sysxBuffer.replace(sysxBuffer.size() - 1, checksum);
-
+                        if(sum!=0) {sum = base.toInt(&ok, 16) - sum; };
+                        QByteArray cs;
+                        cs.append((char)sum);
+                        GT100_default.replace(i, 1, cs);
                     };
                     offset++;
-
                     if(hex == "F7")
                     {
-
                         sysxBuffer.clear();
                         dataSize = 0;
                         offset = 0;
                     };
                 };
                 a=a+patchSize;
-                bulkFile.append(header);
+
                 bulkFile.append(GT100_default);      // append the bulk file.
                 GT100_default.prepend(header);
                 GT100_default.append(footer);
             };
+            bulkFile.prepend(header);
             bulkFile.append(footer);                // add file footer.
+            size = bulkFile.size()-22;
+            QByteArray fileSize;
+            int xsb = size/16384;
+            int msb = size/128;
+            int lsb = size-((msb*128)+(xsb*16384));
+            fileSize.append((char)xsb/4);
+            fileSize.append((char)msb/2);
+            fileSize.append((char)lsb);
+            bulkFile.replace(19, 3, fileSize);     // correct filesize attributes
             file.write(bulkFile);
         };
         DialogClose();

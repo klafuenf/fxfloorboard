@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2012 Colin Willcocks.
+** Copyright (C) 2007~2013 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag. 
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -41,5 +41,7 @@ void stompbox_cn_m1_s2::updateSignal()
 void stompbox_cn_m1_s2::setEditPages()
 {
 
+    QString text = tr("USE FOR PASTING CHAIN CONFIGURATIONS - For Chain editing, close and drag stompboxes");
+    editDetails()->page()->addLabel(0, 0, 1, 3, text);
     editDetails()->addPage();
 }

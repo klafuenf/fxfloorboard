@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2012 Colin Willcocks.
+** Copyright (C) 2007~2013 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag.
 ** All rights reserved.
 ** This file is part of "GT-100B Fx FloorBoard".
@@ -257,7 +257,11 @@ void customGraphicEQGraph::paintEvent ( QPaintEvent *pPaintEvent )
     path.moveTo(poly.at(0));
     path.addPolygon(poly);
 
-    painter.setPen(Qt::gray);
+    painter.setPen(Qt::black);
+    QPen pen;
+    pen.setWidth(3);
+    painter.setPen(pen);
+    painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setBrush(grad);
     painter.drawPath((path));
 

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2012 Colin Willcocks.
+** Copyright (C) 2007~2013 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag. 
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -40,7 +40,7 @@ void menuPage_midi::setEditPages()
 	editDetails()->page()->newGroupBox("SYSTEM MIDI.  Caution: Changes are automatically written to the GT-100.");
     editDetails()->page()->addComboBox(0, 0, 1, 1, "02", "00", "00", "System"); // rx channel
     editDetails()->page()->addComboBox(0, 1, 1, 1, "02", "00", "01", "System"); // omni mode
-	editDetails()->page()->addComboBox(0, 2, 1, 1, "02", "00", "02", "System"); // tx channel
+    editDetails()->page()->addComboBox(0, 2, 1, 1, "02", "00", "02", "System"); // tx channel
     editDetails()->page()->addComboBox(0, 3, 1, 1, "02", "00", "03", "System"); // sync clock
     editDetails()->page()->addComboBox(0, 4, 1, 1, "02", "00", "04", "System"); // midi port
     editDetails()->page()->addComboBox(0, 5, 1, 1, "02", "00", "05", "System"); // pc out
@@ -53,10 +53,10 @@ void menuPage_midi::setEditPages()
     editDetails()->page()->addComboBox(2, 1, 1, 1, "02", "00", "0B", "System"); // sub ctl 2 out
     editDetails()->page()->addComboBox(2, 2, 1, 1, "02", "00", "0C", "System"); // sub EXP out
 	editDetails()->page()->addComboBox(2, 3, 1, 1, "02", "00", "0D", "System"); // map select
-	
+
 	editDetails()->page()->addGroupBox(0, 0, 1, 1);
     editDetails()->addPage("00", "02", "74", "00", "System");
-/*
+
     editDetails()->page()->newGroupBox("MIDI PROGRAM TABLE - BANK 0.            Caution: Changes are automatically written to the GT-100.");
     editDetails()->page()->addMultiComboBox(0, 0, 1, 1, "02", "01", "00", "System"); // 1
     editDetails()->page()->addGroupBox(0, 0, 1, 1);
@@ -75,5 +75,5 @@ void menuPage_midi::setEditPages()
     editDetails()->page()->newGroupBox("MIDI PROGRAM TABLE - BANK 3.            Caution: Changes are automatically written to the GT-100.");
     editDetails()->page()->addMultiComboBox(0, 0, 1, 1, "02", "07", "00", "System"); // 1
     editDetails()->page()->addGroupBox(0, 0, 1, 1);
-    editDetails()->addPage("00", "02", "74", "04", "System");*/
+    editDetails()->addPage("00", "02", "74", "04", "System");
 }

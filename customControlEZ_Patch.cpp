@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2012 Colin Willcocks.
+** Copyright (C) 2007~2013 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag.
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -24,6 +24,15 @@
 #include "customControlEZ_Patch.h"
 #include "MidiTable.h"
 #include "SysxIO.h"
+
+// Platform-dependent sleep routines.
+#ifdef Q_OS_WIN
+#include <windows.h>
+#define SLEEP( milliseconds ) Sleep( (DWORD) milliseconds )
+#else // Unix variants & Mac
+#include <unistd.h>
+#define SLEEP( milliseconds ) usleep( (unsigned long) (milliseconds * 1000.0) )
+#endif
 
 customControlEZ_Patch::customControlEZ_Patch(QWidget *parent,
                                              QString hex1, QString hex2, QString hex3,
@@ -147,7 +156,20 @@ void customControlEZ_Patch::select_patch()
     SysxIO *sysxIO = SysxIO::Instance();
     sysxIO->setFileName("EZ-Tone");
     sysxIO->setFileSource("Structure", patch);
+     if(sysxIO->isConnected() && sysxIO->deviceReady())
+    {
+        int time = 0;
+        sysxIO->writeToBuffer();
+        while(time<20)
+        {
+            SLEEP(150);
+            if(sysxIO->deviceReady())
+            {
+                time = 20;
+            };
+            ++time;     // wait until device is ready
+        };
+    };
     emit sysxIO->relayUpdateSignal();
-    sysxIO->writeToBuffer();
 }
 

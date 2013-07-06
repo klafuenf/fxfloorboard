@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2012 Colin Willcocks.
+** Copyright (C) 2007~2013 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag.
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -45,8 +45,8 @@ customControlListMenu::customControlListMenu(QWidget *parent,
     this->hex1 = hex1;
     this->hex2 = hex2;
     this->hex3 = hex3;
-    if (direction.contains("System")) {this->area = "System"; }
-    if (direction.contains("Tables")) {this->area = "Tables"; }
+    if (this->direction.contains("System")) {this->area = "System"; }
+    else if (this->direction.contains("Tables")) {this->area = "Tables"; }
     else {this->area = "Structure"; };
 
     MidiTable *midiTable = MidiTable::Instance();
@@ -132,13 +132,13 @@ void customControlListMenu::paintEvent(QPaintEvent *)
 
 void customControlListMenu::setComboBox()
 {
-    this->hex1 = hex1;
-    this->hex2 = hex2;
-    this->hex3 = hex3;
+    //this->hex1 = hex1;
+    //this->hex2 = hex2;
+    //this->hex3 = hex3;
 
     MidiTable *midiTable = MidiTable::Instance();
     Midi items;
-    items = midiTable->getMidiMap(this->area, hex1, hex2, hex3);
+    items = midiTable->getMidiMap(this->area, this->hex1, this->hex2, this->hex3);
 
     QString longestItem = "";
     int itemcount;
@@ -186,7 +186,7 @@ void customControlListMenu::valueChanged(int index)
         SysxIO *sysxIO = SysxIO::Instance();
         MidiTable *midiTable = MidiTable::Instance();
         bool ok;
-        if(midiTable->isData(this->area, hex1, hex2, hex3))
+        if(midiTable->isData(this->area, this->hex1, this->hex2, this->hex3))
         {
             int maxRange = QString("7F").toInt(&ok, 16) + 1;
             int value = valueHex.toInt(&ok, 16);
@@ -196,11 +196,11 @@ void customControlListMenu::valueChanged(int index)
             QString valueHex2 = QString::number(value - (dif * maxRange), 16).toUpper();
             if(valueHex2.length() < 2) valueHex2.prepend("0");
 
-            sysxIO->setFileSource(this->area, hex1, hex2, hex3, valueHex1, valueHex2);
+            sysxIO->setFileSource(this->area, this->hex1, this->hex2, this->hex3, valueHex1, valueHex2);
         }
         else
         {
-            sysxIO->setFileSource(this->area, hex1, hex2, hex3, valueHex);
+            sysxIO->setFileSource(this->area, this->hex1, this->hex2, this->hex3, valueHex);
         };
 
         //emit updateDisplay(valueStr);

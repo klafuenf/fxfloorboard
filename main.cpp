@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2012 Colin Willcocks.
+** Copyright (C) 2007~2013 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag. 
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -73,12 +73,13 @@ int main(int argc, char **argv)
 	{
         splash->show();
 	};
+
+    splash->showStatusMessage(QObject::tr("GT-100FxFloorboard     -    Initializing - please wait..."));
 	/* To intercept mousclick to hide splash screen. Since the 
 	splash screen is typically displayed before the event loop 
 	has started running, it is necessary to periodically call. */
 	app.processEvents();
 
-	splash->showStatusMessage(QObject::tr("Initializing - please wait..."));
     mainWindow window;// = new mainWindow;
 
   QObject::connect( &window, SIGNAL(closed()), &app, SLOT(quit()) );
@@ -188,7 +189,7 @@ int main(int argc, char **argv)
 	window.show();
 	splash->finish(&window);
 
-    bool reg = false;
+   /* bool reg = false;
     if(QFile("registare.bin").exists())
     {
         QFile file("registare.bin");
@@ -198,24 +199,25 @@ int main(int argc, char **argv)
         {
           reg = true;
         };
-    };
+    };*/
 
-    if(reg == false)
+    int count = (preferences->getPreferences("General", "Start", "count").toInt(&ok, 10));
+    if((count == 1 || count == 4) && preferences->getPreferences("General", "Donate", "url")!="true")
     {
         //PREVIEW WARNING
        QMessageBox *msgBox = new QMessageBox();
-       msgBox->setWindowTitle(QObject::tr("               GT-100FxFloorBoard unregistered version!"));
+       msgBox->setWindowTitle(QObject::tr("               GT-100FxFloorBoard Donation"));
        msgBox->setIcon(QMessageBox::Warning);
        msgBox->setTextFormat(Qt::RichText);
        QString msgText;
        msgText.append("<font size='+1'><b>");
-       msgText.append(QObject::tr("This software is currently under construction!<br>"));
+       msgText.append(QObject::tr("This software is free to use, but....<br>"));
        msgText.append("<b></font><br>");
-       msgText.append(QObject::tr("Ensure you make regular backups of your GT-100 with the Boss Librarian.<br><br>"));
-       msgText.append(QObject::tr("This is a preview only and still under construction,<br><br>"));
-       msgText.append(QObject::tr(" so some features displayed may be incorrect due to this project being incomplete."));
-       msgText.append(QObject::tr("<br><br> For Help assistance - press [F1] and highlight with mouse cursor on any object"));
-       msgText.append(QObject::tr("<br><br> File load/save features are currently disabled."));
+       msgText.append(QObject::tr("To ensure further development and continued support<br><br>"));
+       msgText.append(QObject::tr("please donate (link in Help menu)<br><br>"));
+       msgText.append(QObject::tr(" This software is developed out of my own time and cost"));
+       msgText.append(QObject::tr("<br><br> I am not supported or sponsored by Boss/Roland"));
+       msgText.append(QObject::tr("<br><br> Thank You !! I hope you enjoy the software"));
        msgBox->setText(msgText);
        msgBox->setStandardButtons(QMessageBox::Ok);
        msgBox->exec();
