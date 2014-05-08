@@ -1,5 +1,5 @@
 
-GT-100FxFloorBoard Copyright (C) 2007~2013 Colin Willcocks (gumtownbassman@yahoo.com).
+GT-100FxFloorBoard Copyright (C) 2007~2014 Colin Willcocks (gumtownbassman@yahoo.com).
  All rights reserved.
 =======
 
@@ -141,7 +141,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 LEGAL:
 ------
 
-GT100 FxFloorBoard Copyright (C)2007~2013 Colin Willcocks <gumtownbassman@yahoo.com>.
+GT100 FxFloorBoard Copyright (C)2007~2014 Colin Willcocks <gumtownbassman@yahoo.com>.
 based on the GT8 FxFloorBoard Copyright (C)2005~2007 Uco Mesdag.
 
 Windows(TM), Windows 95(TM), Windows 98(TM), Windows ME(TM), Windows NT(TM), 

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2013 Colin Willcocks.
+** Copyright (C) 2007~2014 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag.
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -21,7 +21,7 @@
 **
 ****************************************************************************/
 
-#include <QtGui>
+#include <QtWidgets>
 #include <QWhatsThis>
 #include "mainWindow.h"
 #include "Preferences.h"
@@ -107,7 +107,7 @@ mainWindow::~mainWindow()
                 preferences->getPreferences("Window", "Collapsed", "bool")=="true")
         {
             width = QString::number(this->geometry().width(), 10);
-            posx = QString::number(this->geometry().x()-3, 10);
+            posx = QString::number(this->geometry().x()-8, 10);
         }
         else
         {
@@ -116,7 +116,7 @@ mainWindow::~mainWindow()
             posx = QString::number(this->geometry().x()+((this->geometry().width()-width.toInt(&ok,10))/2), 10);
         };
         preferences->setPreferences("Window", "Position", "x", posx);
-        preferences->setPreferences("Window", "Position", "y", QString::number(this->geometry().y()-25, 10));
+        preferences->setPreferences("Window", "Position", "y", QString::number(this->geometry().y()-30, 10));
         preferences->setPreferences("Window", "Size", "width", width);
         preferences->setPreferences("Window", "Size", "height", QString::number(this->geometry().height(), 10));
     }

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2013 Colin Willcocks.
+** Copyright (C) 2007~2014 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag. 
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -53,7 +53,7 @@ void renameWidget::updateName(QString name)
     {
         if(i<name.size())
         {
-            char asciiChar = name.at(i).toAscii();
+            char asciiChar = name.at(i).toLatin1();
             int asciiValue = (int)asciiChar;
             QString nameHexValue = QString::number(asciiValue, 16).toUpper();
             if(nameHexValue.length() < 2) nameHexValue.prepend("0");

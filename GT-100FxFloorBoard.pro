@@ -1,6 +1,6 @@
 #############################################################################
 ##
-## Copyright (C) 2007~2013 Colin Willcocks.
+## Copyright (C) 2007~2014 Colin Willcocks.
 ## Copyright (C) 2005~2007 Uco Mesdag. 
 ## All rights reserved.
 ##
@@ -22,18 +22,13 @@
 ##
 #############################################################################
 
+cache()
 TEMPLATE = app
-CONFIG += static
+##CONFIG += static
 CONFIG += embed_manifest_exe
-#ifdef Q_OS_MAC
-CONFIG += release ppc x86
-TARGET = "GT-100FxFloorBoard"
-DESTDIR = ./packager
-#else 
 CONFIG += release
 TARGET = "GT-100FxFloorBoard"
 DESTDIR = ./packager
-#endif
 	OBJECTS_DIR += release
 	UI_DIR += ./generatedfiles
 	MOC_DIR += ./generatedfiles/release
@@ -49,58 +44,39 @@ CODECFORTR = UTF-8
 
 DEPENDPATH += .
 QT += xml
+QT += widgets
+QT += printsupport
 
 #Platform dependent file(s)
-win32 {
-        exists("C:/FxFloorBoard/GT-100_sauce/windows/WinMM.Lib") {	# <-- Change the path to WinMM.Lib here!
-                LIBS += C:/FxFloorBoard/GT-100_sauce/windows/WinMM.Lib	# <-- Change the path here also!
-    } else { 
-        exists("c:/PROGRA~1/MICROS~3/VC/PLATFO~1/Lib/WinMM.Lib") { # Path vs2005 (Vista)
-        	LIBS += c:/PROGRA~1/MICROS~3/VC/PLATFO~1/Lib/WinMM.Lib
-        } else { 
-            LIBS += .\WinMM.Lib
-            message("WINMM.LIB IS REQUIRED. IF NOT INSTALLED THEN")
-            message("PLEASE DOWNLOAD AND INSTALL THE LATEST PLATFORM SDK")
-            message("FROM MICROSOFT.COM AND AFTER INSTALLATION")
-            message("CHANGE THE CORRECT (DOS) PATH TO WinMM.lib")
-            message("IN THIS (GT-100FxFloorBoard.pro) FILE WHERE INDICATED")
-        }
-	}
-	 HEADERS += 
-	 SOURCES += ./windows/RtMidi.cpp                        
-         INCLUDEPATH += ./windows \ ./windows/Lib
-	message(Including Windows specific headers and sources...)
+win32{
+        exists("C:/SDK/Lib/WinMM.Lib")
+                {	# <-- Change the path to WinMM.Lib here!
+                    LIBS += C:/SDK/Lib/WinMM.Lib	# <-- Change the path here also!
+                    LIBS += C:/SDK/Lib/setupapi.Lib
+                    LIBS += C:/SDK/Lib/ksuser.Lib
+                }
+        message(Including Windows specific headers and sources...)
 }
-linux-g++ {
+linux-g++{
         LIBS += -lasound
-	message("ALSA LIBRARIES SHOULD BE INSTALLED or ERROR will Occur") 
-	message("Please install the ALSA Audio System packages if not present") 	
- 
-	 HEADERS += 
-	 SOURCES += ./linux/RtMidi.cpp 
-	 INCLUDEPATH += ./linux
-	message(Including Linux specific headers and sources...)
+        message("ALSA LIBRARIES SHOULD BE INSTALLED or ERROR will Occur")
+        message("Please install the ALSA Audio System packages if not present")
+        message(Including Linux specific headers and sources...)
 }
-linux-g++-64 {
+linux-g++-64{
         LIBS += -lasound
-	message("ALSA LIBRARIES SHOULD BE INSTALLED or ERROR will Occur") 
-	message("Please install the ALSA Audio System packages if not present") 	
- 
-	 HEADERS += 
-	 SOURCES += ./linux/RtMidi.cpp 
-	 INCLUDEPATH += ./linux
-	message(Including Linux specific headers and sources...)
+        message("ALSA LIBRARIES SHOULD BE INSTALLED or ERROR will Occur")
+        message("Please install the ALSA Audio System packages if not present")
+        message(Including Linux specific headers and sources...)
 }
-macx {
-	LIBS += -framework CoreMidi -framework CoreAudio -framework CoreFoundation
-	message("X-Code LIBRARIES SHOULD BE INSTALLED or ERROR will Occur") 
-	message("Please install the X-Code Audio System packages if not present") 
-	 HEADERS += 
-	 SOURCES += ./macosx/RtMidi.cpp 
-	INCLUDEPATH += ./macosx
-	ICON = GT-100FxFloorBoard.icns
-	message(Including Mac OS X specific headers and sources...)
+macx{
+        LIBS += -framework CoreMidi -framework CoreAudio -framework CoreFoundation
+        message("X-Code LIBRARIES SHOULD BE INSTALLED or ERROR will Occur")
+        message("Please install the X-Code Audio System packages if not present")
+        ICON = ME-25-Edit.icns
+        message(Including Mac OS X specific headers and sources...)
 }
+
 
 
 #Include file(s)
@@ -108,3 +84,9 @@ include(GT-100FxFloorBoard.pri)
 
 #Windows resource file
 win32:RC_FILE = GT-100FxFloorBoard.rc
+
+ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
+
+OTHER_FILES += \
+    android/AndroidManifest.xml
+

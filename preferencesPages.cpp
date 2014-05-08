@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2013 Colin Willcocks.
+** Copyright (C) 2007~2014 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag. 
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -21,7 +21,7 @@
 **
 ****************************************************************************/
 
-#include <QtGui>
+#include <QtWidgets>
 #include "midiIO.h"
 #include "RtMidi.h"
 #include "preferencesPages.h"
@@ -94,7 +94,7 @@ MidiPage::MidiPage(QWidget *parent)
     for (QList<QString>::iterator dev = midiInDevices.begin(); dev != midiInDevices.end(); ++dev)
     {
         QString str(*dev);
-        midiInCombo->addItem(str.toAscii().data());
+        midiInCombo->addItem(str.toLatin1().data());
         id++;
     };
     if(!midiInDevice.isEmpty())
@@ -114,7 +114,7 @@ MidiPage::MidiPage(QWidget *parent)
     for (QList<QString>::iterator dev = midiOutDevices.begin(); dev != midiOutDevices.end(); ++dev)
     {
         QString str(*dev);
-        midiOutCombo->addItem(str.toAscii().data());
+        midiOutCombo->addItem(str.toLatin1().data());
         id++;
     };
     if(!midiOutDevice.isEmpty())

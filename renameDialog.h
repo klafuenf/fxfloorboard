@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2013 Colin Willcocks.
+** Copyright (C) 2007~2014 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag. 
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -24,7 +24,7 @@
 #ifndef RENAMEDIALOG_H
 #define RENAMEDIALOG_H
 
-#include <QtGui>
+#include <QtWidgets>
 
 class renameDialog : public QDialog
 {

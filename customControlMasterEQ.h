@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2013 Colin Willcocks.
+** Copyright (C) 2007~2014 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag. 
 ** All rights reserved.
 ** This file is part of "GT-100B Fx FloorBoard".
@@ -25,7 +25,7 @@
 #define CUSTOMCONTROLMASTEREQ_H
 
 #include <QWidget>
-#include <QtGui>
+#include <QtWidgets>
 #include <QFrame>
 #include "customMasterEQGraph.h"
 #include "customKnob.h"
