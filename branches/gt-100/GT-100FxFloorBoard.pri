@@ -1,6 +1,6 @@
 #############################################################################
 ##
-## Copyright (C) 2007~2013 Colin Willcocks.
+## Copyright (C) 2007~2014 Colin Willcocks.
 ## Copyright (C) 2005~2007 Uco Mesdag. 
 ## All rights reserved.
 ##
@@ -114,6 +114,7 @@ HEADERS += ./editPage.h \
     ./stompbox_rv.h \
     ./stompbox_usb.h \
     ./midiIO.h \
+    ./midiIODestroyer.h \
     ./MidiTable.h \
     ./MidiTableDestroyer.h \
     ./RtError.h \
@@ -199,6 +200,7 @@ SOURCES += ./editPage.cpp \
     ./menuPage_system.cpp \
     ./renameDialog.cpp \
     ./renameWidget.cpp \
+    ./RtMidi.cpp \
     ./statusBarSymbol.cpp \
     ./statusBarWidget.cpp \
     ./stompBox.cpp \
@@ -226,6 +228,7 @@ SOURCES += ./editPage.cpp \
     ./summaryDialogPatchList.cpp \
     ./summaryDialogSystem.cpp \
     ./midiIO.cpp \
+    ./midiIODestroyer.cpp \
     ./MidiTable.cpp \
     ./MidiTableDestroyer.cpp \
     ./Preferences.cpp \

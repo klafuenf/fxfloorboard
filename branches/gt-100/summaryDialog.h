@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2013 Colin Willcocks.
+** Copyright (C) 2007~2014 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag.
 ** All rights reserved.
 ** This file is part of "GT-100B Fx FloorBoard".
@@ -47,7 +47,7 @@ public:
   ~summaryDialog();
   QTextEdit *textDialog;
   QTextDocument *document;
-  QPrintDialog *dialog;
+  //QPrintDialog *dialog;
                                                             
 public slots:
   void view();

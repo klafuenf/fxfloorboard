@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2013 Colin Willcocks.
+** Copyright (C) 2007~2014 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag. 
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -31,16 +31,18 @@
 
 int main(int argc, char **argv)
 {
-	QApplication app(argc, argv);
+    QApplication app(argc, argv);
+    app.setOrganizationName("Gumtown");
+    app.setApplicationName("GT-100FxFloorBoard");
 
-	 Preferences *preferences = Preferences::Instance(); // Load the preferences.
-  QString lang = preferences->getPreferences("Language", "Locale", "select");
-	bool ok;
-	int choice = lang.toInt(&ok, 16);
- /* Loading translation */
-	QTranslator translator;
-	
-	if (choice == 6)     {translator.load(":language_ch.qm");  }
+    Preferences *preferences = Preferences::Instance(); // Load the preferences.
+    QString lang = preferences->getPreferences("Language", "Locale", "select");
+    bool ok;
+    int choice = lang.toInt(&ok, 16);
+    /* Loading translation */
+    QTranslator translator;
+
+    if (choice == 6)     {translator.load(":language_ch.qm");  }
     else if (choice ==5) {translator.load(":language_jp.qm"); }
     else if (choice ==4) {translator.load(":language_es.qm"); }
     else if (choice ==3) {translator.load(":language_pt.qm"); }
@@ -48,148 +50,145 @@ int main(int argc, char **argv)
     else if (choice ==1) {translator.load(":language_fr.qm"); }
     else {/*translator.load(":language_en.qm");*/ };
 
-	app.installTranslator(&translator);
-	
-	/* Splash Screen setup uses subclassed QSplashScreen for message position controle. */
-	QPixmap splashImage(":images/splash.png");
-	QPixmap splashMask(":images/splashmask.png");
+    app.installTranslator(&translator);
 
-	customSplashScreen *splash = new customSplashScreen(splashImage);
-	splash->setMessageRect(QRect(7, 253, 415, 14), Qt::AlignCenter); // Setting the message position.
+    /* Splash Screen setup uses subclassed QSplashScreen for message position controle. */
+    QPixmap splashImage(":images/splash.png");
+    QPixmap splashMask(":images/splashmask.png");
 
-	QFont splashFont;
-	splashFont.setFamily("Arial");
-	splashFont.setBold(true);
-	splashFont.setPixelSize(9);
-	splashFont.setStretch(125);
+    customSplashScreen *splash = new customSplashScreen(splashImage);
+    splash->setMessageRect(QRect(7, 253, 415, 14), Qt::AlignCenter); // Setting the message position.
 
-	splash->setFont(splashFont);
-	splash->setMask(splashMask);
-	//splash->setWindowOpacity(0.90);
-	//splash->setWindowFlags(Qt::WindowStaysOnTopHint | Qt::SplashScreen);
-	
-	//Preferences *preferences = Preferences::Instance(); // Load the preferences.
-	if(preferences->getPreferences("Window", "Splash", "bool")=="true")
-	{
+    QFont splashFont;
+    splashFont.setFamily("Arial");
+    splashFont.setBold(true);
+    splashFont.setPixelSize(9);
+    splashFont.setStretch(125);
+
+    splash->setFont(splashFont);
+    splash->setMask(splashMask);
+
+    if(preferences->getPreferences("Window", "Splash", "bool")=="true")
+    {
         splash->show();
-	};
+    };
 
     splash->showStatusMessage(QObject::tr("GT-100FxFloorboard     -    Initializing - please wait..."));
-	/* To intercept mousclick to hide splash screen. Since the 
-	splash screen is typically displayed before the event loop 
-	has started running, it is necessary to periodically call. */
-	app.processEvents();
+    /* To intercept mousclick to hide splash screen. Since the
+    splash screen is typically displayed before the event loop
+    has started running, it is necessary to periodically call. */
+    app.processEvents();
 
     mainWindow window;// = new mainWindow;
 
-  QObject::connect( &window, SIGNAL(closed()), &app, SLOT(quit()) );
+    QObject::connect( &window, SIGNAL(closed()), &app, SLOT(quit()) );
 
-	app.processEvents();
+    app.processEvents();
 
-	splash->showStatusMessage(QObject::tr("Checking license file..."));
-	if(!QFile("license.txt").exists())
-	{
-		splash->showStatusMessage(QObject::tr("Loading license file..."));
-		QFile file(":license.txt" );
-		file.copy("license.txt");
-		file.close();
-	};
-	
-	app.processEvents();
+    splash->showStatusMessage(QObject::tr("Checking license file..."));
+    if(!QFile("license.txt").exists())
+    {
+        splash->showStatusMessage(QObject::tr("Loading license file..."));
+        QFile file(":license.txt" );
+        file.copy("license.txt");
+        file.close();
+    };
 
-	splash->showStatusMessage(QObject::tr("Loading midi mapping..."));
-	MidiTable *midiTable = MidiTable::Instance();
-        midiTable = 0;
+    app.processEvents();
 
-	app.processEvents(); 
+    splash->showStatusMessage(QObject::tr("Loading midi mapping..."));
+    MidiTable *midiTable = MidiTable::Instance();
+    midiTable->loadMidiMap();
 
-	splash->showStatusMessage(QObject::tr("Initializing main window..."));
-	window.setWindowFlags( Qt::WindowTitleHint 
-		| Qt::WindowMinimizeButtonHint 
-		| Qt::MSWindowsFixedSizeDialogHint );
-	window.setWindowIcon(QIcon(":/images/windowicon.png"));
+    app.processEvents();
 
-	app.processEvents(); 
+    splash->showStatusMessage(QObject::tr("Initializing main window..."));
+    /*window.setWindowFlags( Qt::WindowTitleHint
+                           | Qt::WindowMinimizeButtonHint
+                           | Qt::MSWindowsFixedSizeDialogHint );*/
+    window.setWindowIcon(QIcon(":/images/windowicon.png"));
 
-	//bool ok;
-	QString x_str = preferences->getPreferences("Window", "Position", "x");
-	QString y_str = preferences->getPreferences("Window", "Position", "y");
+    app.processEvents();
 
-	app.processEvents(); 
+    //bool ok;
+    QString x_str = preferences->getPreferences("Window", "Position", "x");
+    QString y_str = preferences->getPreferences("Window", "Position", "y");
 
-	//window.show(); // need to show the windows to get the size of it, before that it doesn't exist
-	//int windowWidth = window.width();                  
-	//int windowHeight = window.height();
+    app.processEvents();
 
-	app.processEvents(); 
+    //window.show(); // need to show the windows to get the size of it, before that it doesn't exist
+    //int windowWidth = window.width();
+    //int windowHeight = window.height();
 
-	int windowWidth, windowHeight;
-	if(preferences->getPreferences("Window", "Collapsed", "bool")=="true" && 
-		preferences->getPreferences("Window", "Restore", "sidepanel")=="true")
-	{
-		
-		if(preferences->getPreferences("Window", "Collapsed", "width").isEmpty())
-		{
-			windowWidth = preferences->getPreferences("Window", "Collapsed", "defaultwidth").toInt(&ok, 10);
-		}
-		else
-		{
-			windowWidth = preferences->getPreferences("Window", "Collapsed", "width").toInt(&ok, 10);
-		};
-	}
-	else
-	{
-		if(preferences->getPreferences("Window", "Size", "width").isEmpty())
-		{
-			windowWidth = preferences->getPreferences("Window", "Size", "minwidth").toInt(&ok, 10);
-		}
-		else
-		{
-			windowWidth = preferences->getPreferences("Window", "Size", "width").toInt(&ok, 10);
-		};
-	}
+    app.processEvents();
 
-	app.processEvents(); 
+    int windowWidth, windowHeight;
+    if(preferences->getPreferences("Window", "Collapsed", "bool")=="true" &&
+            preferences->getPreferences("Window", "Restore", "sidepanel")=="true")
+    {
+
+        if(preferences->getPreferences("Window", "Collapsed", "width").isEmpty())
+        {
+            windowWidth = preferences->getPreferences("Window", "Collapsed", "defaultwidth").toInt(&ok, 10);
+        }
+        else
+        {
+            windowWidth = preferences->getPreferences("Window", "Collapsed", "width").toInt(&ok, 10);
+        };
+    }
+    else
+    {
+        if(preferences->getPreferences("Window", "Size", "width").isEmpty())
+        {
+            windowWidth = preferences->getPreferences("Window", "Size", "minwidth").toInt(&ok, 10);
+        }
+        else
+        {
+            windowWidth = preferences->getPreferences("Window", "Size", "width").toInt(&ok, 10);
+        };
+    }
+
+    app.processEvents();
 
 
-	if(preferences->getPreferences("Window", "Restore", "window")=="true" && !x_str.isEmpty())
-	{
-		splash->showStatusMessage(QObject::tr("Restoring window position..."));
-		if(preferences->getPreferences("Window", "Size", "height").isEmpty())
-		{
-			windowHeight = preferences->getPreferences("Window", "Size", "minheight").toInt(&ok, 10);
-		}
-		else
-		{
-			windowHeight = preferences->getPreferences("Window", "Size", "height").toInt(&ok, 10);
-		};
-		//window.setGeometry(x_str.toInt(&ok, 10), y_str.toInt(&ok, 10), windowWidth, windowHeight);
-		window.resize(QSize(windowWidth, windowHeight));
-		window.move(x_str.toInt(&ok, 10), y_str.toInt(&ok, 10));
-	}
-	else
-	{
-		splash->showStatusMessage(QObject::tr("Centering main window..."));
-		QDesktopWidget *desktop = new QDesktopWidget;
-		QRect screen = desktop->availableGeometry(desktop->primaryScreen()); 
-		int screenWidth = screen.width();                    // returns available screen width
-		int screenHeight = screen.height();                  // returns available screen height
+    if(preferences->getPreferences("Window", "Restore", "window")=="true" && !x_str.isEmpty())
+    {
+        splash->showStatusMessage(QObject::tr("Restoring window position..."));
+        if(preferences->getPreferences("Window", "Size", "height").isEmpty())
+        {
+            windowHeight = preferences->getPreferences("Window", "Size", "minheight").toInt(&ok, 10);
+        }
+        else
+        {
+            windowHeight = preferences->getPreferences("Window", "Size", "height").toInt(&ok, 10);
+        };
+        //window.setGeometry(x_str.toInt(&ok, 10), y_str.toInt(&ok, 10), windowWidth, windowHeight);
+        window.resize(QSize(windowWidth, windowHeight));
+        window.move(x_str.toInt(&ok, 10), y_str.toInt(&ok, 10));
+    }
+    else
+    {
+        splash->showStatusMessage(QObject::tr("Centering main window..."));
+        QDesktopWidget *desktop = new QDesktopWidget;
+        QRect screen = desktop->availableGeometry(desktop->primaryScreen());
+        int screenWidth = screen.width();                    // returns available screen width
+        int screenHeight = screen.height();                  // returns available screen height
 
-		windowHeight = preferences->getPreferences("Window", "Size", "minheight").toInt(&ok, 10);
+        windowHeight = preferences->getPreferences("Window", "Size", "minheight").toInt(&ok, 10);
 
-		int x = (screenWidth - windowWidth) / 2;
-		int y = (screenHeight - windowHeight) / 2;
-		window.setGeometry(x, y, window.width(), window.height());
-	};
-	
-	app.processEvents();
+        int x = (screenWidth - windowWidth) / 2;
+        int y = (screenHeight - windowHeight) / 2;
+        window.setGeometry(x, y, window.width(), window.height());
+    };
 
-	splash->showStatusMessage(QObject::tr("Finished Initializing..."));
+    app.processEvents();
 
-	window.show();
-	splash->finish(&window);
+    splash->showStatusMessage(QObject::tr("Finished Initializing..."));
 
-   /* bool reg = false;
+    window.show();
+    splash->finish(&window);
+
+    /* bool reg = false;
     if(QFile("registare.bin").exists())
     {
         QFile file("registare.bin");
@@ -205,24 +204,24 @@ int main(int argc, char **argv)
     if((count == 1 || count == 4) && preferences->getPreferences("General", "Donate", "url")!="true")
     {
         //PREVIEW WARNING
-       QMessageBox *msgBox = new QMessageBox();
-       msgBox->setWindowTitle(QObject::tr("               GT-100FxFloorBoard Donation"));
-       msgBox->setIcon(QMessageBox::Warning);
-       msgBox->setTextFormat(Qt::RichText);
-       QString msgText;
-       msgText.append("<font size='+1'><b>");
-       msgText.append(QObject::tr("This software is free to use, but....<br>"));
-       msgText.append("<b></font><br>");
-       msgText.append(QObject::tr("To ensure further development and continued support<br><br>"));
-       msgText.append(QObject::tr("please donate (link in Help menu)<br><br>"));
-       msgText.append(QObject::tr(" This software is developed out of my own time and cost"));
-       msgText.append(QObject::tr("<br><br> I am not supported or sponsored by Boss/Roland"));
-       msgText.append(QObject::tr("<br><br> Thank You !! I hope you enjoy the software"));
-       msgBox->setText(msgText);
-       msgBox->setStandardButtons(QMessageBox::Ok);
-       msgBox->exec();
-       // END WARNING
+        QMessageBox *msgBox = new QMessageBox();
+        msgBox->setWindowTitle(QObject::tr("               GT-100FxFloorBoard Donation"));
+        msgBox->setIcon(QMessageBox::Warning);
+        msgBox->setTextFormat(Qt::RichText);
+        QString msgText;
+        msgText.append("<font size='+1'><b>");
+        msgText.append(QObject::tr("This software is free to use, but....<br>"));
+        msgText.append("<b></font><br>");
+        msgText.append(QObject::tr("To ensure further development and continued support<br><br>"));
+        msgText.append(QObject::tr("please donate (link in Help menu)<br><br>"));
+        msgText.append(QObject::tr(" This software is developed out of my own time and cost"));
+        msgText.append(QObject::tr("<br><br> I am not supported or sponsored by Boss/Roland"));
+        msgText.append(QObject::tr("<br><br> Thank You !! I hope you enjoy the software"));
+        msgBox->setText(msgText);
+        msgBox->setStandardButtons(QMessageBox::Ok);
+        msgBox->exec();
+        // END WARNING
     };
 
-	return app.exec();
+    return app.exec();
 }

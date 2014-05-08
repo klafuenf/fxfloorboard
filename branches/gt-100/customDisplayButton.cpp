@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2013 Colin Willcocks.
+** Copyright (C) 2007~2014 Colin Willcocks.
 ** All rights reserved.
 ** This file is part of "GT-100 FloorBoard".
 **
@@ -20,7 +20,7 @@
 **
 ****************************************************************************/
 
-#include <QtGui>
+#include <QtWidgets>
 #include "customDisplayButton.h"
 #include "globalVariables.h"
 
