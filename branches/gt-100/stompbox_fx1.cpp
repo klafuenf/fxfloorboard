@@ -747,8 +747,9 @@ void stompbox_fx1::setEditPages()
     editDetails()->page()->addGroupBox(0, 1, 2, 1);
 
     editDetails()->page()->newGroupBox("Level");
-    editDetails()->page()->addKnob(0, 0, 1, 1, "03", "00", "41");
-    editDetails()->page()->addKnob(2, 0, 1, 1, "03", "00", "3D");
+    editDetails()->page()->addKnob(0, 0, 1, 1, "03", "00", "41"); // high
+    editDetails()->page()->addKnob(1, 0, 1, 1, "03", "00", "42"); //direct
+    editDetails()->page()->addKnob(2, 0, 1, 1, "03", "00", "3D"); //low
     editDetails()->page()->addGroupBox(0, 2, 2, 1);
     editDetails()->page()->addStackField();
 
@@ -780,6 +781,45 @@ void stompbox_fx1::setEditPages()
     editDetails()->page()->addStackField();
     editDetails()->page()->newStackField(1);
     editDetails()->page()->addKnob(0, 0, 1, 1, "03", "00", "4A");
+    editDetails()->page()->addStackField();
+
+    // AC Guitar Sim
+    editDetails()->page()->newStackField(0);
+    editDetails()->page()->newGroupBox("Effect");
+    editDetails()->page()->addSwitch(0, 0, 1, 1, "01", "00", "40", "middle", Qt::AlignCenter);
+    editDetails()->page()->addGroupBox(0, 0, 1, 1);
+
+    editDetails()->page()->newGroupBox("AC Guitar Simulator");
+    editDetails()->page()->addKnob(0, 1, 1, 1, "10", "00", "10"); //high
+    editDetails()->page()->addKnob(0, 2, 1, 1, "10", "00", "11"); //body
+    editDetails()->page()->addKnob(0, 3, 1, 1, "10", "00", "12"); //low
+    editDetails()->page()->addGroupBox(0, 1, 1, 1);
+
+    editDetails()->page()->newGroupBox("Level");
+    editDetails()->page()->addKnob(0, 0, 1, 1, "10", "00", "14"); //level
+    editDetails()->page()->addGroupBox(0, 2, 1, 1);
+    editDetails()->page()->addStackField();
+
+    // Rotary 2
+    editDetails()->page()->newStackField(0);
+    editDetails()->page()->newGroupBox("Effect");
+    editDetails()->page()->addSwitch(0, 0, 1, 1, "01", "00", "40", "middle", Qt::AlignCenter);
+    editDetails()->page()->addComboBox(1, 0, 1, 3, "10", "00", "26"); //speed sel
+    editDetails()->page()->addGroupBox(0, 0, 1, 1);
+
+    editDetails()->page()->newGroupBox("Rotary 2");
+    editDetails()->page()->addKnob(0, 0, 2, 1, "10", "00", "18", "normal","right", 120); //rate slow
+    editDetails()->page()->addKnob(2, 0, 2, 1, "10", "00", "19", "normal","right", 120); //rate fast
+    editDetails()->page()->addKnob(0, 1, 2, 1, "10", "00", "1A"); //rise
+    editDetails()->page()->addKnob(2, 1, 2, 1, "10", "00", "1B"); //fall
+    editDetails()->page()->addKnob(0, 2, 2, 1, "10", "00", "16"); //balance
+    editDetails()->page()->addKnob(2, 2, 2, 1, "10", "00", "1C"); //depth
+    editDetails()->page()->addGroupBox(0, 1, 1, 1);
+
+    editDetails()->page()->newGroupBox("Level");
+    editDetails()->page()->addKnob(0, 0, 1, 1, "10", "00", "1D"); //effect
+    editDetails()->page()->addKnob(2, 0, 1, 1, "10", "00", "1E"); //direct
+    editDetails()->page()->addGroupBox(0, 2, 1, 1);
     editDetails()->page()->addStackField();
 
     editDetails()->addPage();

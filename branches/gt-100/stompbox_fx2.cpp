@@ -597,14 +597,14 @@ void stompbox_fx2::setEditPages()
     editDetails()->page()->addStackField();
 
 
-    // Rotary
+    // Rotary 1
     editDetails()->page()->newStackField(0);
     editDetails()->page()->newGroupBox("Effect");
     editDetails()->page()->addSwitch(0, 0, 1, 1, "03", "00", "4C", "middle", Qt::AlignCenter);
     editDetails()->page()->addComboBox(1, 0, 1, 3, "05", "00", "18");
     editDetails()->page()->addGroupBox(0, 0, 1, 1);
 
-    editDetails()->page()->newGroupBox("Rotary");
+    editDetails()->page()->newGroupBox("Rotary 1");
     editDetails()->page()->addKnob(0, 0, 1, 1, "05", "00", "19", "normal","right", 120);
     editDetails()->page()->addKnob(1, 0, 1, 1, "05", "00", "1A", "normal","right", 120);
     editDetails()->page()->addKnob(0, 1, 2, 1, "05", "00", "1B");
@@ -747,8 +747,9 @@ void stompbox_fx2::setEditPages()
     editDetails()->page()->addGroupBox(0, 1, 2, 1);
 
     editDetails()->page()->newGroupBox("Level");
-    editDetails()->page()->addKnob(0, 0, 1, 1, "05", "00", "4D");
-    editDetails()->page()->addKnob(2, 0, 1, 1, "05", "00", "49");
+    editDetails()->page()->addKnob(0, 0, 1, 1, "05", "00", "4D"); //high
+    editDetails()->page()->addKnob(1, 0, 1, 1, "05", "00", "4E"); //direct
+    editDetails()->page()->addKnob(2, 0, 1, 1, "05", "00", "49"); //low
     editDetails()->page()->addGroupBox(0, 2, 2, 1);
     editDetails()->page()->addStackField();
 
@@ -781,6 +782,87 @@ void stompbox_fx2::setEditPages()
     editDetails()->page()->newStackField(1);
     editDetails()->page()->addKnob(0, 0, 1, 1, "05", "00", "56");
     editDetails()->page()->addStackField();
+
+    // AC Guitar Sim
+    editDetails()->page()->newStackField(0);
+    editDetails()->page()->newGroupBox("Effect");
+    editDetails()->page()->addSwitch(0, 0, 1, 1, "03", "00", "4C", "middle", Qt::AlignCenter);
+    editDetails()->page()->addGroupBox(0, 0, 1, 1);
+
+    editDetails()->page()->newGroupBox("AC Guitar Simulator");
+    editDetails()->page()->addKnob(0, 1, 1, 1, "10", "00", "1F"); //high
+    editDetails()->page()->addKnob(0, 2, 1, 1, "10", "00", "20"); //body
+    editDetails()->page()->addKnob(0, 3, 1, 1, "10", "00", "21"); //low
+    editDetails()->page()->addGroupBox(0, 1, 1, 1);
+
+    editDetails()->page()->newGroupBox("Level");
+    editDetails()->page()->addKnob(0, 0, 1, 1, "10", "00", "23"); //level
+    editDetails()->page()->addGroupBox(0, 2, 1, 1);
+    editDetails()->page()->addStackField();
+
+    // Rotary 2
+    editDetails()->page()->newStackField(0);
+    editDetails()->page()->newGroupBox("Effect");
+    editDetails()->page()->addSwitch(0, 0, 1, 1, "03", "00", "4C", "middle", Qt::AlignCenter);
+    editDetails()->page()->addComboBox(1, 0, 1, 3, "10", "00", "26");
+    editDetails()->page()->addGroupBox(0, 0, 1, 1);
+
+    editDetails()->page()->newGroupBox("Rotary 2");
+    editDetails()->page()->addKnob(0, 0, 2, 1, "10", "00", "27", "normal","right", 120); //rate slow
+    editDetails()->page()->addKnob(2, 0, 2, 1, "10", "00", "28", "normal","right", 120); //rate fast
+    editDetails()->page()->addKnob(0, 1, 2, 1, "10", "00", "29"); //rise
+    editDetails()->page()->addKnob(2, 1, 2, 1, "10", "00", "2A"); //fall
+    editDetails()->page()->addKnob(0, 2, 2, 1, "10", "00", "25"); //balance
+    editDetails()->page()->addKnob(2, 2, 2, 1, "10", "00", "2B"); //depth
+    editDetails()->page()->addGroupBox(0, 1, 1, 1);
+
+    editDetails()->page()->newGroupBox("Level");
+    editDetails()->page()->addKnob(0, 0, 1, 1, "10", "00", "2C"); //effect
+    editDetails()->page()->addKnob(2, 0, 1, 1, "10", "00", "2D"); //direct
+    editDetails()->page()->addGroupBox(0, 2, 1, 1);
+    editDetails()->page()->addStackField();
+
+    // Tera Echo
+    editDetails()->page()->newStackField(0);
+    editDetails()->page()->newGroupBox("Effect", Qt::AlignTop | Qt::AlignHCenter);
+    editDetails()->page()->addSwitch(0, 0, 1, 1, "03", "00", "4C", "middle", Qt::AlignCenter);
+    editDetails()->page()->addGroupBox(0, 0, 1, 1);
+
+    editDetails()->page()->newGroupBox("Tera Echo");
+    editDetails()->page()->addComboBox(0, 0, 1, 1, "10", "00", "2F"); //mode
+    editDetails()->page()->addKnob(0, 1, 1, 1, "10", "00", "30", "normal","right", 120); //s time
+    editDetails()->page()->addKnob(0, 2, 1, 1, "10", "00", "31"); //feedback
+    editDetails()->page()->addKnob(0, 3, 1, 1, "10", "00", "32"); //tone
+    editDetails()->page()->addComboBox(0, 4, 1, 1, "10", "00", "35"); //hold
+    editDetails()->page()->addGroupBox(0, 1, 1, 1);
+
+    editDetails()->page()->newGroupBox("Level");
+    editDetails()->page()->addKnob(0, 0, 1, 1, "10", "00", "33"); //effect level
+    editDetails()->page()->addKnob(0, 1, 1, 1, "10", "00", "34"); //direct mix
+    editDetails()->page()->addGroupBox(0, 2, 1, 1);
+
+    editDetails()->page()->addStackField();
+
+
+    //OVERTONE
+    editDetails()->page()->newStackField(0);
+    editDetails()->page()->newGroupBox("Effect");
+    editDetails()->page()->addSwitch(0, 0, 1, 1, "03", "00", "4C", "middle", Qt::AlignCenter); //on/off
+    editDetails()->page()->addGroupBox(0, 0, 1, 1);
+
+    editDetails()->page()->newGroupBox("Over Tone");
+    editDetails()->page()->addKnob(0, 0, 1, 1, "10", "00", "37"); //detune
+    editDetails()->page()->addKnob(0, 1, 1, 1, "10", "00", "38"); //tone
+    editDetails()->page()->addGroupBox(0, 1, 1, 1);
+
+    editDetails()->page()->newGroupBox("Level");
+    editDetails()->page()->addKnob(0, 0, 1, 1, "10", "00", "39"); //lower level
+    editDetails()->page()->addKnob(0, 1, 1, 1, "10", "00", "3A"); //upper level
+    editDetails()->page()->addKnob(0, 2, 1, 1, "10", "00", "3B"); //direct mix
+    editDetails()->page()->addGroupBox(0, 2, 1, 1);
+    editDetails()->page()->addStackField();
+
+
 
     editDetails()->addPage();
 }

@@ -49,14 +49,28 @@ void stompbox_lp::updateSignal()
 void stompbox_lp::setEditPages()
 {
     editDetails()->page()->newGroupBox("Effect");
-    editDetails()->page()->addSwitch(0, 0, 1, 1, "06", "00", "55", "middle", Qt::AlignCenter);
-    editDetails()->page()->addComboBox(1, 0, 1, 1, "06", "00", "56", "large");
+    editDetails()->page()->addSwitch(0, 0, 1, 1, "06", "00", "55", "middle", Qt::AlignCenter); //on/off
+    editDetails()->page()->newStackControl(0);
+    editDetails()->page()->addComboBox(1, 0, 1, 1, "06", "00", "56", "large"); //mode
+    editDetails()->page()->addStackControl();
     editDetails()->page()->addGroupBox(0, 0, 1, 1);
 
     editDetails()->page()->newGroupBox("Level");
-    editDetails()->page()->addKnob(0, 0, 1, 1, "06", "00", "57");
-    editDetails()->page()->addKnob(0, 1, 1, 1, "06", "00", "58");
+    editDetails()->page()->addKnob(0, 0, 1, 1, "06", "00", "57"); //send
+    editDetails()->page()->addKnob(0, 1, 1, 1, "06", "00", "58"); //return
+    editDetails()->page()->insertStackField(0, 0, 2, 1, 1);
     editDetails()->page()->addGroupBox(0, 1, 1, 1);
+
+    editDetails()->page()->newStackField(0);
+    editDetails()->page()->addKnob(0, 2, 1, 1, "06", "00", "59"); //adjust
+    editDetails()->page()->addStackField();
+
+    editDetails()->page()->newStackField(0);
+    editDetails()->page()->addKnob(0, 2, 1, 1, "06", "00", "59"); //adjust
+    editDetails()->page()->addStackField();
+
+    editDetails()->page()->newStackField(0);
+    editDetails()->page()->addStackField();
 
     editDetails()->addPage();
 }

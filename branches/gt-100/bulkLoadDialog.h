@@ -86,16 +86,22 @@ private:
     int patchCount;
     int steps;
     int dataSent;
+    int index;
     QString fileName;
     void loadGCL();
     void loadSYX();
     void loadSMF();
+    void loadTSL();
+    void GT100_default_replace(int pos, int size, QByteArray value);
     QByteArray data;
     QByteArray default_data;
     QByteArray hextable;
     QByteArray sysxPatches;
+    QByteArray GT100_default;
     QList<QString> patchList;
     QList<QString> userList;
+    QByteArray GetJsonValue(QByteArray text, int pos);
+    QByteArray GetJsonHex(QByteArray text, int pos);
     bool failed;
 };
 

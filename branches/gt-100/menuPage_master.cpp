@@ -61,6 +61,7 @@ void menuPage_master::setEditPages()
     editDetails()->page()->addKnob(0, 0, 1, 1, "07", "00", "16");                         // master BPM
     editDetails()->page()->addComboBox(1, 0, 1, 1, "07", "00", "18");                     // master key
     editDetails()->page()->addComboBox(2, 0, 1, 1, "07", "00", "19");                     // master beat
+    editDetails()->page()->addComboBox(3, 0, 1, 1, "07", "00", "1A");                     // midi pitch detect
     editDetails()->page()->addGroupBox(0, 2, 2, 1);
 
 

@@ -117,7 +117,6 @@ HEADERS += ./editPage.h \
     ./midiIODestroyer.h \
     ./MidiTable.h \
     ./MidiTableDestroyer.h \
-    ./RtError.h \
     ./RtMidi.h \
     ./summaryDialog.h \
     ./summaryDialogPatchList.h \

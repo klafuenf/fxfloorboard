@@ -159,7 +159,7 @@ bulkLoadDialog::bulkLoadDialog()
                 this,
                 tr("Choose a file"),
                 dir,
-                tr("GT100 Bulk Data File (*.gcl *.syx *.mid)"));
+                tr("GT100 Bulk Data File (*.tsl *.gcl *.syx *.mid)"));
     if (!fileName.isEmpty())
     {
 
@@ -213,6 +213,7 @@ bulkLoadDialog::bulkLoadDialog()
             if (isHeader == true && isPatch == true) {loadSYX(); setStatusMessage("is a *.syx file type");  }
             else if (isGCL == true) { loadGCL(); setStatusMessage("is a *.gcl file type"); }
             else if (isSMF == true) { loadSMF(); setStatusMessage("is a *.mid file type"); }
+            else if (fileName.contains(".tsl")) { loadTSL(); setStatusMessage("is a Tone Studio file type"); }
             else
             {
                 failed = true;
@@ -274,7 +275,6 @@ void bulkLoadDialog::sendData()
     startList = this->startPatchCombo->currentIndex();
     finishList = this->finishPatchCombo->currentIndex();
     startButton->hide();
-    //cancelButton->hide();
     progress = 0;
     patch = 1;
     range = (200)/((finishList-startList));
@@ -403,61 +403,61 @@ void bulkLoadDialog::sendSequence(QString value)
 void bulkLoadDialog::updatePatch()
 {
     patchCount = sysxPatches.size()/(patchSize);
-    QString msgText;
-    QString patchText;
-    QString patchNumber;
-    unsigned char r;
-    this->patchList.clear();
-    unsigned int a = sysxNameOffset;             // locate patch text start position from the start of the file
-    for (int h=0;h<patchCount;h++)
-    {
-        for (int b=0;b<nameLength;b++)
+        QString msgText;
+        QString patchText;
+        QString patchNumber;
+        unsigned char r;
+        this->patchList.clear();
+        unsigned int a = sysxNameOffset;             // locate patch text start position from the start of the file
+        for (int h=0;h<patchCount;h++)
         {
-            r = (char)sysxPatches[a+b];
-            patchText.append(r);
+            for (int b=0;b<nameLength;b++)
+            {
+                r = (char)sysxPatches[a+b];
+                patchText.append(r);
+            };
+            patchNumber = QString::number(h+1, 10).toUpper();
+            msgText.append(patchNumber + " : ");
+            msgText.append(patchText + "   ");
+            this->patchList.append(msgText);
+            patchText.clear();
+            msgText.clear();
+            a=a+patchSize;                                // advance to the next patch in the bulk file.
         };
-        patchNumber = QString::number(h+1, 10).toUpper();
-        msgText.append(patchNumber + " : ");
-        msgText.append(patchText + "   ");
-        this->patchList.append(msgText);
-        patchText.clear();
-        msgText.clear();
-        a=a+patchSize;                                // advance to the next patch in the bulk file.
-    };
-    this->startPatchCombo->addItems(patchList);            // add patch names to the combobox lists.
-    this->finishPatchCombo->addItems(patchList);
-    this->finishPatchCombo->setCurrentIndex(patchCount-1);     // set the finish combobox index to the end of the list.
-    this->startPatchCombo->setCurrentIndex(0);
-    QString text = tr("Finish at U");
-    if (patchCount<patchPerBank) {patchCount=patchPerBank; };
-    text.append(QString::number(patchCount/patchPerBank, 10).toUpper() );
-    text.append("-x");
-    this->finishRange->setText(text);
-    QString bnk;
-    QString U = "U";
-    for (int x=0; x<bankTotalUser; x++)
-    {
-        bnk = "U" + QString::number(x+1, 10).toUpper() + "-1";
-        this->startRangeComboBox->addItem(bnk);
-        bnk = "U" + QString::number(x+1, 10).toUpper() + "-2";
-        this->startRangeComboBox->addItem(bnk);
-        bnk = "U" + QString::number(x+1, 10).toUpper() + "-3";
-        this->startRangeComboBox->addItem(bnk);
-        bnk = "U" + QString::number(x+1, 10).toUpper() + "-4";
-        this->startRangeComboBox->addItem(bnk);
-    };
-    this->startRangeComboBox->setCurrentIndex(0);
+        this->startPatchCombo->addItems(patchList);            // add patch names to the combobox lists.
+        this->finishPatchCombo->addItems(patchList);
+        this->finishPatchCombo->setCurrentIndex(patchCount-1);     // set the finish combobox index to the end of the list.
+        this->startPatchCombo->setCurrentIndex(0);
+        QString text = tr("Finish at U");
+        if (patchCount<patchPerBank) {patchCount=patchPerBank; };
+        text.append(QString::number(patchCount/patchPerBank, 10).toUpper() );
+        text.append("-x");
+        this->finishRange->setText(text);
+        QString bnk;
+        QString U = "U";
+        for (int x=0; x<bankTotalUser; x++)
+        {
+            bnk = "U" + QString::number(x+1, 10).toUpper() + "-1";
+            this->startRangeComboBox->addItem(bnk);
+            bnk = "U" + QString::number(x+1, 10).toUpper() + "-2";
+            this->startRangeComboBox->addItem(bnk);
+            bnk = "U" + QString::number(x+1, 10).toUpper() + "-3";
+            this->startRangeComboBox->addItem(bnk);
+            bnk = "U" + QString::number(x+1, 10).toUpper() + "-4";
+            this->startRangeComboBox->addItem(bnk);
+        };
+        this->startRangeComboBox->setCurrentIndex(0);
 
-    QString sysxBuffer;
-    for(int i=0;i<sysxPatches.size();i++)
-    {
-        unsigned char byte = (char)sysxPatches[i];
-        unsigned int n = (int)byte;
-        QString hex = QString::number(n, 16).toUpper();     // convert QByteArray to QString
-        if (hex.length() < 2) hex.prepend("0");
-        sysxBuffer.append(hex);
-    };
-    bulk.append(sysxBuffer);
+        QString sysxBuffer;
+        for(int i=0;i<sysxPatches.size();i++)
+        {
+            unsigned char byte = (char)sysxPatches[i];
+            unsigned int n = (int)byte;
+            QString hex = QString::number(n, 16).toUpper();     // convert QByteArray to QString
+            if (hex.length() < 2) hex.prepend("0");
+            sysxBuffer.append(hex);
+        };
+        bulk.append(sysxBuffer);
 }
 
 void bulkLoadDialog::bulkStatusProgress(int value)
@@ -530,7 +530,6 @@ void bulkLoadDialog::loadSYX()        //********************************* SYX Fi
 
 void bulkLoadDialog::loadSMF()    // **************************** SMF FILE FORMAT ***************************
 {	
-
     QByteArray temp;                         // TRANSLATION of GT-100 SMF PATCHES, data read from smf patch **************
     if ( data.at(37) != default_data.at(5) ){    // check if a valid GT-100 file
         QMessageBox *msgBox = new QMessageBox();
@@ -596,6 +595,1066 @@ void bulkLoadDialog::loadSMF()    // **************************** SMF FILE FORMA
         this->sysxPatches.append(temp.mid(0, patchSize));
     };
     updatePatch();
+}
+
+void bulkLoadDialog::loadTSL()         // ************************************ TSL File Format***************************
+{
+    bool skip = false;
+    unsigned int pnum = data.count("name2");
+    int pindex = data.size()/(pnum);
+    QString device=GetJsonValue("device", 1);
+    int patchCount = pnum;
+    unsigned int a = 0; // locate patch text start position from the start of the file
+    for (int h=0;h<patchCount;h++)
+    {
+        QByteArray temp;
+        GT100_default=default_data;
+        if(device.contains("GT"))
+        {
+            temp.append((char)GetJsonValue("patch_name1", a).toInt() );  //copy patch name
+            temp.append((char)GetJsonValue("patch_name2", a).toInt() );  //copy patch name
+            temp.append((char)GetJsonValue("patch_name3", a).toInt() );  //copy patch name
+            temp.append((char)GetJsonValue("patch_name4", a).toInt() );  //copy patch name
+            temp.append((char)GetJsonValue("patch_name5", a).toInt() );  //copy patch name
+            temp.append((char)GetJsonValue("patch_name6", a).toInt() );  //copy patch name
+            temp.append((char)GetJsonValue("patch_name7", a).toInt() );  //copy patch name
+            temp.append((char)GetJsonValue("patch_name8", a).toInt() );  //copy patch name
+            temp.append((char)GetJsonValue("patch_name9", a).toInt() );  //copy patch name
+            temp.append((char)GetJsonValue("patch_name10", a).toInt() ); //copy patch name
+            temp.append((char)GetJsonValue("patch_name11", a).toInt() ); //copy patch name
+            temp.append((char)GetJsonValue("patch_name12", a).toInt() ); //copy patch name
+            temp.append((char)GetJsonValue("patch_name13", a).toInt() ); //copy patch name
+            temp.append((char)GetJsonValue("patch_name14", a).toInt() ); //copy patch name
+            temp.append((char)GetJsonValue("patch_name15", a).toInt() ); //copy patch name
+            temp.append((char)GetJsonValue("patch_name16", a).toInt() ); //copy patch name
+            GT100_default_replace(11, 16, temp );                        //copy patch name
+            GT100_default_replace(27, 1, GetJsonHex("output_select", a));   //copy output select
+            GT100_default_replace(43, 1, GetJsonHex("comp_on_off", a));     //copy comp
+            GT100_default_replace(44, 1, GetJsonHex("comp_type", a));       //copy comp
+            GT100_default_replace(45, 1, GetJsonHex("comp_sustain", a));    //copy comp
+            GT100_default_replace(46, 1, GetJsonHex("comp_attack", a));     //copy comp
+            GT100_default_replace(47, 1, GetJsonHex("comp_tone", a));       //copy comp
+            GT100_default_replace(48, 1, GetJsonHex("comp_level", a));      //copy comp
+            GT100_default_replace(59, 1, GetJsonHex("od_ds_on_off", a));              //copy dist
+            GT100_default_replace(60, 1, GetJsonHex("od_ds_type", a));                //copy dist
+            GT100_default_replace(61, 1, GetJsonHex("od_ds_drive", a));               //copy dist
+            GT100_default_replace(62, 1, GetJsonHex("od_ds_bottom", a));              //copy dist
+            GT100_default_replace(63, 1, GetJsonHex("od_ds_tone", a));                //copy dist
+            GT100_default_replace(64, 1, GetJsonHex("od_ds_solo_sw", a));             //copy dist
+            GT100_default_replace(65, 1, GetJsonHex("od_ds_solo_level", a));          //copy dist
+            GT100_default_replace(66, 1, GetJsonHex("od_ds_effect_level", a));        //copy dist
+            GT100_default_replace(67, 1, GetJsonHex("od_ds_direct_mix", a));          //copy dist
+            GT100_default_replace(68, 1, GetJsonHex("od_ds_custom_type", a));         //copy dist
+            GT100_default_replace(69, 1, GetJsonHex("od_ds_custom_bottom", a));       //copy dist
+            GT100_default_replace(70, 1, GetJsonHex("od_ds_custom_top", a));          //copy dist
+            GT100_default_replace(71, 1, GetJsonHex("od_ds_custom_low", a));          //copy dist
+            GT100_default_replace(72, 1, GetJsonHex("od_ds_custom_high", a));         //copy dist
+            GT100_default_replace(73, 1, GetJsonHex("od_ds_custom_character", a));    //copy dist
+            GT100_default_replace(91, 1, GetJsonHex("preamp_a_on_off", a));                 //copy pre A
+            GT100_default_replace(92, 1, GetJsonHex("preamp_a_type", a));                   //copy pre A
+            GT100_default_replace(93, 1, GetJsonHex("preamp_a_gain", a));                   //copy pre A
+            GT100_default_replace(94, 1, GetJsonHex("preamp_a_t_comp", a));                 //copy pre A
+            GT100_default_replace(95, 1, GetJsonHex("preamp_a_bass", a));                   //copy pre A
+            GT100_default_replace(96, 1, GetJsonHex("preamp_a_middle", a));                 //copy pre A
+            GT100_default_replace(97, 1, GetJsonHex("preamp_a_treble", a));                 //copy pre A
+            GT100_default_replace(98, 1, GetJsonHex("preamp_a_presence", a));               //copy pre A
+            GT100_default_replace(99, 1, GetJsonHex("preamp_a_level", a));                  //copy pre A
+            GT100_default_replace(100, 1, GetJsonHex("preamp_a_bright", a));                //copy pre A
+            GT100_default_replace(101, 1, GetJsonHex("preamp_a_gain_sw", a));               //copy pre A
+            GT100_default_replace(102, 1, GetJsonHex("preamp_a_solo_sw", a));               //copy pre A
+            GT100_default_replace(103, 1, GetJsonHex("preamp_a_solo_level", a));            //copy pre A
+            GT100_default_replace(104, 1, GetJsonHex("preamp_a_sp_type", a));               //copy pre A
+            GT100_default_replace(105, 1, GetJsonHex("preamp_a_mic_type", a));              //copy pre A
+            GT100_default_replace(106, 1, GetJsonHex("preamp_a_mic_dis", a));               //copy pre A
+            GT100_default_replace(107, 1, GetJsonHex("preamp_a_mic_pos", a));               //copy pre A
+            GT100_default_replace(108, 1, GetJsonHex("preamp_a_mic_level", a));             //copy pre A
+            GT100_default_replace(109, 1, GetJsonHex("preamp_a_direct_mix", a));            //copy pre A
+            GT100_default_replace(110, 1, GetJsonHex("preamp_a_custom_type", a));           //copy pre A
+            GT100_default_replace(111, 1, GetJsonHex("preamp_a_custom_bottom", a));         //copy pre A
+            GT100_default_replace(112, 1, GetJsonHex("preamp_a_custom_edge", a));           //copy pre A
+            GT100_default_replace(115, 1, GetJsonHex("preamp_a_custom_preamp_low", a));     //copy pre A
+            GT100_default_replace(116, 1, GetJsonHex("preamp_a_custom_preamp_high", a));    //copy pre A
+            GT100_default_replace(117, 1, GetJsonHex("preamp_a_custom_char", a));           //copy pre A
+            GT100_default_replace(118, 1, GetJsonHex("preamp_a_custom_sp_size", a));        //copy pre A
+            GT100_default_replace(119, 1, GetJsonHex("preamp_a_custom_sp_color_low", a));   //copy pre A
+            GT100_default_replace(120, 1, GetJsonHex("preamp_a_custom_sp_color_high", a));  //copy pre A
+            GT100_default_replace(121, 1, GetJsonHex("preamp_a_custom_sp_num", a));         //copy pre A
+            GT100_default_replace(122, 1, GetJsonHex("preamp_a_custom_sp_cabinet", a));     //copy pre A
+            GT100_default_replace(152, 1, GetJsonHex("preamp_b_on_off", a));              //copy pre B
+            GT100_default_replace(153, 1, GetJsonHex("preamp_b_type", a));                //copy pre B
+            GT100_default_replace(154, 1, GetJsonHex("preamp_b_gain", a));                //copy pre B
+            GT100_default_replace(155, 1, GetJsonHex("preamp_b_t_comp", a));              //copy pre B
+            GT100_default_replace(156, 1, GetJsonHex("preamp_b_bass", a));                //copy pre B
+            GT100_default_replace(157, 1, GetJsonHex("preamp_b_middle", a));              //copy pre B
+            GT100_default_replace(158, 1, GetJsonHex("preamp_b_treble", a));              //copy pre B
+            GT100_default_replace(159, 1, GetJsonHex("preamp_b_presence", a));            //copy pre B
+            GT100_default_replace(160, 1, GetJsonHex("preamp_b_level", a));               //copy pre B
+            GT100_default_replace(161, 1, GetJsonHex("preamp_b_bright", a));              //copy pre B
+            GT100_default_replace(162, 1, GetJsonHex("preamp_b_gain_sw", a));             //copy pre B
+            GT100_default_replace(163, 1, GetJsonHex("preamp_b_solo_sw", a));             //copy pre B
+            GT100_default_replace(164, 1, GetJsonHex("preamp_b_solo_level", a));          //copy pre B
+            GT100_default_replace(165, 1, GetJsonHex("preamp_b_sp_type", a));             //copy pre B
+            GT100_default_replace(166, 1, GetJsonHex("preamp_b_mic_type", a));            //copy pre B
+            GT100_default_replace(167, 1, GetJsonHex("preamp_b_mic_dis", a));             //copy pre B
+            GT100_default_replace(168, 1, GetJsonHex("preamp_b_mic_pos", a));             //copy pre B
+            GT100_default_replace(169, 1, GetJsonHex("preamp_b_mic_level", a));           //copy pre B
+            GT100_default_replace(170, 1, GetJsonHex("preamp_b_direct_mix", a));          //copy pre B
+            GT100_default_replace(171, 1, GetJsonHex("preamp_b_custom_type", a));         //copy pre B
+            GT100_default_replace(172, 1, GetJsonHex("preamp_b_custom_bottom", a));       //copy pre B
+            GT100_default_replace(173, 1, GetJsonHex("preamp_b_custom_edge", a));         //copy pre B
+            GT100_default_replace(176, 1, GetJsonHex("preamp_b_custom_preamp_low", a));   //copy pre B
+            GT100_default_replace(177, 1, GetJsonHex("preamp_b_custom_preamp_high", a));  //copy pre B
+            GT100_default_replace(178, 1, GetJsonHex("preamp_b_custom_char", a));         //copy pre B
+            GT100_default_replace(179, 1, GetJsonHex("preamp_b_custom_sp_size", a));      //copy pre B
+            GT100_default_replace(180, 1, GetJsonHex("preamp_b_custom_sp_color_low", a)); //copy pre B
+            GT100_default_replace(181, 1, GetJsonHex("preamp_b_custom_sp_color_high", a));//copy pre B
+            GT100_default_replace(182, 1, GetJsonHex("preamp_b_custom_sp_num", a));       //copy pre B
+            GT100_default_replace(183, 1, GetJsonHex("preamp_b_custom_sp_cabinet", a));   //copy pre B
+            GT100_default_replace(200, 1, GetJsonHex("eq_on_off", a));                 //copy EQ
+            GT100_default_replace(201, 1, GetJsonHex("eq_low_cut", a));                //copy EQ
+            GT100_default_replace(202, 1, GetJsonHex("eq_low_gain", a));               //copy EQ
+            GT100_default_replace(203, 1, GetJsonHex("eq_low_mid_freq", a));           //copy EQ
+            GT100_default_replace(204, 1, GetJsonHex("eq_low_mid_q", a));              //copy EQ
+            GT100_default_replace(205, 1, GetJsonHex("eq_low_mid_gain", a));           //copy EQ
+            GT100_default_replace(206, 1, GetJsonHex("eq_high_mid_freq", a));          //copy EQ
+            GT100_default_replace(207, 1, GetJsonHex("eq_high_mid_q", a));             //copy EQ
+            GT100_default_replace(208, 1, GetJsonHex("eq_high_mid_gain", a));          //copy EQ
+            GT100_default_replace(209, 1, GetJsonHex("eq_high_gain", a));              //copy EQ
+            GT100_default_replace(210, 1, GetJsonHex("eq_high_cut", a));               //copy EQ
+            GT100_default_replace(211, 1, GetJsonHex("eq_level", a));                  //copy EQ
+            GT100_default_replace(216, 1, GetJsonHex("fx1_on_off", a));                  //copy FX1
+            GT100_default_replace(217, 1, GetJsonHex("fx1_fx_type", a));                  //copy FX1
+            GT100_default_replace(218, 1, GetJsonHex("fx1_sub_od_ds_type", a));                  //copy FX1
+            GT100_default_replace(219, 1, GetJsonHex("fx1_sub_od_ds_drive", a));                  //copy FX1
+            GT100_default_replace(220, 1, GetJsonHex("fx1_sub_od_ds_bottom", a));                  //copy FX1
+            GT100_default_replace(221, 1, GetJsonHex("fx1_sub_od_ds_tone", a));                  //copy FX1
+            GT100_default_replace(222, 1, GetJsonHex("fx1_sub_od_ds_solo_sw", a));                  //copy FX1
+            GT100_default_replace(223, 1, GetJsonHex("fx1_sub_od_ds_solo_level", a));                  //copy FX1
+            GT100_default_replace(224, 1, GetJsonHex("fx1_sub_od_ds_effect_level", a));                  //copy FX1
+            GT100_default_replace(225, 1, GetJsonHex("fx1_sub_od_ds_direct_mix", a));                  //copy FX1
+            GT100_default_replace(228, 1, GetJsonHex("fx1_t_wah_mode", a));                  //copy FX1
+            GT100_default_replace(229, 1, GetJsonHex("fx1_t_wah_polar", a));                  //copy FX1
+            GT100_default_replace(230, 1, GetJsonHex("fx1_t_wah_sens", a));                  //copy FX1
+            GT100_default_replace(231, 1, GetJsonHex("fx1_t_wah_freq", a));                  //copy FX1
+            GT100_default_replace(232, 1, GetJsonHex("fx1_t_wah_peak", a));                  //copy FX1
+            GT100_default_replace(233, 1, GetJsonHex("fx1_t_wah_direct_mix", a));                  //copy FX1
+            GT100_default_replace(234, 1, GetJsonHex("fx1_t_wah_effect_level", a));                  //copy FX1
+            GT100_default_replace(236, 1, GetJsonHex("fx1_auto_wah_mode", a));                  //copy FX1
+            GT100_default_replace(237, 1, GetJsonHex("fx1_auto_wah_freq", a));                  //copy FX1
+            GT100_default_replace(238, 1, GetJsonHex("fx1_auto_wah_peak", a));                  //copy FX1
+            GT100_default_replace(239, 1, GetJsonHex("fx1_auto_wah_rate", a));                  //copy FX1
+            GT100_default_replace(240, 1, GetJsonHex("fx1_auto_wah_depth", a));                  //copy FX1
+            GT100_default_replace(241, 1, GetJsonHex("fx1_auto_wah_direct_mix", a));                  //copy FX1
+            GT100_default_replace(242, 1, GetJsonHex("fx1_auto_wah_effect_level", a));                  //copy FX1
+            GT100_default_replace(245, 1, GetJsonHex("fx1_sub_wah_type", a));                  //copy FX1
+            GT100_default_replace(246, 1, GetJsonHex("fx1_sub_wah_pedal_pos", a));                  //copy FX1
+            GT100_default_replace(247, 1, GetJsonHex("fx1_sub_wah_pedal_min", a));                  //copy FX1
+            GT100_default_replace(248, 1, GetJsonHex("fx1_sub_wah_pedal_max", a));                  //copy FX1
+            GT100_default_replace(249, 1, GetJsonHex("fx1_sub_wah_effect_level", a));                  //copy FX1
+            GT100_default_replace(250, 1, GetJsonHex("fx1_sub_wah_direct_mix", a));                  //copy FX1
+            GT100_default_replace(251, 1, GetJsonHex("fx1_adv_comp_type", a));                  //copy FX1
+            GT100_default_replace(252, 1, GetJsonHex("fx1_adv_comp_sustain", a));                  //copy FX1
+            GT100_default_replace(253, 1, GetJsonHex("fx1_adv_comp_attack", a));                  //copy FX1
+            GT100_default_replace(254, 1, GetJsonHex("fx1_adv_comp_tone", a));                  //copy FX1
+            GT100_default_replace(255, 1, GetJsonHex("fx1_adv_comp_level", a));                  //copy FX1
+            GT100_default_replace(257, 1, GetJsonHex("fx1_limiter_type", a));                  //copy FX1
+            GT100_default_replace(258, 1, GetJsonHex("fx1_limiter_attack", a));                  //copy FX1
+            GT100_default_replace(259, 1, GetJsonHex("fx1_limiter_thresh", a));                  //copy FX1
+            GT100_default_replace(260, 1, GetJsonHex("fx1_limiter_ratio", a));                  //copy FX1
+            GT100_default_replace(261, 1, GetJsonHex("fx1_limiter_release", a));                  //copy FX1
+            GT100_default_replace(262, 1, GetJsonHex("fx1_limiter_level", a));                  //copy FX1
+            GT100_default_replace(264, 1, GetJsonHex("fx1_graphic_eq_31hz", a));                  //copy FX1
+            GT100_default_replace(265, 1, GetJsonHex("fx1_graphic_eq_62hz", a));                  //copy FX1
+            GT100_default_replace(266, 1, GetJsonHex("fx1_graphic_eq_125hz", a));                  //copy FX1
+            GT100_default_replace(267, 1, GetJsonHex("fx1_graphic_eq_250hz", a));                  //copy FX1
+            GT100_default_replace(268, 1, GetJsonHex("fx1_graphic_eq_500hz", a));                  //copy FX1
+            GT100_default_replace(269, 1, GetJsonHex("fx1_graphic_eq_1khz", a));                  //copy FX1
+            GT100_default_replace(270, 1, GetJsonHex("fx1_graphic_eq_2khz", a));                  //copy FX1
+            GT100_default_replace(271, 1, GetJsonHex("fx1_graphic_eq_4khz", a));                  //copy FX1
+            GT100_default_replace(272, 1, GetJsonHex("fx1_graphic_eq_8khz", a));                  //copy FX1
+            GT100_default_replace(273, 1, GetJsonHex("fx1_graphic_eq_16khz", a));                  //copy FX1
+            GT100_default_replace(274, 1, GetJsonHex("fx1_graphic_eq_level", a));                  //copy FX1
+            GT100_default_replace(276, 1, GetJsonHex("fx1_parametric_eq_low_cut", a));                  //copy FX1
+            GT100_default_replace(277, 1, GetJsonHex("fx1_parametric_eq_low_gain", a));                  //copy FX1
+            GT100_default_replace(278, 1, GetJsonHex("fx1_parametric_eq_low_mid_freq", a));                  //copy FX1
+            GT100_default_replace(279, 1, GetJsonHex("fx1_parametric_eq_low_mid_q", a));                  //copy FX1
+            GT100_default_replace(293, 1, GetJsonHex("fx1_parametric_eq_low_mid_gain", a));                  //copy FX1
+            GT100_default_replace(294, 1, GetJsonHex("fx1_parametric_eq_high_mid_freq", a));                  //copy FX1
+            GT100_default_replace(295, 1, GetJsonHex("fx1_parametric_eq_high_mid_q", a));                  //copy FX1
+            GT100_default_replace(296, 1, GetJsonHex("fx1_parametric_eq_high_mid_gain", a));                  //copy FX1
+            GT100_default_replace(297, 1, GetJsonHex("fx1_parametric_eq_high_gain", a));                  //copy FX1
+            GT100_default_replace(298, 1, GetJsonHex("fx1_parametric_eq_high_cut", a));                  //copy FX1
+            GT100_default_replace(299, 1, GetJsonHex("fx1_parametric_eq_level", a));                  //copy FX1
+            GT100_default_replace(301, 1, GetJsonHex("fx1_tone_modify_type", a));                  //copy FX1
+            GT100_default_replace(302, 1, GetJsonHex("fx1_tone_modify_reso", a));                  //copy FX1
+            GT100_default_replace(303, 1, GetJsonHex("fx1_tone_modify_low", a));                  //copy FX1
+            GT100_default_replace(304, 1, GetJsonHex("fx1_tone_modify_high", a));                  //copy FX1
+            GT100_default_replace(305, 1, GetJsonHex("fx1_tone_modify_level", a));                  //copy FX1
+            GT100_default_replace(307, 1, GetJsonHex("fx1_guitar_sim_type", a));                  //copy FX1
+            GT100_default_replace(308, 1, GetJsonHex("fx1_guitar_sim_low", a));                  //copy FX1
+            GT100_default_replace(309, 1, GetJsonHex("fx1_guitar_sim_high", a));                  //copy FX1
+            GT100_default_replace(310, 1, GetJsonHex("fx1_guitar_sim_level", a));                  //copy FX1
+            GT100_default_replace(311, 1, GetJsonHex("fx1_guitar_sim_body", a));                  //copy FX1
+            GT100_default_replace(313, 1, GetJsonHex("fx1_slow_gear_sens", a));                  //copy FX1
+            GT100_default_replace(314, 1, GetJsonHex("fx1_slow_gear_rise_time", a));                  //copy FX1
+            GT100_default_replace(315, 1, GetJsonHex("fx1_slow_gear_level", a));                  //copy FX1
+            GT100_default_replace(317, 1, GetJsonHex("fx1_defretter_tone", a));                  //copy FX1
+            GT100_default_replace(318, 1, GetJsonHex("fx1_defretter_sens", a));                  //copy FX1
+            GT100_default_replace(319, 1, GetJsonHex("fx1_defretter_attack", a));                  //copy FX1
+            GT100_default_replace(320, 1, GetJsonHex("fx1_defretter_depth", a));                  //copy FX1
+            GT100_default_replace(321, 1, GetJsonHex("fx1_defretter_reso", a));                  //copy FX1
+            GT100_default_replace(322, 1, GetJsonHex("fx1_defretter_effect_level", a));                  //copy FX1
+            GT100_default_replace(323, 1, GetJsonHex("fx1_defretter_direct_mix", a));                  //copy FX1
+            GT100_default_replace(325, 1, GetJsonHex("fx1_wave_synth_wave", a));                  //copy FX1
+            GT100_default_replace(326, 1, GetJsonHex("fx1_wave_synth_cutoff", a));                  //copy FX1
+            GT100_default_replace(327, 1, GetJsonHex("fx1_wave_synth_reso", a));                  //copy FX1
+            GT100_default_replace(328, 1, GetJsonHex("fx1_wave_synth_filter_sens", a));                  //copy FX1
+            GT100_default_replace(329, 1, GetJsonHex("fx1_wave_synth_filter_decay", a));                  //copy FX1
+            GT100_default_replace(330, 1, GetJsonHex("fx1_wave_synth_filter_depth", a));                  //copy FX1
+            GT100_default_replace(331, 1, GetJsonHex("fx1_wave_synth_synth_level", a));                  //copy FX1
+            GT100_default_replace(332, 1, GetJsonHex("fx1_wave_synth_direct_mix", a));                  //copy FX1
+            GT100_default_replace(334, 1, GetJsonHex("fx1_sitar_sim_tone", a));                  //copy FX1
+            GT100_default_replace(335, 1, GetJsonHex("fx1_sitar_sim_sens", a));                  //copy FX1
+            GT100_default_replace(336, 1, GetJsonHex("fx1_sitar_sim_depth", a));                  //copy FX1
+            GT100_default_replace(337, 1, GetJsonHex("fx1_sitar_sim_reso", a));                  //copy FX1
+            GT100_default_replace(338, 1, GetJsonHex("fx1_sitar_sim_buzz", a));                  //copy FX1
+            GT100_default_replace(339, 1, GetJsonHex("fx1_sitar_sim_effect_level", a));                  //copy FX1
+            GT100_default_replace(340, 1, GetJsonHex("fx1_sitar_sim_direct_mix", a));                  //copy FX1
+            GT100_default_replace(342, 1, GetJsonHex("fx1_octave_range", a));                  //copy FX1
+            GT100_default_replace(343, 1, GetJsonHex("fx1_octave_level", a));                  //copy FX1
+            GT100_default_replace(344, 1, GetJsonHex("fx1_octave_direct_mix", a));                  //copy FX1
+            GT100_default_replace(346, 1, GetJsonHex("fx1_pitch_shifter_voice", a));                  //copy FX1
+            GT100_default_replace(347, 1, GetJsonHex("fx1_pitch_shifter_ps1mode", a));                  //copy FX1
+            GT100_default_replace(348, 1, GetJsonHex("fx1_pitch_shifter_ps1pitch", a));                  //copy FX1
+            GT100_default_replace(349, 1, GetJsonHex("fx1_pitch_shifter_ps1fine", a));                  //copy FX1
+            GT100_default_replace(350, 1, GetJsonHex("fx1_pitch_shifter_ps1pre_dly_h", a));                  //copy FX1
+            GT100_default_replace(351, 1, GetJsonHex("fx1_pitch_shifter_ps1pre_dly_l", a));                  //copy FX1
+            GT100_default_replace(352, 1, GetJsonHex("fx1_pitch_shifter_ps1level", a));                  //copy FX1
+            GT100_default_replace(353, 1, GetJsonHex("fx1_pitch_shifter_ps2mode", a));                  //copy FX1
+            GT100_default_replace(354, 1, GetJsonHex("fx1_pitch_shifter_ps2pitch", a));                  //copy FX1
+            GT100_default_replace(355, 1, GetJsonHex("fx1_pitch_shifter_ps2fine", a));                  //copy FX1
+            GT100_default_replace(356, 1, GetJsonHex("fx1_pitch_shifter_ps2pre_dly_h", a));                  //copy FX1
+            GT100_default_replace(357, 1, GetJsonHex("fx1_pitch_shifter_ps2pre_dly_l", a));                  //copy FX1
+            GT100_default_replace(358, 1, GetJsonHex("fx1_pitch_shifter_ps2level", a));                  //copy FX1
+            GT100_default_replace(359, 1, GetJsonHex("fx1_pitch_shifter_ps1f_back", a));                  //copy FX1
+            GT100_default_replace(360, 1, GetJsonHex("fx1_pitch_shifter_direct_mix", a));                  //copy FX1
+            GT100_default_replace(362, 1, GetJsonHex("fx1_harmonist_voice", a));                  //copy FX1
+            GT100_default_replace(363, 1, GetJsonHex("fx1_harmonist_hr1harm", a));                  //copy FX1
+            GT100_default_replace(364, 1, GetJsonHex("fx1_harmonist_hr1pre_dly_h", a));                  //copy FX1
+            GT100_default_replace(365, 1, GetJsonHex("fx1_harmonist_hr1pre_dly_l", a));                  //copy FX1
+            GT100_default_replace(366, 1, GetJsonHex("fx1_harmonist_hr1level", a));                  //copy FX1
+            GT100_default_replace(367, 1, GetJsonHex("fx1_harmonist_hr2harm", a));                  //copy FX1
+            GT100_default_replace(368, 1, GetJsonHex("fx1_harmonist_hr2pre_dly_h", a));                  //copy FX1
+            GT100_default_replace(369, 1, GetJsonHex("fx1_harmonist_hr2pre_dly_l", a));                  //copy FX1
+            GT100_default_replace(370, 1, GetJsonHex("fx1_harmonist_hr2level", a));                  //copy FX1
+            GT100_default_replace(371, 1, GetJsonHex("fx1_harmonist_hr1f_back", a));                  //copy FX1
+            GT100_default_replace(372, 1, GetJsonHex("fx1_harmonist_direct_mix", a));                  //copy FX1
+            GT100_default_replace(373, 1, GetJsonHex("fx1_harmonist_hr1c", a));                  //copy FX1
+            GT100_default_replace(274, 1, GetJsonHex("fx1_harmonist_hr1db", a));                  //copy FX1
+            GT100_default_replace(375, 1, GetJsonHex("fx1_harmonist_hr1d", a));                  //copy FX1
+            GT100_default_replace(376, 1, GetJsonHex("fx1_harmonist_hr1eb", a));                  //copy FX1
+            GT100_default_replace(377, 1, GetJsonHex("fx1_harmonist_hr1e", a));                  //copy FX1
+            GT100_default_replace(378, 1, GetJsonHex("fx1_harmonist_hr1f", a));                  //copy FX1
+            GT100_default_replace(379, 1, GetJsonHex("fx1_harmonist_hr1f_s", a));                  //copy FX1
+            GT100_default_replace(380, 1, GetJsonHex("fx1_harmonist_hr1g", a));                  //copy FX1
+            GT100_default_replace(381, 1, GetJsonHex("fx1_harmonist_hr1ab", a));                  //copy FX1
+            GT100_default_replace(382, 1, GetJsonHex("fx1_harmonist_hr1a", a));                  //copy FX1
+            GT100_default_replace(383, 1, GetJsonHex("fx1_harmonist_hr1bb", a));                  //copy FX1
+            GT100_default_replace(384, 1, GetJsonHex("fx1_harmonist_hr1b", a));                  //copy FX1
+            GT100_default_replace(385, 1, GetJsonHex("fx1_harmonist_hr2c", a));                  //copy FX1
+            GT100_default_replace(386, 1, GetJsonHex("fx1_harmonist_hr2db", a));                  //copy FX1
+            GT100_default_replace(387, 1, GetJsonHex("fx1_harmonist_hr2d", a));                  //copy FX1
+            GT100_default_replace(388, 1, GetJsonHex("fx1_harmonist_hr2eb", a));                  //copy FX1
+            GT100_default_replace(389, 1, GetJsonHex("fx1_harmonist_hr2e", a));                  //copy FX1
+            GT100_default_replace(390, 1, GetJsonHex("fx1_harmonist_hr2f", a));                  //copy FX1
+            GT100_default_replace(391, 1, GetJsonHex("fx1_harmonist_hr2f_s", a));                  //copy FX1
+            GT100_default_replace(392, 1, GetJsonHex("fx1_harmonist_hr2g", a));                  //copy FX1
+            GT100_default_replace(393, 1, GetJsonHex("fx1_harmonist_hr2ab", a));                  //copy FX1
+            GT100_default_replace(394, 1, GetJsonHex("fx1_harmonist_hr2a", a));                  //copy FX1
+            GT100_default_replace(395, 1, GetJsonHex("fx1_harmonist_hr2bb", a));                  //copy FX1
+            GT100_default_replace(396, 1, GetJsonHex("fx1_harmonist_hr2b", a));                  //copy FX1
+            GT100_default_replace(398, 1, GetJsonHex("fx1_sound_hold_hold", a));                  //copy FX1
+            GT100_default_replace(399, 1, GetJsonHex("fx1_sound_hold_rise_time", a));                  //copy FX1
+            GT100_default_replace(400, 1, GetJsonHex("fx1_sound_hold_effect_level", a));                  //copy FX1
+            GT100_default_replace(402, 1, GetJsonHex("fx1_ac_processor_type", a));                  //copy FX1
+            GT100_default_replace(403, 1, GetJsonHex("fx1_ac_processor_bass", a));                  //copy FX1
+            GT100_default_replace(404, 1, GetJsonHex("fx1_ac_processor_middle", a));                  //copy FX1
+            GT100_default_replace(405, 1, GetJsonHex("fx1_ac_processor_middle_freq", a));                  //copy FX1
+            GT100_default_replace(406, 1, GetJsonHex("fx1_ac_processor_treble", a));                  //copy FX1
+            GT100_default_replace(407, 1, GetJsonHex("fx1_ac_processor_presence", a));                  //copy FX1
+            GT100_default_replace(408, 1, GetJsonHex("fx1_ac_processor_level", a));                  //copy FX1
+            GT100_default_replace(410, 1, GetJsonHex("fx1_phaser_type", a));                  //copy FX1
+            GT100_default_replace(411, 1, GetJsonHex("fx1_phaser_rate", a));                  //copy FX1
+            GT100_default_replace(412, 1, GetJsonHex("fx1_phaser_depth", a));                  //copy FX1
+            GT100_default_replace(413, 1, GetJsonHex("fx1_phaser_manual", a));                  //copy FX1
+            GT100_default_replace(414, 1, GetJsonHex("fx1_phaser_reso", a));                  //copy FX1
+            GT100_default_replace(415, 1, GetJsonHex("fx1_phaser_step_rate", a));                  //copy FX1
+            GT100_default_replace(416, 1, GetJsonHex("fx1_phaser_effect_level", a));                  //copy FX1
+            GT100_default_replace(417, 1, GetJsonHex("fx1_phaser_direct_mix", a));                  //copy FX1
+            GT100_default_replace(419, 1, GetJsonHex("fx1_flanger_rate", a));                  //copy FX1
+            GT100_default_replace(420, 1, GetJsonHex("fx1_flanger_depth", a));                  //copy FX1
+            GT100_default_replace(434, 1, GetJsonHex("fx1_flanger_manual", a));                  //copy FX1
+            GT100_default_replace(435, 1, GetJsonHex("fx1_flanger_reso", a));                  //copy FX1
+            GT100_default_replace(436, 1, GetJsonHex("fx1_flanger_separation", a));                  //copy FX1
+            GT100_default_replace(437, 1, GetJsonHex("fx1_flanger_low_cut", a));                  //copy FX1
+            GT100_default_replace(438, 1, GetJsonHex("fx1_flanger_effect_level", a));                  //copy FX1
+            GT100_default_replace(439, 1, GetJsonHex("fx1_flanger_direct_mix", a));                  //copy FX1
+            GT100_default_replace(441, 1, GetJsonHex("fx1_tremolo_wave_shape", a));                  //copy FX1
+            GT100_default_replace(442, 1, GetJsonHex("fx1_tremolo_rate", a));                  //copy FX1
+            GT100_default_replace(443, 1, GetJsonHex("fx1_tremolo_depth", a));                  //copy FX1
+            GT100_default_replace(444, 1, GetJsonHex("fx1_tremolo_level", a));                  //copy FX1
+            GT100_default_replace(446, 1, GetJsonHex("fx1_rotary_speed_select", a));                  //copy FX1
+            GT100_default_replace(447, 1, GetJsonHex("fx1_rotary_rate_slow", a));                  //copy FX1
+            GT100_default_replace(448, 1, GetJsonHex("fx1_rotary_rate_fast", a));                  //copy FX1
+            GT100_default_replace(449, 1, GetJsonHex("fx1_rotary_rise_time", a));                  //copy FX1
+            GT100_default_replace(450, 1, GetJsonHex("fx1_rotary_fall_time", a));                  //copy FX1
+            GT100_default_replace(451, 1, GetJsonHex("fx1_rotary_depth", a));                  //copy FX1
+            GT100_default_replace(452, 1, GetJsonHex("fx1_rotary_level", a));                  //copy FX1
+            GT100_default_replace(454, 1, GetJsonHex("fx1_uni_v_rate", a));                  //copy FX1
+            GT100_default_replace(455, 1, GetJsonHex("fx1_uni_v_depth", a));                  //copy FX1
+            GT100_default_replace(456, 1, GetJsonHex("fx1_uni_v_level", a));                  //copy FX1
+            GT100_default_replace(458, 1, GetJsonHex("fx1_pan_type", a));                  //copy FX1
+            GT100_default_replace(459, 1, GetJsonHex("fx1_pan_pos", a));                  //copy FX1
+            GT100_default_replace(460, 1, GetJsonHex("fx1_pan_wave_shape", a));                  //copy FX1
+            GT100_default_replace(461, 1, GetJsonHex("fx1_pan_rate", a));                  //copy FX1
+            GT100_default_replace(462, 1, GetJsonHex("fx1_pan_depth", a));                  //copy FX1
+            GT100_default_replace(463, 1, GetJsonHex("fx1_pan_level", a));                  //copy FX1
+            GT100_default_replace(465, 1, GetJsonHex("fx1_slicer_pattern", a));                  //copy FX1
+            GT100_default_replace(466, 1, GetJsonHex("fx1_slicer_rate", a));                  //copy FX1
+            GT100_default_replace(467, 1, GetJsonHex("fx1_slicer_trigger_sens", a));                  //copy FX1
+            GT100_default_replace(468, 1, GetJsonHex("fx1_slicer_effect_level", a));                  //copy FX1
+            GT100_default_replace(469, 1, GetJsonHex("fx1_slicer_direct_mix", a));                  //copy FX1
+            GT100_default_replace(471, 1, GetJsonHex("fx1_vibrato_rate", a));                  //copy FX1
+            GT100_default_replace(472, 1, GetJsonHex("fx1_vibrato_depth", a));                  //copy FX1
+            GT100_default_replace(473, 1, GetJsonHex("fx1_vibrato_trigger", a));                  //copy FX1
+            GT100_default_replace(474, 1, GetJsonHex("fx1_vibrato_rise_time", a));                  //copy FX1
+            GT100_default_replace(475, 1, GetJsonHex("fx1_vibrato_level", a));                  //copy FX1
+            GT100_default_replace(477, 1, GetJsonHex("fx1_ring_mod_mode", a));                  //copy FX1
+            GT100_default_replace(478, 1, GetJsonHex("fx1_ring_mod_freq", a));                  //copy FX1
+            GT100_default_replace(479, 1, GetJsonHex("fx1_ring_mod_effect_level", a));                  //copy FX1
+            GT100_default_replace(480, 1, GetJsonHex("fx1_ring_mod_direct_mix", a));                  //copy FX1
+            GT100_default_replace(482, 1, GetJsonHex("fx1_humanizer_mode", a));                  //copy FX1
+            GT100_default_replace(483, 1, GetJsonHex("fx1_humanizer_vowel1", a));                  //copy FX1
+            GT100_default_replace(484, 1, GetJsonHex("fx1_humanizer_vowel2", a));                  //copy FX1
+            GT100_default_replace(485, 1, GetJsonHex("fx1_humanizer_sens", a));                  //copy FX1
+            GT100_default_replace(486, 1, GetJsonHex("fx1_humanizer_rate", a));                  //copy FX1
+            GT100_default_replace(487, 1, GetJsonHex("fx1_humanizer_depth", a));                  //copy FX1
+            GT100_default_replace(488, 1, GetJsonHex("fx1_humanizer_manual", a));                  //copy FX1
+            GT100_default_replace(489, 1, GetJsonHex("fx1_humanizer_level", a));                  //copy FX1
+            GT100_default_replace(491, 1, GetJsonHex("fx1_2x2_chorus_xover_freq", a));                  //copy FX1
+            GT100_default_replace(492, 1, GetJsonHex("fx1_2x2_chorus_low_rate", a));                  //copy FX1
+            GT100_default_replace(493, 1, GetJsonHex("fx1_2x2_chorus_low_depth", a));                  //copy FX1
+            GT100_default_replace(494, 1, GetJsonHex("fx1_2x2_chorus_low_pre_delay", a));                  //copy FX1
+            GT100_default_replace(495, 1, GetJsonHex("fx1_2x2_chorus_low_level", a));                  //copy FX1
+            GT100_default_replace(496, 1, GetJsonHex("fx1_2x2_chorus_high_rate", a));                  //copy FX1
+            GT100_default_replace(497, 1, GetJsonHex("fx1_2x2_chorus_high_depth", a));                  //copy FX1
+            GT100_default_replace(498, 1, GetJsonHex("fx1_2x2_chorus_high_pre_delay", a));                  //copy FX1
+            GT100_default_replace(499, 1, GetJsonHex("fx1_2x2_chorus_high_level", a));                  //copy FX1
+            GT100_default_replace(500, 1, GetJsonHex("fx1_2x2_chorus_direct_level", a));                  //copy FX1
+            GT100_default_replace(501, 1, GetJsonHex("fx1_sub_delay_type", a));                  //copy FX1
+            GT100_default_replace(502, 1, GetJsonHex("fx1_sub_delay_time_h", a));                  //copy FX1
+            GT100_default_replace(503, 1, GetJsonHex("fx1_sub_delay_time_l", a));                  //copy FX1
+            GT100_default_replace(504, 1, GetJsonHex("fx1_sub_delay_f_back", a));                  //copy FX1
+            GT100_default_replace(505, 1, GetJsonHex("fx1_sub_delay_high_cut", a));                  //copy FX1
+            GT100_default_replace(506, 1, GetJsonHex("fx1_sub_delay_effect_level", a));                  //copy FX1
+            GT100_default_replace(507, 1, GetJsonHex("fx1_sub_delay_direct_mix", a));                  //copy FX1
+            GT100_default_replace(508, 1, GetJsonHex("fx1_sub_delay_tap_time", a));                  //copy FX1
+            GT100_default_replace(510, 1, GetJsonHex("fx2_on_off", a));                  //copy FX2
+            GT100_default_replace(511, 1, GetJsonHex("fx2_fx_type", a));                  //copy FX2
+            GT100_default_replace(512, 1, GetJsonHex("fx2_sub_od_ds_type", a));                  //copy FX2
+            GT100_default_replace(513, 1, GetJsonHex("fx2_sub_od_ds_drive", a));                  //copy FX2
+            GT100_default_replace(514, 1, GetJsonHex("fx2_sub_od_ds_bottom", a));                  //copy FX2
+            GT100_default_replace(515, 1, GetJsonHex("fx2_sub_od_ds_tone", a));                  //copy FX2
+            GT100_default_replace(516, 1, GetJsonHex("fx2_sub_od_ds_solo_sw", a));                  //copy FX2
+            GT100_default_replace(517, 1, GetJsonHex("fx2_sub_od_ds_solo_level", a));                  //copy FX2
+            GT100_default_replace(518, 1, GetJsonHex("fx2_sub_od_ds_effect_level", a));                  //copy FX2
+            GT100_default_replace(519, 1, GetJsonHex("fx2_sub_od_ds_direct_mix", a));                  //copy FX2
+            GT100_default_replace(522, 1, GetJsonHex("fx2_t_wah_mode", a));                  //copy FX2
+            GT100_default_replace(523, 1, GetJsonHex("fx2_t_wah_polar", a));                  //copy FX2
+            GT100_default_replace(524, 1, GetJsonHex("fx2_t_wah_sens", a));                  //copy FX2
+            GT100_default_replace(525, 1, GetJsonHex("fx2_t_wah_freq", a));                  //copy FX2
+            GT100_default_replace(526, 1, GetJsonHex("fx2_t_wah_peak", a));                  //copy FX2
+            GT100_default_replace(527, 1, GetJsonHex("fx2_t_wah_direct_mix", a));                  //copy FX2
+            GT100_default_replace(528, 1, GetJsonHex("fx2_t_wah_effect_level", a));                  //copy FX2
+            GT100_default_replace(530, 1, GetJsonHex("fx2_auto_wah_mode", a));                  //copy FX2
+            GT100_default_replace(531, 1, GetJsonHex("fx2_auto_wah_freq", a));                  //copy FX2
+            GT100_default_replace(532, 1, GetJsonHex("fx2_auto_wah_peak", a));                  //copy FX2
+            GT100_default_replace(533, 1, GetJsonHex("fx2_auto_wah_rate", a));                  //copy FX2
+            GT100_default_replace(534, 1, GetJsonHex("fx2_auto_wah_depth", a));                  //copy FX2
+            GT100_default_replace(535, 1, GetJsonHex("fx2_auto_wah_direct_mix", a));                  //copy FX2
+            GT100_default_replace(536, 1, GetJsonHex("fx2_auto_wah_effect_level", a));                  //copy FX2
+            GT100_default_replace(538, 1, GetJsonHex("fx2_sub_wah_type", a));                  //copy FX2
+            GT100_default_replace(539, 1, GetJsonHex("fx2_sub_wah_pedal_pos", a));                  //copy FX2
+            GT100_default_replace(540, 1, GetJsonHex("fx2_sub_wah_pedal_min", a));                  //copy FX2
+            GT100_default_replace(541, 1, GetJsonHex("fx2_sub_wah_pedal_max", a));                  //copy FX2
+            GT100_default_replace(542, 1, GetJsonHex("fx2_sub_wah_effect_level", a));                  //copy FX2
+            GT100_default_replace(543, 1, GetJsonHex("fx2_sub_wah_direct_mix", a));                  //copy FX2
+            GT100_default_replace(545, 1, GetJsonHex("fx2_adv_comp_type", a));                  //copy FX2
+            GT100_default_replace(546, 1, GetJsonHex("fx2_adv_comp_sustain", a));                  //copy FX2
+            GT100_default_replace(547, 1, GetJsonHex("fx2_adv_comp_attack", a));                  //copy FX2
+            GT100_default_replace(548, 1, GetJsonHex("fx2_adv_comp_tone", a));                  //copy FX2
+            GT100_default_replace(549, 1, GetJsonHex("fx2_adv_comp_level", a));                  //copy FX2
+            GT100_default_replace(551, 1, GetJsonHex("fx2_limiter_type", a));                  //copy FX2
+            GT100_default_replace(552, 1, GetJsonHex("fx2_limiter_attack", a));                  //copy FX2
+            GT100_default_replace(553, 1, GetJsonHex("fx2_limiter_thresh", a));                  //copy FX2
+            GT100_default_replace(554, 1, GetJsonHex("fx2_limiter_ratio", a));                  //copy FX2
+            GT100_default_replace(555, 1, GetJsonHex("fx2_limiter_release", a));                  //copy FX2
+            GT100_default_replace(556, 1, GetJsonHex("fx2_limiter_level", a));                  //copy FX2
+            GT100_default_replace(558, 1, GetJsonHex("fx2_graphic_eq_31hz", a));                  //copy FX2
+            GT100_default_replace(559, 1, GetJsonHex("fx2_graphic_eq_62hz", a));                  //copy FX2
+            GT100_default_replace(560, 1, GetJsonHex("fx2_graphic_eq_125hz", a));                  //copy FX2
+            GT100_default_replace(561, 1, GetJsonHex("fx2_graphic_eq_250hz", a));                  //copy FX2
+            GT100_default_replace(575, 1, GetJsonHex("fx2_graphic_eq_500hz", a));                  //copy FX2
+            GT100_default_replace(576, 1, GetJsonHex("fx2_graphic_eq_1khz", a));                  //copy FX2
+            GT100_default_replace(577, 1, GetJsonHex("fx2_graphic_eq_2khz", a));                  //copy FX2
+            GT100_default_replace(578, 1, GetJsonHex("fx2_graphic_eq_4khz", a));                  //copy FX2
+            GT100_default_replace(579, 1, GetJsonHex("fx2_graphic_eq_8khz", a));                  //copy FX2
+            GT100_default_replace(580, 1, GetJsonHex("fx2_graphic_eq_16khz", a));                  //copy FX2
+            GT100_default_replace(581, 1, GetJsonHex("fx2_graphic_eq_level", a));                  //copy FX2
+            GT100_default_replace(583, 1, GetJsonHex("fx2_parametric_eq_low_cut", a));                  //copy FX2
+            GT100_default_replace(584, 1, GetJsonHex("fx2_parametric_eq_low_gain", a));                  //copy FX2
+            GT100_default_replace(585, 1, GetJsonHex("fx2_parametric_eq_low_mid_freq", a));                  //copy FX2
+            GT100_default_replace(586, 1, GetJsonHex("fx2_parametric_eq_low_mid_q", a));                  //copy FX2
+            GT100_default_replace(587, 1, GetJsonHex("fx2_parametric_eq_low_mid_gain", a));                  //copy FX2
+            GT100_default_replace(588, 1, GetJsonHex("fx2_parametric_eq_high_mid_freq", a));                  //copy FX2
+            GT100_default_replace(589, 1, GetJsonHex("fx2_parametric_eq_high_mid_q", a));                  //copy FX2
+            GT100_default_replace(590, 1, GetJsonHex("fx2_parametric_eq_high_mid_gain", a));                  //copy FX2
+            GT100_default_replace(591, 1, GetJsonHex("fx2_parametric_eq_high_gain", a));                  //copy FX2
+            GT100_default_replace(592, 1, GetJsonHex("fx2_parametric_eq_high_cut", a));                  //copy FX2
+            GT100_default_replace(593, 1, GetJsonHex("fx2_parametric_eq_level", a));                  //copy FX2
+            GT100_default_replace(595, 1, GetJsonHex("fx2_tone_modify_type", a));                  //copy FX2
+            GT100_default_replace(596, 1, GetJsonHex("fx2_tone_modify_reso", a));                  //copy FX2
+            GT100_default_replace(597, 1, GetJsonHex("fx2_tone_modify_low", a));                  //copy FX2
+            GT100_default_replace(598, 1, GetJsonHex("fx2_tone_modify_high", a));                  //copy FX2
+            GT100_default_replace(599, 1, GetJsonHex("fx2_tone_modify_level", a));                  //copy FX2
+            GT100_default_replace(601, 1, GetJsonHex("fx2_guitar_sim_type", a));                  //copy FX2
+            GT100_default_replace(602, 1, GetJsonHex("fx2_guitar_sim_low", a));                  //copy FX2
+            GT100_default_replace(603, 1, GetJsonHex("fx2_guitar_sim_high", a));                  //copy FX2
+            GT100_default_replace(604, 1, GetJsonHex("fx2_guitar_sim_level", a));                  //copy FX2
+            GT100_default_replace(605, 1, GetJsonHex("fx2_guitar_sim_body", a));                  //copy FX2
+            GT100_default_replace(607, 1, GetJsonHex("fx2_slow_gear_sens", a));                  //copy FX2
+            GT100_default_replace(608, 1, GetJsonHex("fx2_slow_gear_rise_time", a));                  //copy FX2
+            GT100_default_replace(609, 1, GetJsonHex("fx2_slow_gear_level", a));                  //copy FX2
+            GT100_default_replace(611, 1, GetJsonHex("fx2_defretter_tone", a));                  //copy FX2
+            GT100_default_replace(612, 1, GetJsonHex("fx2_defretter_sens", a));                  //copy FX2
+            GT100_default_replace(613, 1, GetJsonHex("fx2_defretter_attack", a));                  //copy FX2
+            GT100_default_replace(614, 1, GetJsonHex("fx2_defretter_depth", a));                  //copy FX2
+            GT100_default_replace(615, 1, GetJsonHex("fx2_defretter_reso", a));                  //copy FX2
+            GT100_default_replace(616, 1, GetJsonHex("fx2_defretter_effect_level", a));                  //copy FX2
+            GT100_default_replace(617, 1, GetJsonHex("fx2_defretter_direct_mix", a));                  //copy FX2
+            GT100_default_replace(619, 1, GetJsonHex("fx2_wave_synth_wave", a));                  //copy FX2
+            GT100_default_replace(620, 1, GetJsonHex("fx2_wave_synth_cutoff", a));                  //copy FX2
+            GT100_default_replace(621, 1, GetJsonHex("fx2_wave_synth_reso", a));                  //copy FX2
+            GT100_default_replace(622, 1, GetJsonHex("fx2_wave_synth_filter_sens", a));                  //copy FX2
+            GT100_default_replace(623, 1, GetJsonHex("fx2_wave_synth_filter_decay", a));                  //copy FX2
+            GT100_default_replace(624, 1, GetJsonHex("fx2_wave_synth_filter_depth", a));                  //copy FX2
+            GT100_default_replace(625, 1, GetJsonHex("fx2_wave_synth_synth_level", a));                  //copy FX2
+            GT100_default_replace(626, 1, GetJsonHex("fx2_wave_synth_direct_mix", a));                  //copy FX2
+            GT100_default_replace(628, 1, GetJsonHex("fx2_sitar_sim_tone", a));                  //copy FX2
+            GT100_default_replace(629, 1, GetJsonHex("fx2_sitar_sim_sens", a));                  //copy FX2
+            GT100_default_replace(630, 1, GetJsonHex("fx2_sitar_sim_depth", a));                  //copy FX2
+            GT100_default_replace(631, 1, GetJsonHex("fx2_sitar_sim_reso", a));                  //copy FX2
+            GT100_default_replace(632, 1, GetJsonHex("fx2_sitar_sim_buzz", a));                  //copy FX2
+            GT100_default_replace(633, 1, GetJsonHex("fx2_sitar_sim_effect_level", a));                  //copy FX2
+            GT100_default_replace(634, 1, GetJsonHex("fx2_sitar_sim_direct_mix", a));                  //copy FX2
+            GT100_default_replace(636, 1, GetJsonHex("fx2_octave_range", a));                  //copy FX2
+            GT100_default_replace(637, 1, GetJsonHex("fx2_octave_level", a));                  //copy FX2
+            GT100_default_replace(638, 1, GetJsonHex("fx2_octave_direct_mix", a));                  //copy FX2
+            GT100_default_replace(640, 1, GetJsonHex("fx2_pitch_shifter_voice", a));                  //copy FX2
+            GT100_default_replace(641, 1, GetJsonHex("fx2_pitch_shifter_ps1mode", a));                  //copy FX2
+            GT100_default_replace(642, 1, GetJsonHex("fx2_pitch_shifter_ps1pitch", a));                  //copy FX2
+            GT100_default_replace(643, 1, GetJsonHex("fx2_pitch_shifter_ps1fine", a));                  //copy FX2
+            GT100_default_replace(644, 1, GetJsonHex("fx2_pitch_shifter_ps1pre_dly_h", a));                  //copy FX2
+            GT100_default_replace(645, 1, GetJsonHex("fx2_pitch_shifter_ps1pre_dly_l", a));                  //copy FX2
+            GT100_default_replace(646, 1, GetJsonHex("fx2_pitch_shifter_ps1level", a));                  //copy FX2
+            GT100_default_replace(647, 1, GetJsonHex("fx2_pitch_shifter_ps2mode", a));                  //copy FX2
+            GT100_default_replace(648, 1, GetJsonHex("fx2_pitch_shifter_ps2pitch", a));                  //copy FX2
+            GT100_default_replace(649, 1, GetJsonHex("fx2_pitch_shifter_ps2fine", a));                  //copy FX2
+            GT100_default_replace(650, 1, GetJsonHex("fx2_pitch_shifter_ps2pre_dly_h", a));                  //copy FX2
+            GT100_default_replace(650, 1, GetJsonHex("fx2_pitch_shifter_ps2pre_dly_l", a));                  //copy FX2
+            GT100_default_replace(652, 1, GetJsonHex("fx2_pitch_shifter_ps2level", a));                  //copy FX2
+            GT100_default_replace(653, 1, GetJsonHex("fx2_pitch_shifter_ps1f_back", a));                  //copy FX2
+            GT100_default_replace(654, 1, GetJsonHex("fx2_pitch_shifter_direct_mix", a));                  //copy FX2
+            GT100_default_replace(656, 1, GetJsonHex("fx2_harmonist_voice", a));                  //copy FX2
+            GT100_default_replace(657, 1, GetJsonHex("fx2_harmonist_hr1harm", a));                  //copy FX2
+            GT100_default_replace(658, 1, GetJsonHex("fx2_harmonist_hr1pre_dly_h", a));                  //copy FX2
+            GT100_default_replace(659, 1, GetJsonHex("fx2_harmonist_hr1pre_dly_l", a));                  //copy FX2
+            GT100_default_replace(660, 1, GetJsonHex("fx2_harmonist_hr1level", a));                  //copy FX2
+            GT100_default_replace(661, 1, GetJsonHex("fx2_harmonist_hr2harm", a));                  //copy FX2
+            GT100_default_replace(662, 1, GetJsonHex("fx2_harmonist_hr2pre_dly_h", a));                  //copy FX2
+            GT100_default_replace(662, 1, GetJsonHex("fx2_harmonist_hr2pre_dly_l", a));                  //copy FX2
+            GT100_default_replace(664, 1, GetJsonHex("fx2_harmonist_hr2level", a));                  //copy FX2
+            GT100_default_replace(665, 1, GetJsonHex("fx2_harmonist_hr1f_back", a));                  //copy FX2
+            GT100_default_replace(666, 1, GetJsonHex("fx2_harmonist_direct_mix", a));                  //copy FX2
+            GT100_default_replace(667, 1, GetJsonHex("fx2_harmonist_hr1c", a));                  //copy FX2
+            GT100_default_replace(668, 1, GetJsonHex("fx2_harmonist_hr1db", a));                  //copy FX2
+            GT100_default_replace(669, 1, GetJsonHex("fx2_harmonist_hr1d", a));                  //copy FX2
+            GT100_default_replace(670, 1, GetJsonHex("fx2_harmonist_hr1eb", a));                  //copy FX2
+            GT100_default_replace(671, 1, GetJsonHex("fx2_harmonist_hr1e", a));                  //copy FX2
+            GT100_default_replace(672, 1, GetJsonHex("fx2_harmonist_hr1f", a));                  //copy FX2
+            GT100_default_replace(673, 1, GetJsonHex("fx2_harmonist_hr1f_s", a));                  //copy FX2
+            GT100_default_replace(674, 1, GetJsonHex("fx2_harmonist_hr1g", a));                  //copy FX2
+            GT100_default_replace(675, 1, GetJsonHex("fx2_harmonist_hr1ab", a));                  //copy FX2
+            GT100_default_replace(676, 1, GetJsonHex("fx2_harmonist_hr1a", a));                  //copy FX2
+            GT100_default_replace(677, 1, GetJsonHex("fx2_harmonist_hr1bb", a));                  //copy FX2
+            GT100_default_replace(678, 1, GetJsonHex("fx2_harmonist_hr1b", a));                  //copy FX2
+            GT100_default_replace(679, 1, GetJsonHex("fx2_harmonist_hr2c", a));                  //copy FX2
+            GT100_default_replace(680, 1, GetJsonHex("fx2_harmonist_hr2db", a));                  //copy FX2
+            GT100_default_replace(681, 1, GetJsonHex("fx2_harmonist_hr2d", a));                  //copy FX2
+            GT100_default_replace(682, 1, GetJsonHex("fx2_harmonist_hr2eb", a));                  //copy FX2
+            GT100_default_replace(683, 1, GetJsonHex("fx2_harmonist_hr2e", a));                  //copy FX2
+            GT100_default_replace(684, 1, GetJsonHex("fx2_harmonist_hr2f", a));                  //copy FX2
+            GT100_default_replace(685, 1, GetJsonHex("fx2_harmonist_hr2f_s", a));                  //copy FX2
+            GT100_default_replace(686, 1, GetJsonHex("fx2_harmonist_hr2g", a));                  //copy FX2
+            GT100_default_replace(687, 1, GetJsonHex("fx2_harmonist_hr2ab", a));                  //copy FX2
+            GT100_default_replace(688, 1, GetJsonHex("fx2_harmonist_hr2a", a));                  //copy FX2
+            GT100_default_replace(689, 1, GetJsonHex("fx2_harmonist_hr2bb", a));                  //copy FX2
+            GT100_default_replace(690, 1, GetJsonHex("fx2_harmonist_hr2b", a));                  //copy FX2
+            GT100_default_replace(692, 1, GetJsonHex("fx2_sound_hold_hold", a));                  //copy FX2
+            GT100_default_replace(693, 1, GetJsonHex("fx2_sound_hold_rise_time", a));                  //copy FX2
+            GT100_default_replace(694, 1, GetJsonHex("fx2_sound_hold_effect_level", a));                  //copy FX2
+            GT100_default_replace(696, 1, GetJsonHex("fx2_ac_processor_type", a));                  //copy FX2
+            GT100_default_replace(697, 1, GetJsonHex("fx2_ac_processor_bass", a));                  //copy FX2
+            GT100_default_replace(698, 1, GetJsonHex("fx2_ac_processor_middle", a));                  //copy FX2
+            GT100_default_replace(699, 1, GetJsonHex("fx2_ac_processor_middle_freq", a));                  //copy FX2
+            GT100_default_replace(700, 1, GetJsonHex("fx2_ac_processor_treble", a));                  //copy FX2
+            GT100_default_replace(701, 1, GetJsonHex("fx2_ac_processor_presence", a));                  //copy FX2
+            GT100_default_replace(702, 1, GetJsonHex("fx2_ac_processor_level", a));                  //copy FX2
+            GT100_default_replace(716, 1, GetJsonHex("fx2_phaser_type", a));                  //copy FX2
+            GT100_default_replace(717, 1, GetJsonHex("fx2_phaser_rate", a));                  //copy FX2
+            GT100_default_replace(718, 1, GetJsonHex("fx2_phaser_depth", a));                  //copy FX2
+            GT100_default_replace(719, 1, GetJsonHex("fx2_phaser_manual", a));                  //copy FX2
+            GT100_default_replace(720, 1, GetJsonHex("fx2_phaser_reso", a));                  //copy FX2
+            GT100_default_replace(721, 1, GetJsonHex("fx2_phaser_step_rate", a));                  //copy FX2
+            GT100_default_replace(722, 1, GetJsonHex("fx2_phaser_effect_level", a));                  //copy FX2
+            GT100_default_replace(723, 1, GetJsonHex("fx2_phaser_direct_mix", a));                  //copy FX2
+            GT100_default_replace(726, 1, GetJsonHex("fx2_flanger_rate", a));                  //copy FX2
+            GT100_default_replace(727, 1, GetJsonHex("fx2_flanger_depth", a));                  //copy FX2
+            GT100_default_replace(728, 1, GetJsonHex("fx2_flanger_manual", a));                  //copy FX2
+            GT100_default_replace(729, 1, GetJsonHex("fx2_flanger_reso", a));                  //copy FX2
+            GT100_default_replace(730, 1, GetJsonHex("fx2_flanger_separation", a));                  //copy FX2
+            GT100_default_replace(731, 1, GetJsonHex("fx2_flanger_low_cut", a));                  //copy FX2
+            GT100_default_replace(732, 1, GetJsonHex("fx2_flanger_effect_level", a));                  //copy FX2
+            GT100_default_replace(733, 1, GetJsonHex("fx2_flanger_direct_mix", a));                  //copy FX2
+            GT100_default_replace(735, 1, GetJsonHex("fx2_tremolo_wave_shape", a));                  //copy FX2
+            GT100_default_replace(736, 1, GetJsonHex("fx2_tremolo_rate", a));                  //copy FX2
+            GT100_default_replace(737, 1, GetJsonHex("fx2_tremolo_depth", a));                  //copy FX2
+            GT100_default_replace(738, 1, GetJsonHex("fx2_tremolo_level", a));                  //copy FX2
+            GT100_default_replace(740, 1, GetJsonHex("fx2_rotary_speed_select", a));                  //copy FX2
+            GT100_default_replace(741, 1, GetJsonHex("fx2_rotary_rate_slow", a));                  //copy FX2
+            GT100_default_replace(742, 1, GetJsonHex("fx2_rotary_rate_fast", a));                  //copy FX2
+            GT100_default_replace(743, 1, GetJsonHex("fx2_rotary_rise_time", a));                  //copy FX2
+            GT100_default_replace(744, 1, GetJsonHex("fx2_rotary_fall_time", a));                  //copy FX2
+            GT100_default_replace(745, 1, GetJsonHex("fx2_rotary_depth", a));                  //copy FX2
+            GT100_default_replace(746, 1, GetJsonHex("fx2_rotary_level", a));                  //copy FX2
+            GT100_default_replace(748, 1, GetJsonHex("fx2_uni_v_rate", a));                  //copy FX2
+            GT100_default_replace(749, 1, GetJsonHex("fx2_uni_v_depth", a));                  //copy FX2
+            GT100_default_replace(750, 1, GetJsonHex("fx2_uni_v_level", a));                  //copy FX2
+            GT100_default_replace(752, 1, GetJsonHex("fx2_pan_type", a));                  //copy FX2
+            GT100_default_replace(753, 1, GetJsonHex("fx2_pan_pos", a));                  //copy FX2
+            GT100_default_replace(754, 1, GetJsonHex("fx2_pan_wave_shape", a));                  //copy FX2
+            GT100_default_replace(755, 1, GetJsonHex("fx2_pan_rate", a));                  //copy FX2
+            GT100_default_replace(756, 1, GetJsonHex("fx2_pan_depth", a));                  //copy FX2
+            GT100_default_replace(757, 1, GetJsonHex("fx2_pan_level", a));                  //copy FX2
+            GT100_default_replace(759, 1, GetJsonHex("fx2_slicer_pattern", a));                  //copy FX2
+            GT100_default_replace(760, 1, GetJsonHex("fx2_slicer_rate", a));                  //copy FX2
+            GT100_default_replace(761, 1, GetJsonHex("fx2_slicer_trigger_sens", a));                  //copy FX2
+            GT100_default_replace(762, 1, GetJsonHex("fx2_slicer_effect_level", a));                  //copy FX2
+            GT100_default_replace(763, 1, GetJsonHex("fx2_slicer_direct_mix", a));                  //copy FX2
+            GT100_default_replace(765, 1, GetJsonHex("fx2_vibrato_rate", a));                  //copy FX2
+            GT100_default_replace(766, 1, GetJsonHex("fx2_vibrato_depth", a));                  //copy FX2
+            GT100_default_replace(767, 1, GetJsonHex("fx2_vibrato_trigger", a));                  //copy FX2
+            GT100_default_replace(768, 1, GetJsonHex("fx2_vibrato_rise_time", a));                  //copy FX2
+            GT100_default_replace(769, 1, GetJsonHex("fx2_vibrato_level", a));                  //copy FX2
+            GT100_default_replace(771, 1, GetJsonHex("fx2_ring_mod_mode", a));                  //copy FX2
+            GT100_default_replace(772, 1, GetJsonHex("fx2_ring_mod_freq", a));                  //copy FX2
+            GT100_default_replace(773, 1, GetJsonHex("fx2_ring_mod_effect_level", a));                  //copy FX2
+            GT100_default_replace(774, 1, GetJsonHex("fx2_ring_mod_direct_mix", a));                  //copy FX2
+            GT100_default_replace(776, 1, GetJsonHex("fx2_humanizer_mode", a));                  //copy FX2
+            GT100_default_replace(777, 1, GetJsonHex("fx2_humanizer_vowel1", a));                  //copy FX2
+            GT100_default_replace(778, 1, GetJsonHex("fx2_humanizer_vowel2", a));                  //copy FX2
+            GT100_default_replace(779, 1, GetJsonHex("fx2_humanizer_sens", a));                  //copy FX2
+            GT100_default_replace(780, 1, GetJsonHex("fx2_humanizer_rate", a));                  //copy FX2
+            GT100_default_replace(781, 1, GetJsonHex("fx2_humanizer_depth", a));                  //copy FX2
+            GT100_default_replace(782, 1, GetJsonHex("fx2_humanizer_manual", a));                  //copy FX2
+            GT100_default_replace(783, 1, GetJsonHex("fx2_humanizer_level", a));                  //copy FX2
+            GT100_default_replace(785, 1, GetJsonHex("fx2_2x2_chorus_xover_freq", a));                  //copy FX2
+            GT100_default_replace(786, 1, GetJsonHex("fx2_2x2_chorus_low_rate", a));                  //copy FX2
+            GT100_default_replace(787, 1, GetJsonHex("fx2_2x2_chorus_low_depth", a));                  //copy FX2
+            GT100_default_replace(788, 1, GetJsonHex("fx2_2x2_chorus_low_pre_delay", a));                  //copy FX2
+            GT100_default_replace(789, 1, GetJsonHex("fx2_2x2_chorus_low_level", a));                  //copy FX2
+            GT100_default_replace(790, 1, GetJsonHex("fx2_2x2_chorus_high_rate", a));                  //copy FX2
+            GT100_default_replace(791, 1, GetJsonHex("fx2_2x2_chorus_high_depth", a));                  //copy FX2
+            GT100_default_replace(792, 1, GetJsonHex("fx2_2x2_chorus_high_pre_delay", a));                  //copy FX2
+            GT100_default_replace(793, 1, GetJsonHex("fx2_2x2_chorus_high_level", a));                  //copy FX2
+            GT100_default_replace(794, 1, GetJsonHex("fx2_2x2_chorus_direct_level", a));                  //copy FX2
+            GT100_default_replace(795, 1, GetJsonHex("fx2_sub_delay_type", a));                  //copy FX2
+            GT100_default_replace(796, 1, GetJsonHex("fx2_sub_delay_time_h", a));                  //copy FX2
+            GT100_default_replace(797, 1, GetJsonHex("fx2_sub_delay_time_l", a));                  //copy FX2
+            GT100_default_replace(798, 1, GetJsonHex("fx2_sub_delay_f_back", a));                  //copy FX2
+            GT100_default_replace(799, 1, GetJsonHex("fx2_sub_delay_high_cut", a));                  //copy FX2
+            GT100_default_replace(800, 1, GetJsonHex("fx2_sub_delay_effect_level", a));                  //copy FX2
+            GT100_default_replace(801, 1, GetJsonHex("fx2_sub_delay_direct_mix", a));                  //copy FX2
+            GT100_default_replace(802, 1, GetJsonHex("fx2_sub_delay_tap_time", a));                  //copy FX2
+            GT100_default_replace(812, 1, GetJsonHex("delay_on_off", a));                  //copy DD
+            GT100_default_replace(813, 1, GetJsonHex("delay_type", a));                  //copy DD
+            GT100_default_replace(814, 1, GetJsonHex("delay_delay_time_h", a));                  //copy DD
+            GT100_default_replace(815, 1, GetJsonHex("delay_delay_time_l", a));                  //copy DD
+            GT100_default_replace(816, 1, GetJsonHex("delay_f_back", a));                  //copy DD
+            GT100_default_replace(817, 1, GetJsonHex("delay_high_cut", a));                  //copy DD
+            GT100_default_replace(818, 1, GetJsonHex("delay_effect_level", a));                  //copy DD
+            GT100_default_replace(819, 1, GetJsonHex("delay_direct_mix", a));                  //copy DD
+            GT100_default_replace(820, 1, GetJsonHex("delay_tap_time", a));                  //copy DD
+            GT100_default_replace(821, 1, GetJsonHex("delay_d1_time_h", a));                  //copy DD
+            GT100_default_replace(822, 1, GetJsonHex("delay_d1_time_l", a));                  //copy DD
+            GT100_default_replace(823, 1, GetJsonHex("delay_d1_f_back", a));                  //copy DD
+            GT100_default_replace(824, 1, GetJsonHex("delay_d1_hi_cut", a));                  //copy DD
+            GT100_default_replace(825, 1, GetJsonHex("delay_d1_level", a));                  //copy DD
+            GT100_default_replace(826, 1, GetJsonHex("delay_d2_time_h", a));                  //copy DD
+            GT100_default_replace(827, 1, GetJsonHex("delay_d2_time_l", a));                  //copy DD
+            GT100_default_replace(828, 1, GetJsonHex("delay_d2_f_back", a));                  //copy DD
+            GT100_default_replace(829, 1, GetJsonHex("delay_d2_hi_cut", a));                  //copy DD
+            GT100_default_replace(830, 1, GetJsonHex("delay_d2_level", a));                  //copy DD
+            GT100_default_replace(831, 1, GetJsonHex("delay_mod_rate", a));                  //copy DD
+            GT100_default_replace(832, 1, GetJsonHex("delay_mod_depth", a));                  //copy DD
+            GT100_default_replace(857, 1, GetJsonHex("chorus_on_off", a));                  //copy CE
+            GT100_default_replace(858, 1, GetJsonHex("chorus_mode", a));                  //copy CE
+            GT100_default_replace(859, 1, GetJsonHex("chorus_rate", a));                  //copy CE
+            GT100_default_replace(860, 1, GetJsonHex("chorus_depth", a));                  //copy CE
+            GT100_default_replace(861, 1, GetJsonHex("chorus_pre_delay", a));                  //copy CE
+            GT100_default_replace(862, 1, GetJsonHex("chorus_low_cut", a));                  //copy CE
+            GT100_default_replace(863, 1, GetJsonHex("chorus_high_cut", a));                  //copy CE
+            GT100_default_replace(864, 1, GetJsonHex("chorus_effect_level", a));                  //copy CE
+            GT100_default_replace(865, 1, GetJsonHex("chorus_direct_level", a));                  //copy CE
+            GT100_default_replace(873, 1, GetJsonHex("reverb_on_off", a));                  //copy RV
+            GT100_default_replace(874, 1, GetJsonHex("reverb_type", a));                  //copy RV
+            GT100_default_replace(875, 1, GetJsonHex("reverb_time", a));                  //copy RV
+            GT100_default_replace(876, 1, GetJsonHex("reverb_pre_delay_h", a));                  //copy RV
+            GT100_default_replace(877, 1, GetJsonHex("reverb_pre_delay_l", a));                  //copy RV
+            GT100_default_replace(878, 1, GetJsonHex("reverb_low_cut", a));                  //copy RV
+            GT100_default_replace(879, 1, GetJsonHex("reverb_high_cut", a));                  //copy RV
+            GT100_default_replace(880, 1, GetJsonHex("reverb_density", a));                  //copy RV
+            GT100_default_replace(881, 1, GetJsonHex("reverb_effect_level", a));                  //copy RV
+            GT100_default_replace(882, 1, GetJsonHex("reverb_direct_mix", a));                  //copy RV
+            GT100_default_replace(883, 1, GetJsonHex("reverb_spring_sens", a));                  //copy RV
+            GT100_default_replace(889, 1, GetJsonHex("pedal_fx_on_off", a));                  //copy PedalFX
+            GT100_default_replace(891, 1, GetJsonHex("pedal_fx_pedal_bend_pitch", a));                  //copy PedalFX
+            GT100_default_replace(892, 1, GetJsonHex("pedal_fx_pedal_bend_position", a));                  //copy PedalFX
+            GT100_default_replace(893, 1, GetJsonHex("pedal_fx_pedal_bend_effect_level", a));                  //copy PedalFX
+            GT100_default_replace(894, 1, GetJsonHex("pedal_fx_pedal_bend_direct_mix", a));                  //copy PedalFX
+            GT100_default_replace(895, 1, GetJsonHex("pedal_fx_wah_type", a));                  //copy PedalFX
+            GT100_default_replace(896, 1, GetJsonHex("pedal_fx_wah_position", a));                  //copy PedalFX
+            GT100_default_replace(897, 1, GetJsonHex("pedal_fx_wah_pedal_min", a));                  //copy PedalFX
+            GT100_default_replace(898, 1, GetJsonHex("pedal_fx_wah_pedal_max", a));                  //copy PedalFX
+            GT100_default_replace(899, 1, GetJsonHex("pedal_fx_wah_effect_level", a));                  //copy PedalFX
+            GT100_default_replace(900, 1, GetJsonHex("pedal_fx_wah_direct_mix", a));                  //copy PedalFX
+            GT100_default_replace(908, 1, GetJsonHex("foot_volume_volume_curve", a));                  //copy FV
+            GT100_default_replace(909, 1, GetJsonHex("foot_volume_volume_min", a));                  //copy FV
+            GT100_default_replace(910, 1, GetJsonHex("foot_volume_volume_max", a));                  //copy FV
+            GT100_default_replace(911, 1, GetJsonHex("foot_volume_level", a));                  //copy FV
+            GT100_default_replace(921, 1, GetJsonHex("divider_mode", a));                  //copy Divide/Mix
+            GT100_default_replace(922, 1, GetJsonHex("divider_ch_select", a));                  //copy Divide/Mix
+            GT100_default_replace(923, 1, GetJsonHex("divider_ch_a_dynamic", a));                  //copy Divide/Mix
+            GT100_default_replace(924, 1, GetJsonHex("divider_ch_a_dynamic_sens", a));                  //copy Divide/Mix
+            GT100_default_replace(925, 1, GetJsonHex("divider_ch_a_filter", a));                  //copy Divide/Mix
+            GT100_default_replace(926, 1, GetJsonHex("divider_ch_a_cutoff_freq", a));                  //copy Divide/Mix
+            GT100_default_replace(927, 1, GetJsonHex("divider_ch_b_dynamic", a));                  //copy Divide/Mix
+            GT100_default_replace(928, 1, GetJsonHex("divider_ch_b_dynamic_sens", a));                  //copy Divide/Mix
+            GT100_default_replace(929, 1, GetJsonHex("divider_ch_b_filter", a));                  //copy Divide/Mix
+            GT100_default_replace(930, 1, GetJsonHex("divider_ch_b_cutoff_freq", a));                  //copy Divide/Mix
+            GT100_default_replace(937, 1, GetJsonHex("mixer_mode", a));                  //copy Divide/Mix
+            GT100_default_replace(938, 1, GetJsonHex("mixer_ch_a_b_balance", a));                  //copy Divide/Mix
+            GT100_default_replace(939, 1, GetJsonHex("mixer_spread", a));                  //copy Divide/Mix
+            GT100_default_replace(942, 1, GetJsonHex("send_return_on_off", a));                  //copy S/R
+            GT100_default_replace(943, 1, GetJsonHex("send_return_mode", a));                  //copy S/R
+            GT100_default_replace(944, 1, GetJsonHex("send_return_send_level", a));                  //copy S/R
+            GT100_default_replace(945, 1, GetJsonHex("send_return_return_level", a));                  //copy S/R
+            GT100_default_replace(946, 1, GetJsonHex("send_return_adjust", a));                  //copy S/R
+            GT100_default_replace(953, 1, GetJsonHex("amp_control", a));                  //copy Amp ctrl
+            GT100_default_replace(956, 1, GetJsonHex("ns1_on_off", a));                  //copy NS
+            GT100_default_replace(957, 1, GetJsonHex("ns1_threshold", a));                  //copy NS
+            GT100_default_replace(958, 1, GetJsonHex("ns1_release", a));                  //copy NS
+            GT100_default_replace(959, 1, GetJsonHex("ns1_detect", a));                  //copy NS
+            GT100_default_replace(961, 1, GetJsonHex("ns2_on_off", a));                  //copy NS
+            GT100_default_replace(962, 1, GetJsonHex("ns2_threshold", a));                  //copy NS
+            GT100_default_replace(963, 1, GetJsonHex("ns2_release", a));                  //copy NS
+            GT100_default_replace(964, 1, GetJsonHex("ns2_detect", a));                  //copy NS
+            GT100_default_replace(969, 1, GetJsonHex("accel_fx_type", a));                  //copy Accel
+            GT100_default_replace(970, 1, GetJsonHex("accel_fx_s_bend_pitch", a));                  //copy Accel
+            GT100_default_replace(971, 1, GetJsonHex("accel_fx_s_bend_rise_time", a));                  //copy Accel
+            GT100_default_replace(972, 1, GetJsonHex("accel_fx_s_bend_fall_time", a));                  //copy Accel
+            GT100_default_replace(973, 1, GetJsonHex("accel_fx_laser_beam_rate", a));                  //copy Accel
+            GT100_default_replace(974, 1, GetJsonHex("accel_fx_laser_beam_depth", a));                  //copy Accel
+            GT100_default_replace(975, 1, GetJsonHex("accel_fx_laser_beam_rise_time", a));                  //copy Accel
+            GT100_default_replace(976, 1, GetJsonHex("accel_fx_laser_beam_fall_time", a));                  //copy Accel
+            GT100_default_replace(977, 1, GetJsonHex("accel_fx_ring_mod_freq", a));                  //copy Accel
+            GT100_default_replace(978, 1, GetJsonHex("accel_fx_ring_mod_rise_time", a));                  //copy Accel
+            GT100_default_replace(979, 1, GetJsonHex("accel_fx_ring_mod_fall_time", a));                  //copy Accel
+            GT100_default_replace(980, 1, GetJsonHex("accel_fx_ring_mod_ring_level", a));                  //copy Accel
+            GT100_default_replace(981, 1, GetJsonHex("accel_fx_ring_mod_octave_level", a));                  //copy Accel
+            GT100_default_replace(982, 1, GetJsonHex("accel_fx_ring_mod_direct_mix", a));                  //copy Accel
+            GT100_default_replace(983, 1, GetJsonHex("accel_fx_twist_level", a));                  //copy Accel
+            GT100_default_replace(984, 1, GetJsonHex("accel_fx_twist_rise_time", a));                  //copy Accel
+            GT100_default_replace(998, 1, GetJsonHex("accel_fx_twist_fall_time", a));                  //copy Accel
+            GT100_default_replace(999, 1, GetJsonHex("accel_fx_warp_level", a));                  //copy Accel
+            GT100_default_replace(1000, 1, GetJsonHex("accel_fx_warp_rise_time", a));                  //copy Accel
+            GT100_default_replace(1001, 1, GetJsonHex("accel_fx_warp_fall_time", a));                  //copy Accel
+            GT100_default_replace(1002, 1, GetJsonHex("accel_fx_feedbacker_mode", a));                  //copy Accel
+            GT100_default_replace(1003, 1, GetJsonHex("accel_fx_feedbacker_depth", a));                  //copy Accel
+            GT100_default_replace(1004, 1, GetJsonHex("accel_fx_feedbacker_rise_time", a));                  //copy Accel
+            GT100_default_replace(1005, 1, GetJsonHex("accel_fx_feedbacker_octave_rise_time", a));                  //copy Accel
+            GT100_default_replace(1006, 1, GetJsonHex("accel_fx_feedbacker_f_back_level", a));                  //copy Accel
+            GT100_default_replace(1007, 1, GetJsonHex("accel_fx_feedbacker_octave_f_back_level", a));                  //copy Accel
+            GT100_default_replace(1008, 1, GetJsonHex("accel_fx_feedbacker_vib_rate", a));                  //copy Accel
+            GT100_default_replace(1009, 1, GetJsonHex("accel_fx_feedbacker_vib_depth", a));                  //copy Accel
+            GT100_default_replace(1013, 1, GetJsonHex("patch_category", a));               //copy Master
+            GT100_default_replace(1014, 1, GetJsonHex("patch_level", a));                  //copy Master
+            GT100_default_replace(1015, 1, GetJsonHex("master_eq_low_gain", a));           //copy Master
+            GT100_default_replace(1016, 1, GetJsonHex("master_eq_mid_freq", a));           //copy Master
+            GT100_default_replace(1017, 1, GetJsonHex("master_eq_mid_q", a));              //copy Master
+            GT100_default_replace(1018, 1, GetJsonHex("master_eq_mid_gain", a));           //copy Master
+            GT100_default_replace(1019, 1, GetJsonHex("master_eq_high_gain", a));          //copy Master
+            GT100_default_replace(1020, 1, GetJsonHex("master_bpm_h", a));                 //copy Master
+            GT100_default_replace(1021, 1, GetJsonHex("master_bpm_l", a));                 //copy Master
+            GT100_default_replace(1022, 1, GetJsonHex("master_key", a));                   //copy Master
+            GT100_default_replace(1023, 1, GetJsonHex("master_beat", a));                  //copy Master
+            GT100_default_replace(1024, 1, GetJsonHex("pitch_detection", a));              //copy Master
+            GT100_default_replace(1030, 1, GetJsonHex("fx_chain_position1", a));                   //copy Chain position
+            GT100_default_replace(1031, 1, GetJsonHex("fx_chain_position2", a));                   //copy Chain position
+            GT100_default_replace(1032, 1, GetJsonHex("fx_chain_position3", a));                   //copy Chain position
+            GT100_default_replace(1033, 1, GetJsonHex("fx_chain_position4", a));                   //copy Chain position
+            GT100_default_replace(1034, 1, GetJsonHex("fx_chain_position5", a));                   //copy Chain position
+            GT100_default_replace(1035, 1, GetJsonHex("fx_chain_position6", a));                   //copy Chain position
+            GT100_default_replace(1036, 1, GetJsonHex("fx_chain_position7", a));                   //copy Chain position
+            GT100_default_replace(1037, 1, GetJsonHex("fx_chain_position8", a));                   //copy Chain position
+            GT100_default_replace(1038, 1, GetJsonHex("fx_chain_position9", a));                   //copy Chain position
+            GT100_default_replace(1039, 1, GetJsonHex("fx_chain_position10", a));                  //copy Chain position
+            GT100_default_replace(1040, 1, GetJsonHex("fx_chain_position11", a));                  //copy Chain position
+            GT100_default_replace(1041, 1, GetJsonHex("fx_chain_position12", a));                  //copy Chain position
+            GT100_default_replace(1042, 1, GetJsonHex("fx_chain_position13", a));                  //copy Chain position
+            GT100_default_replace(1043, 1, GetJsonHex("fx_chain_position14", a));                  //copy Chain position
+            GT100_default_replace(1044, 1, GetJsonHex("fx_chain_position15", a));                  //copy Chain position
+            GT100_default_replace(1045, 1, GetJsonHex("fx_chain_position16", a));                  //copy Chain position
+            GT100_default_replace(1046, 1, GetJsonHex("fx_chain_position17", a));                  //copy Chain position
+            GT100_default_replace(1047, 1, GetJsonHex("fx_chain_position18", a));                  //copy Chain position
+            GT100_default_replace(1048, 1, GetJsonHex("fx_chain_position19", a));                  //copy Chain position
+            GT100_default_replace(1049, 1, GetJsonHex("fx_chain_position20", a));                  //copy Chain position
+            GT100_default_replace(1062, 1, GetJsonHex("manual_mode_bank_down", a));                      //copy Manual Mode
+            GT100_default_replace(1063, 1, GetJsonHex("manual_mode_bank_up", a));                        //copy Manual Mode
+            GT100_default_replace(1064, 1, GetJsonHex("manual_mode_number_pedal1", a));                  //copy Manual Mode
+            GT100_default_replace(1065, 1, GetJsonHex("manual_mode_number_pedal2", a));                  //copy Manual Mode
+            GT100_default_replace(1066, 1, GetJsonHex("manual_mode_number_pedal3", a));                  //copy Manual Mode
+            GT100_default_replace(1067, 1, GetJsonHex("manual_mode_number_pedal4", a));                  //copy Manual Mode
+            GT100_default_replace(1068, 1, GetJsonHex("manual_mode_phrase_loop", a));                    //copy Manual Mode
+            GT100_default_replace(1069, 1, GetJsonHex("manual_mode_accel_ctrl", a));                     //copy Manual Mode
+            GT100_default_replace(1078, 1, GetJsonHex("ctl_exp_accel_ctl_func", a));                 //copy CTL/EXP
+            GT100_default_replace(1079, 1, GetJsonHex("ctl_exp_accel_ctl_min", a));                  //copy CTL/EXP
+            GT100_default_replace(1080, 1, GetJsonHex("ctl_exp_accel_ctl_max", a));                  //copy CTL/EXP
+            GT100_default_replace(1081, 1, GetJsonHex("ctl_exp_accel_ctl_src_mode", a));             //copy CTL/EXP
+            GT100_default_replace(1094, 1, GetJsonHex("ctl_exp_exp_sw_func", a));                    //copy CTL/EXP
+            GT100_default_replace(1095, 1, GetJsonHex("ctl_exp_exp_sw_min", a));                     //copy CTL/EXP
+            GT100_default_replace(1096, 1, GetJsonHex("ctl_exp_exp_sw_max", a));                     //copy CTL/EXP
+            GT100_default_replace(1097, 1, GetJsonHex("ctl_exp_exp_sw_src_mode", a));                //copy CTL/EXP
+            GT100_default_replace(1110, 1, GetJsonHex("ctl_exp_sub_ctl1_func", a));                  //copy CTL/EXP
+            GT100_default_replace(1111, 1, GetJsonHex("ctl_exp_sub_ctl1_min", a));                   //copy CTL/EXP
+            GT100_default_replace(1112, 1, GetJsonHex("ctl_exp_sub_ctl1_max", a));                   //copy CTL/EXP
+            GT100_default_replace(1113, 1, GetJsonHex("ctl_exp_sub_ctl1_src_mode", a));              //copy CTL/EXP
+            GT100_default_replace(1139, 1, GetJsonHex("ctl_exp_sub_ctl2_func", a));                  //copy CTL/EXP
+            GT100_default_replace(1140, 1, GetJsonHex("ctl_exp_sub_ctl2_min", a));                   //copy CTL/EXP
+            GT100_default_replace(1141, 1, GetJsonHex("ctl_exp_sub_ctl2_max", a));                   //copy CTL/EXP
+            GT100_default_replace(1142, 1, GetJsonHex("ctl_exp_sub_ctl2_src_mode", a));              //copy CTL/EXP
+            GT100_default_replace(1155, 1, GetJsonHex("ctl_exp_exp_func", a));                       //copy CTL/EXP
+            GT100_default_replace(1156, 1, GetJsonHex("ctl_exp_sub_exp_patch_level_min", a));        //copy CTL/EXP
+            GT100_default_replace(1157, 1, GetJsonHex("ctl_exp_sub_exp_patch_level_max", a));        //copy CTL/EXP
+            GT100_default_replace(1171, 1, GetJsonHex("ctl_exp_sub_exp_func", a));                   //copy CTL/EXP
+            GT100_default_replace(1172, 1, GetJsonHex("ctl_exp_exp_patch_level_min", a));            //copy CTL/EXP
+            GT100_default_replace(1173, 1, GetJsonHex("ctl_exp_exp_patch_level_max", a));            //copy CTL/EXP
+            GT100_default_replace(1187, 1, GetJsonHex("assign1_on_off", a));                  //copy Assigns
+            GT100_default_replace(1188, 1, GetJsonHex("assign1_target_h", a));                //copy Assigns
+            GT100_default_replace(1189, 1, GetJsonHex("assign1_target_l", a));                //copy Assigns
+            GT100_default_replace(1190, 1, GetJsonHex("assign1_target_min_h", a));            //copy Assigns
+            GT100_default_replace(1191, 1, GetJsonHex("assign1_target_min_l", a));            //copy Assigns
+            GT100_default_replace(1192, 1, GetJsonHex("assign1_target_max_h", a));            //copy Assigns
+            GT100_default_replace(1193, 1, GetJsonHex("assign1_target_max_l", a));            //copy Assigns
+            GT100_default_replace(1194, 1, GetJsonHex("assign1_source", a));                  //copy Assigns
+            GT100_default_replace(1195, 1, GetJsonHex("assign1_source_mode", a));             //copy Assigns
+            GT100_default_replace(1196, 1, GetJsonHex("assign1_act_range_lo", a));            //copy Assigns
+            GT100_default_replace(1197, 1, GetJsonHex("assign1_act_range_hi", a));            //copy Assigns
+            GT100_default_replace(1198, 1, GetJsonHex("assign1_int_pdl_trigger", a));         //copy Assigns
+            GT100_default_replace(1199, 1, GetJsonHex("assign1_int_pdl_time", a));            //copy Assigns
+            GT100_default_replace(1200, 1, GetJsonHex("assign1_int_pdl_curve", a));           //copy Assigns
+            GT100_default_replace(1201, 1, GetJsonHex("assign1_wave_rate", a));               //copy Assigns
+            GT100_default_replace(1202, 1, GetJsonHex("assign1_waveform", a));                //copy Assigns
+            GT100_default_replace(1219, 1, GetJsonHex("assign2_on_off", a));                  //copy Assigns
+            GT100_default_replace(1220, 1, GetJsonHex("assign2_target_h", a));                //copy Assigns
+            GT100_default_replace(1221, 1, GetJsonHex("assign2_target_l", a));                //copy Assigns
+            GT100_default_replace(1222, 1, GetJsonHex("assign2_target_min_h", a));            //copy Assigns
+            GT100_default_replace(1223, 1, GetJsonHex("assign2_target_min_l", a));            //copy Assigns
+            GT100_default_replace(1224, 1, GetJsonHex("assign2_target_max_h", a));            //copy Assigns
+            GT100_default_replace(1225, 1, GetJsonHex("assign2_target_max_l", a));            //copy Assigns
+            GT100_default_replace(1226, 1, GetJsonHex("assign2_source", a));                  //copy Assigns
+            GT100_default_replace(1227, 1, GetJsonHex("assign2_source_mode", a));             //copy Assigns
+            GT100_default_replace(1228, 1, GetJsonHex("assign2_act_range_lo", a));            //copy Assigns
+            GT100_default_replace(1229, 1, GetJsonHex("assign2_act_range_hi", a));            //copy Assigns
+            GT100_default_replace(1230, 1, GetJsonHex("assign2_int_pdl_trigger", a));         //copy Assigns
+            GT100_default_replace(1231, 1, GetJsonHex("assign2_int_pdl_time", a));            //copy Assigns
+            GT100_default_replace(1232, 1, GetJsonHex("assign2_int_pdl_curve", a));           //copy Assigns
+            GT100_default_replace(1233, 1, GetJsonHex("assign2_wave_rate", a));               //copy Assigns
+            GT100_default_replace(1234, 1, GetJsonHex("assign2_waveform", a));                //copy Assigns
+            GT100_default_replace(1251, 1, GetJsonHex("assign3_on_off", a));                  //copy Assigns
+            GT100_default_replace(1252, 1, GetJsonHex("assign3_target_h", a));                //copy Assigns
+            GT100_default_replace(1253, 1, GetJsonHex("assign3_target_l", a));                //copy Assigns
+            GT100_default_replace(1254, 1, GetJsonHex("assign3_target_min_h", a));            //copy Assigns
+            GT100_default_replace(1255, 1, GetJsonHex("assign3_target_min_l", a));            //copy Assigns
+            GT100_default_replace(1256, 1, GetJsonHex("assign3_target_max_h", a));            //copy Assigns
+            GT100_default_replace(1257, 1, GetJsonHex("assign3_target_max_l", a));            //copy Assigns
+            GT100_default_replace(1258, 1, GetJsonHex("assign3_source", a));                  //copy Assigns
+            GT100_default_replace(1259, 1, GetJsonHex("assign3_source_mode", a));             //copy Assigns
+            GT100_default_replace(1260, 1, GetJsonHex("assign3_act_range_lo", a));            //copy Assigns
+            GT100_default_replace(1261, 1, GetJsonHex("assign3_act_range_hi", a));            //copy Assigns
+            GT100_default_replace(1262, 1, GetJsonHex("assign3_int_pdl_trigger", a));         //copy Assigns
+            GT100_default_replace(1263, 1, GetJsonHex("assign3_int_pdl_time", a));            //copy Assigns
+            GT100_default_replace(1264, 1, GetJsonHex("assign3_int_pdl_curve", a));           //copy Assigns
+            GT100_default_replace(1265, 1, GetJsonHex("assign3_wave_rate", a));               //copy Assigns
+            GT100_default_replace(1266, 1, GetJsonHex("assign3_waveform", a));                //copy Assigns
+            GT100_default_replace(1296, 1, GetJsonHex("assign4_on_off", a));                  //copy Assigns
+            GT100_default_replace(1297, 1, GetJsonHex("assign4_target_h", a));                //copy Assigns
+            GT100_default_replace(1298, 1, GetJsonHex("assign4_target_l", a));                //copy Assigns
+            GT100_default_replace(1299, 1, GetJsonHex("assign4_target_min_h", a));            //copy Assigns
+            GT100_default_replace(1300, 1, GetJsonHex("assign4_target_min_l", a));            //copy Assigns
+            GT100_default_replace(1301, 1, GetJsonHex("assign4_target_max_h", a));            //copy Assigns
+            GT100_default_replace(1302, 1, GetJsonHex("assign4_target_max_l", a));            //copy Assigns
+            GT100_default_replace(1303, 1, GetJsonHex("assign4_source", a));                  //copy Assigns
+            GT100_default_replace(1304, 1, GetJsonHex("assign4_source_mode", a));             //copy Assigns
+            GT100_default_replace(1305, 1, GetJsonHex("assign4_act_range_lo", a));            //copy Assigns
+            GT100_default_replace(1306, 1, GetJsonHex("assign4_act_range_hi", a));            //copy Assigns
+            GT100_default_replace(1307, 1, GetJsonHex("assign4_int_pdl_trigger", a));         //copy Assigns
+            GT100_default_replace(1308, 1, GetJsonHex("assign4_int_pdl_time", a));            //copy Assigns
+            GT100_default_replace(1309, 1, GetJsonHex("assign4_int_pdl_curve", a));           //copy Assigns
+            GT100_default_replace(1310, 1, GetJsonHex("assign4_wave_rate", a));               //copy Assigns
+            GT100_default_replace(1311, 1, GetJsonHex("assign4_waveform", a));                //copy Assigns
+            GT100_default_replace(1328, 1, GetJsonHex("assign5_on_off", a));                  //copy Assigns
+            GT100_default_replace(1329, 1, GetJsonHex("assign5_target_h", a));                //copy Assigns
+            GT100_default_replace(1330, 1, GetJsonHex("assign5_target_l", a));                //copy Assigns
+            GT100_default_replace(1331, 1, GetJsonHex("assign5_target_min_h", a));            //copy Assigns
+            GT100_default_replace(1332, 1, GetJsonHex("assign5_target_min_l", a));            //copy Assigns
+            GT100_default_replace(1333, 1, GetJsonHex("assign5_target_max_h", a));            //copy Assigns
+            GT100_default_replace(1334, 1, GetJsonHex("assign5_target_max_l", a));            //copy Assigns
+            GT100_default_replace(1335, 1, GetJsonHex("assign5_source", a));                  //copy Assigns
+            GT100_default_replace(1336, 1, GetJsonHex("assign5_source_mode", a));             //copy Assigns
+            GT100_default_replace(1337, 1, GetJsonHex("assign5_act_range_lo", a));            //copy Assigns
+            GT100_default_replace(1338, 1, GetJsonHex("assign5_act_range_hi", a));            //copy Assigns
+            GT100_default_replace(1339, 1, GetJsonHex("assign5_int_pdl_trigger", a));         //copy Assigns
+            GT100_default_replace(1340, 1, GetJsonHex("assign5_int_pdl_time", a));            //copy Assigns
+            GT100_default_replace(1341, 1, GetJsonHex("assign5_int_pdl_curve", a));           //copy Assigns
+            GT100_default_replace(1342, 1, GetJsonHex("assign5_wave_rate", a));               //copy Assigns
+            GT100_default_replace(1343, 1, GetJsonHex("assign5_waveform", a));                //copy Assigns
+            GT100_default_replace(1360, 1, GetJsonHex("assign6_on_off", a));                  //copy Assigns
+            GT100_default_replace(1361, 1, GetJsonHex("assign6_target_h", a));                //copy Assigns
+            GT100_default_replace(1362, 1, GetJsonHex("assign6_target_l", a));                //copy Assigns
+            GT100_default_replace(1363, 1, GetJsonHex("assign6_target_min_h", a));            //copy Assigns
+            GT100_default_replace(1364, 1, GetJsonHex("assign6_target_min_l", a));            //copy Assigns
+            GT100_default_replace(1365, 1, GetJsonHex("assign6_target_max_h", a));            //copy Assigns
+            GT100_default_replace(1366, 1, GetJsonHex("assign6_target_max_l", a));            //copy Assigns
+            GT100_default_replace(1367, 1, GetJsonHex("assign6_source", a));                  //copy Assigns
+            GT100_default_replace(1368, 1, GetJsonHex("assign6_source_mode", a));             //copy Assigns
+            GT100_default_replace(1369, 1, GetJsonHex("assign6_act_range_lo", a));            //copy Assigns
+            GT100_default_replace(1370, 1, GetJsonHex("assign6_act_range_hi", a));            //copy Assigns
+            GT100_default_replace(1371, 1, GetJsonHex("assign6_int_pdl_trigger", a));         //copy Assigns
+            GT100_default_replace(1372, 1, GetJsonHex("assign6_int_pdl_time", a));            //copy Assigns
+            GT100_default_replace(1373, 1, GetJsonHex("assign6_int_pdl_curve", a));           //copy Assigns
+            GT100_default_replace(1374, 1, GetJsonHex("assign6_wave_rate", a));               //copy Assigns
+            GT100_default_replace(1375, 1, GetJsonHex("assign6_waveform", a));                //copy Assigns
+            GT100_default_replace(1392, 1, GetJsonHex("assign7_on_off", a));                  //copy Assigns
+            GT100_default_replace(1393, 1, GetJsonHex("assign7_target_h", a));                //copy Assigns
+            GT100_default_replace(1394, 1, GetJsonHex("assign7_target_l", a));                //copy Assigns
+            GT100_default_replace(1395, 1, GetJsonHex("assign7_target_min_h", a));            //copy Assigns
+            GT100_default_replace(1396, 1, GetJsonHex("assign7_target_min_l", a));            //copy Assigns
+            GT100_default_replace(1397, 1, GetJsonHex("assign7_target_max_h", a));            //copy Assigns
+            GT100_default_replace(1398, 1, GetJsonHex("assign7_target_max_l", a));            //copy Assigns
+            GT100_default_replace(1399, 1, GetJsonHex("assign7_source", a));                  //copy Assigns
+            GT100_default_replace(1400, 1, GetJsonHex("assign7_source_mode", a));             //copy Assigns
+            GT100_default_replace(1401, 1, GetJsonHex("assign7_act_range_lo", a));            //copy Assigns
+            GT100_default_replace(1402, 1, GetJsonHex("assign7_act_range_hi", a));            //copy Assigns
+            GT100_default_replace(1403, 1, GetJsonHex("assign7_int_pdl_trigger", a));         //copy Assigns
+            GT100_default_replace(1404, 1, GetJsonHex("assign7_int_pdl_time", a));            //copy Assigns
+            GT100_default_replace(1405, 1, GetJsonHex("assign7_int_pdl_curve", a));           //copy Assigns
+            GT100_default_replace(1406, 1, GetJsonHex("assign7_wave_rate", a));               //copy Assigns
+            GT100_default_replace(1407, 1, GetJsonHex("assign7_waveform", a));                //copy Assigns
+            GT100_default_replace(1437, 1, GetJsonHex("assign8_on_off", a));                  //copy Assigns
+            GT100_default_replace(1438, 1, GetJsonHex("assign8_target_h", a));                //copy Assigns
+            GT100_default_replace(1439, 1, GetJsonHex("assign8_target_l", a));                //copy Assigns
+            GT100_default_replace(1440, 1, GetJsonHex("assign8_target_min_h", a));            //copy Assigns
+            GT100_default_replace(1441, 1, GetJsonHex("assign8_target_min_l", a));            //copy Assigns
+            GT100_default_replace(1442, 1, GetJsonHex("assign8_target_max_h", a));            //copy Assigns
+            GT100_default_replace(1443, 1, GetJsonHex("assign8_target_max_l", a));            //copy Assigns
+            GT100_default_replace(1444, 1, GetJsonHex("assign8_source", a));                  //copy Assigns
+            GT100_default_replace(1445, 1, GetJsonHex("assign8_source_mode", a));             //copy Assigns
+            GT100_default_replace(1446, 1, GetJsonHex("assign8_act_range_lo", a));            //copy Assigns
+            GT100_default_replace(1447, 1, GetJsonHex("assign8_act_range_hi", a));            //copy Assigns
+            GT100_default_replace(1448, 1, GetJsonHex("assign8_int_pdl_trigger", a));         //copy Assigns
+            GT100_default_replace(1449, 1, GetJsonHex("assign8_int_pdl_time", a));            //copy Assigns
+            GT100_default_replace(1450, 1, GetJsonHex("assign8_int_pdl_curve", a));           //copy Assigns
+            GT100_default_replace(1451, 1, GetJsonHex("assign8_wave_rate", a));               //copy Assigns
+            GT100_default_replace(1452, 1, GetJsonHex("assign8_waveform", a));                //copy Assigns
+            GT100_default_replace(1469, 1, GetJsonHex("assign_common_input_sens", a));        //copy Assign common Input sense
+
+            GT100_default_replace(2283, 1, GetJsonHex("fx1_acsim_high", a));              //copy FX1
+            GT100_default_replace(2284, 1, GetJsonHex("fx1_acsim_body", a));              //copy FX1
+            GT100_default_replace(2285, 1, GetJsonHex("fx1_acsim_low", a));               //copy FX1
+            GT100_default_replace(2287, 1, GetJsonHex("fx1_acsim_level", a));             //copy FX1
+            GT100_default_replace(2289, 1, GetJsonHex("fx1_rotary2_balance", a));         //copy FX1
+            GT100_default_replace(2290, 1, GetJsonHex("fx1_rotary2_speed_sel", a));       //copy FX1
+            GT100_default_replace(2291, 1, GetJsonHex("fx1_rotary2_rate_slow", a));       //copy FX1
+            GT100_default_replace(2292, 1, GetJsonHex("fx1_rotary2_rate_fast", a));       //copy FX1
+            GT100_default_replace(2293, 1, GetJsonHex("fx1_rotary2_risetime", a));        //copy FX1
+            GT100_default_replace(2294, 1, GetJsonHex("fx1_rotary2_falltime", a));        //copy FX1
+            GT100_default_replace(2295, 1, GetJsonHex("fx1_rotary2_depth", a));           //copy FX1
+            GT100_default_replace(2296, 1, GetJsonHex("fx1_rotary2_level", a));           //copy FX1
+            GT100_default_replace(2297, 1, GetJsonHex("fx1_rotary2_direct_mix", a));      //copy FX1
+            GT100_default_replace(2298, 1, GetJsonHex("fx2_acsim_high", a));                 //copy FX2
+            GT100_default_replace(2299, 1, GetJsonHex("fx2_acsim_body", a));                 //copy FX2
+            GT100_default_replace(2300, 1, GetJsonHex("fx2_acsim_low", a));                  //copy FX2
+            GT100_default_replace(2302, 1, GetJsonHex("fx2_acsim_level", a));                //copy FX2
+            GT100_default_replace(2304, 1, GetJsonHex("fx2_rotary2_balance", a));            //copy FX2
+            GT100_default_replace(2305, 1, GetJsonHex("fx2_rotary2_speed_sel", a));          //copy FX2
+            GT100_default_replace(2306, 1, GetJsonHex("fx2_rotary2_rate_slow", a));          //copy FX2
+            GT100_default_replace(2307, 1, GetJsonHex("fx2_rotary2_rate_fast", a));          //copy FX2
+            GT100_default_replace(2308, 1, GetJsonHex("fx2_rotary2_risetime", a));           //copy FX2
+            GT100_default_replace(2309, 1, GetJsonHex("fx2_rotary2_falltime", a));           //copy FX2
+            GT100_default_replace(2310, 1, GetJsonHex("fx2_rotary2_depth", a));              //copy FX2
+            GT100_default_replace(2311, 1, GetJsonHex("fx2_rotary2_level", a));              //copy FX2
+            GT100_default_replace(2312, 1, GetJsonHex("fx2_rotary2_direct_mix", a));         //copy FX2
+            GT100_default_replace(2314, 1, GetJsonHex("prm_fx2_teraecho_mode", a));          //copy FX2
+            GT100_default_replace(2315, 1, GetJsonHex("prm_fx2_teraecho_time", a));          //copy FX2
+            GT100_default_replace(2316, 1, GetJsonHex("prm_fx2_teraecho_feedback", a));      //copy FX2
+            GT100_default_replace(2317, 1, GetJsonHex("prm_fx2_teraecho_tone", a));          //copy FX2
+            GT100_default_replace(2318, 1, GetJsonHex("prm_fx2_teraecho_effect_level", a));  //copy FX2
+            GT100_default_replace(2319, 1, GetJsonHex("prm_fx2_teraecho_direct_mix", a));    //copy FX2
+            GT100_default_replace(2320, 1, GetJsonHex("prm_fx2_teraecho_hold", a));          //copy FX2
+            GT100_default_replace(2321, 1, GetJsonHex("prm_fx2_overtone_detune", a));        //copy FX2
+            GT100_default_replace(2322, 1, GetJsonHex("prm_fx2_overtone_tone", a));          //copy FX2
+            GT100_default_replace(2323, 1, GetJsonHex("prm_fx2_overtone_upper_level", a));   //copy FX2
+            GT100_default_replace(2324, 1, GetJsonHex("prm_fx2_overtone_lower_level", a));   //copy FX2
+            GT100_default_replace(2325, 1, GetJsonHex("prm_fx2_overtone_direct_level", a));  //copy FX2
+            this->sysxPatches.append(GT100_default.mid(0, patchSize));
+        }
+        else if(device.contains("ME-80"))
+        {
+            temp.append((char)GetJsonValue("name1", a).toInt() );  //copy patch name
+            temp.append((char)GetJsonValue("name2", a).toInt() );  //copy patch name
+            temp.append((char)GetJsonValue("name3", a).toInt() );  //copy patch name
+            temp.append((char)GetJsonValue("name4", a).toInt() );  //copy patch name
+            temp.append((char)GetJsonValue("name5", a).toInt() );  //copy patch name
+            temp.append((char)GetJsonValue("name6", a).toInt() );  //copy patch name
+            temp.append((char)GetJsonValue("name7", a).toInt() );  //copy patch name
+            temp.append((char)GetJsonValue("name8", a).toInt() );  //copy patch name
+            temp.append((char)GetJsonValue("name9", a).toInt() );  //copy patch name
+            temp.append((char)GetJsonValue("name10", a).toInt() ); //copy patch name
+            temp.append((char)GetJsonValue("name11", a).toInt() ); //copy patch name
+            temp.append((char)GetJsonValue("name12", a).toInt() ); //copy patch name
+            temp.append((char)GetJsonValue("name13", a).toInt() ); //copy patch name
+            temp.append((char)GetJsonValue("name14", a).toInt() ); //copy patch name
+            temp.append((char)GetJsonValue("name15", a).toInt() ); //copy patch name
+            temp.append((char)GetJsonValue("name16", a).toInt() ); //copy patch name
+            GT100_default_replace(11, 16, temp );                  //copy patch name
+
+            GT100_default_replace(43, 1, GetJsonHex("comp_sw", a));     //copy comp
+            GT100_default_replace(44, 1, GetJsonHex("comp_type", a));       //copy comp
+            GT100_default_replace(45, 1, GetJsonHex("comp1", a));    //copy comp
+            GT100_default_replace(46, 1, GetJsonHex("comp2", a));     //copy comp
+            GT100_default_replace(47, 1, GetJsonHex("comp3", a));       //copy comp
+            GT100_default_replace(59, 1, GetJsonHex("odds_sw", a));              //copy dist
+            GT100_default_replace(60, 1, GetJsonHex("odds_type", a));                //copy dist
+            GT100_default_replace(61, 1, GetJsonHex("odds1", a));               //copy dist
+            GT100_default_replace(63, 1, GetJsonHex("odds2", a));                //copy dist
+            GT100_default_replace(66, 1, GetJsonHex("odds3", a));        //copy dist
+            GT100_default_replace(91, 1, GetJsonHex("amp_sw", a));                 //copy pre A
+            GT100_default_replace(92, 1, GetJsonHex("amp_type", a));                   //copy pre A
+            GT100_default_replace(93, 1, GetJsonHex("amp1", a));                   //copy pre A
+            GT100_default_replace(95, 1, GetJsonHex("amp2", a));                   //copy pre A
+            GT100_default_replace(96, 1, GetJsonHex("amp3", a));                 //copy pre A
+            GT100_default_replace(97, 1, GetJsonHex("amp4", a));                 //copy pre A
+            GT100_default_replace(99, 1, GetJsonHex("amp5", a));                  //copy pre A
+            GT100_default_replace(957, 1, GetJsonHex("ns_thresh", a));                  //copy NS
+            GT100_default_replace(812, 1, GetJsonHex("dly_sw", a));                  //copy DD
+            GT100_default_replace(813, 1, GetJsonHex("dly_type", a));                  //copy DD
+            GT100_default_replace(814, 1, GetJsonHex("delay_bpm_h", a));                  //copy DD
+            GT100_default_replace(815, 1, GetJsonHex("delay_bpm_l", a));                  //copy DD
+            GT100_default_replace(816, 1, GetJsonHex("dly2", a));                  //copy DD
+            GT100_default_replace(817, 1, GetJsonHex("dly1", a));                  //copy DD
+            GT100_default_replace(818, 1, GetJsonHex("dly3", a));                  //copy DD
+            GT100_default_replace(873, 1, GetJsonHex("rev_sw", a));               //copy RV
+            GT100_default_replace(874, 1, GetJsonHex("rev_type", a));             //copy RV
+            GT100_default_replace(881, 1, GetJsonHex("rev", a));                  //copy RV
+
+            GT100_default_replace(200, 1, GetJsonHex("fx2_sw", a));                 //copy EQ
+            GT100_default_replace(201, 1, GetJsonHex("fx2_2", a));                //copy EQ
+            GT100_default_replace(216, 1, GetJsonHex("mod_sw", a));                  //copy FX1
+            GT100_default_replace(217, 1, GetJsonHex("mod_type", a));                  //copy FX1
+            GT100_default_replace(219, 1, GetJsonHex("mod1", a));                  //copy FX1
+            GT100_default_replace(231, 1, GetJsonHex("mod1", a));                  //copy FX1
+            GT100_default_replace(237, 1, GetJsonHex("mod1", a));                  //copy FX1
+            GT100_default_replace(302, 1, GetJsonHex("mod1", a));                  //copy FX1
+
+            GT100_default_replace(510, 1, GetJsonHex("fx2_sw", a));                  //copy FX2
+            GT100_default_replace(511, 1, GetJsonHex("fx2_type", a));                  //copy FX2
+
+            GT100_default_replace(889, 1, GetJsonHex("pdlfx_sw", a));                  //copy PedalFX
+            this->sysxPatches.append(GT100_default.mid(0, patchSize));
+        }else{
+            QMessageBox *msgBox = new QMessageBox();
+            msgBox->setWindowTitle(QObject::tr("Unknown Device Patch File"));
+            msgBox->setIcon(QMessageBox::Warning);
+            msgBox->setTextFormat(Qt::RichText);
+            QString msgText;
+            msgText.append("This device type currrently not supported<br>");
+            msgText.append("Device type recognised as = "+device+"<br>");
+            msgBox->setText(msgText);
+            msgBox->setStandardButtons(QMessageBox::Ok);
+            msgBox->exec();
+            h=patchCount;
+            skip = true;
+            DialogClose();
+        };
+        a=(h+1)*pindex;                      // offset is set in front of marker
+    };
+    if(!skip) {updatePatch(); };
+}
+
+QByteArray bulkLoadDialog::GetJsonValue(QByteArray text, int pos )
+{
+    QByteArray str(((char)34+text+(char)34));
+    int start_index = data.indexOf(str, pos)+(text.size()+3); //find pointer to start of Json value.
+    int end_index = data.indexOf(",", start_index)-start_index;                  //find pointer to end of value to get the size of the value.
+    QByteArray x = data.mid(start_index , end_index );                 //copy the Json value and return as a QByteArray.
+    if(x.at(0)==(char)34) {x.remove(0, 1); };
+    if(x.contains((char)34)) {x.truncate(x.indexOf((char)34)); };
+    return x;
+}
+
+QByteArray bulkLoadDialog::GetJsonHex(QByteArray text, int pos )
+{
+    QByteArray str(((char)34+text+(char)34));
+    int start_index = data.indexOf(str, pos)+(text.size()+3); //find pointer to start of Json value.
+    bool ok;
+    int end_index = data.indexOf(",", start_index)-start_index;                  //find pointer to end of value to get the size of the value.
+    QByteArray x = data.mid(start_index , end_index );
+    if(x.at(0)==(char)34) {x.remove(0, 1); };
+    if(x.contains((char)34)) {x.truncate(x.indexOf((char)34)); };
+    int value =  x.toInt(&ok, 10);
+    QByteArray Array;
+    Array.append((char)value);
+    return Array;                                    // return one byte QByteArray
+}
+
+void bulkLoadDialog::GT100_default_replace(int pos, int size, QByteArray value)
+{
+
+    if(!value.isEmpty() && !value.isNull())
+    {
+        GT100_default.replace(pos, size, value);
+    };
 }
 
 void bulkLoadDialog::DialogClose()

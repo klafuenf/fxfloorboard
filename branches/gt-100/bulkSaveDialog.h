@@ -64,6 +64,7 @@ private:
     QPushButton *startButton;
     QPushButton *cancelButton;
     QPushButton *completedButton;
+    QRadioButton *tslButton;
     QRadioButton *gclButton;
     QRadioButton *syxButton;
     QRadioButton *midButton;
@@ -77,9 +78,13 @@ private:
     int patch;
     int bank;
     QString fileName;
+    QByteArray TSL_default;
     void writeGCL();
     void writeSYX();
     void writeSMF();
+    void writeTSL();
+    void AppendTSL(QByteArray hex, const char* Json_name);
+    void TextTSL(QByteArray hex, const char* Json_name);
 };
 
 #endif // BULKSAVEDIALOG_H

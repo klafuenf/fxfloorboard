@@ -38,10 +38,11 @@ public:
     bool readFile();
     SysxData getFileSource();
     SysxData getSystemSource();
-    void writeFile(QString fileName);
-    void writeSystemFile(QString fileName);
+    void writeSYX(QString fileName);
     void writeSMF(QString fileName);
     void writeGCL(QString fileName);
+    void writeTSL(QString fileName);
+    void writeSystemFile(QString fileName);
     QString getFileName();
     QList<QString> patchList;
     int index;
@@ -54,15 +55,24 @@ private:
     SysxData fileSource;
     SysxData systemSource;
     QByteArray data;
+    QByteArray GT100_default;
     void convertFromGT10();
     void convertFromGT10B();
     void convertFromGT8();
     void translate10to100();
     void translate10Bto100();
     void convertFromGT6B();
+    void convertFromTSL();
+    void GT100_default_replace(int pos, int size, QByteArray value);
     QString headerType;
     int ArrayToInt(QByteArray Array);
     QByteArray IntToArray(int value);
+    QByteArray GetJsonArray(QByteArray text, int pos);
+    QByteArray GetJsonValue(QByteArray text, int pos);
+    QByteArray GetJsonHex(QByteArray text, int pos);
+    QByteArray TSL_default;
+    void AppendTSL(QByteArray hex, const char* Json_name);
+    void TextTSL(QByteArray hex, const char* Json_name);
 };
 
 #endif // SYSXWRITER_H
