@@ -1,10 +1,10 @@
 
-GT-100FxFloorBoard Copyright (C) 2007~2012 Colin Willcocks (gumtownbassman@yahoo.com).
+GT-100FxFloorBoard Copyright (C) 2007~2014 Colin Willcocks (gumtownbassman@yahoo.com).
  All rights reserved.
 ======================================================================================
+====FOR FIRMWARE VERSION 2 only====
 
-
-GT-100FxFloorBoard version 20130628: 28 June 2013
+GT-100FxFloorBoard version 20140724: 24 July 2014
 *****************************************************
 YOU MAY FREELY USE THIS SOFTWARE FOR NON-COMERCIAL USE, BUT PLEASE FEEL FREE TO DONATE, 
  JUST KEEP IN MIND THE 1000's of HOURS SPENT OVER 7 YEARS GETTING IT HERE,
@@ -13,6 +13,9 @@ YOU MAY FREELY USE THIS SOFTWARE FOR NON-COMERCIAL USE, BUT PLEASE FEEL FREE TO 
 
 
  ********* LATEST FEATURES ADDED****************************************************
+ *Tone Central *.tsl patch file format saving and reading of ME-80 patch files.
+ *Bulk Patch backup/restore in *.tsl format, and Tone Central editor interchangable.
+ *New Firmware 2 updates and *.tsl patch file format (Tone Studio) read enabled . 
  *Added GT-10, GT-8, GT-10B and GT-6B patch file compatability/conversion.
  *Auto connect, auto load current GT-100 patch on startup. 
  *File saving is still disabled.    
@@ -127,7 +130,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 LEGAL:
 ------
 
-GT100 FxFloorBoard Copyright (C)2007~2012 Colin Willcocks <gumtownbassman@yahoo.com>.
+GT100 FxFloorBoard Copyright (C)2007~2014 Colin Willcocks <gumtownbassman@yahoo.com>.
 based on the GT8 FxFloorBoard Copyright (C)2005~2007 Uco Mesdag.
 
 Windows(TM), Windows 95(TM), Windows 98(TM), Windows ME(TM), Windows NT(TM), 

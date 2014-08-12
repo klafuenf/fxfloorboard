@@ -28,7 +28,7 @@
 			<xs:attribute name="version" use="required">
 				<xs:simpleType>
 					<xs:restriction base="xs:decimal">
-						<xs:enumeration value="1.0"/>
+						<xs:enumeration value="2.0"/>
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:attribute>
@@ -59,7 +59,10 @@
 		<xs:complexType>
 			<xs:choice minOccurs="0">
 				<xs:element ref="DATA" maxOccurs="unbounded"/>
-				<xs:element ref="PARAM" maxOccurs="unbounded"/>
+				<xs:sequence>
+					<xs:element ref="PARAM" maxOccurs="unbounded"/>
+					<xs:element ref="DATA" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
 			</xs:choice>
 			<xs:attribute name="value" use="required">
 				<xs:simpleType>
@@ -299,6 +302,7 @@
 						<xs:enumeration value="++F"/>
 						<xs:enumeration value="++F#"/>
 						<xs:enumeration value="++G"/>
+						<xs:enumeration value="+1"/>
 						<xs:enumeration value="+1 A"/>
 						<xs:enumeration value="+1 Ab"/>
 						<xs:enumeration value="+1 B"/>
@@ -315,22 +319,28 @@
 						<xs:enumeration value="+1 Octave"/>
 						<xs:enumeration value="+10th"/>
 						<xs:enumeration value="+11th"/>
+						<xs:enumeration value="+12dB"/>
 						<xs:enumeration value="+12th"/>
 						<xs:enumeration value="+13th"/>
 						<xs:enumeration value="+14th"/>
 						<xs:enumeration value="+1oct"/>
+						<xs:enumeration value="+2"/>
 						<xs:enumeration value="+2 C "/>
 						<xs:enumeration value="+2 D"/>
 						<xs:enumeration value="+2 Db"/>
 						<xs:enumeration value="+2 Eb"/>
 						<xs:enumeration value="+2 Octave"/>
+						<xs:enumeration value="+24dB"/>
 						<xs:enumeration value="+2nd"/>
 						<xs:enumeration value="+2oct"/>
+						<xs:enumeration value="+3"/>
 						<xs:enumeration value="+3 Octave"/>
 						<xs:enumeration value="+3rd"/>
+						<xs:enumeration value="+4"/>
 						<xs:enumeration value="+4 Octave"/>
 						<xs:enumeration value="+4 dB"/>
 						<xs:enumeration value="+4th"/>
+						<xs:enumeration value="+5"/>
 						<xs:enumeration value="+5th"/>
 						<xs:enumeration value="+6th"/>
 						<xs:enumeration value="+7th"/>
@@ -361,6 +371,7 @@
 						<xs:enumeration value="--F"/>
 						<xs:enumeration value="--F#"/>
 						<xs:enumeration value="--G"/>
+						<xs:enumeration value="-1"/>
 						<xs:enumeration value="-1 A"/>
 						<xs:enumeration value="-1 Ab"/>
 						<xs:enumeration value="-1 B"/>
@@ -382,6 +393,7 @@
 						<xs:enumeration value="-13th"/>
 						<xs:enumeration value="-14th"/>
 						<xs:enumeration value="-1oct"/>
+						<xs:enumeration value="-2"/>
 						<xs:enumeration value="-2 A"/>
 						<xs:enumeration value="-2 Ab"/>
 						<xs:enumeration value="-2 B"/>
@@ -398,9 +410,12 @@
 						<xs:enumeration value="-2 Octave"/>
 						<xs:enumeration value="-2nd"/>
 						<xs:enumeration value="-2oct"/>
+						<xs:enumeration value="-3"/>
 						<xs:enumeration value="-3 Octave"/>
 						<xs:enumeration value="-3rd"/>
+						<xs:enumeration value="-4"/>
 						<xs:enumeration value="-4th"/>
+						<xs:enumeration value="-5"/>
 						<xs:enumeration value="-5th"/>
 						<xs:enumeration value="-6th"/>
 						<xs:enumeration value="-7th"/>
@@ -604,6 +619,7 @@
 						<xs:enumeration value="007F"/>
 						<xs:enumeration value="01"/>
 						<xs:enumeration value="01/0A/01/10"/>
+						<xs:enumeration value="01/18/01/24"/>
 						<xs:enumeration value="01/65/00/100"/>
 						<xs:enumeration value="01/7F/01/127"/>
 						<xs:enumeration value="0100"/>
@@ -1127,6 +1143,7 @@
 						<xs:enumeration value="0D"/>
 						<xs:enumeration value="0E"/>
 						<xs:enumeration value="0F"/>
+						<xs:enumeration value="0dB"/>
 						<xs:enumeration value="1"/>
 						<xs:enumeration value="1-Voice"/>
 						<xs:enumeration value="1.00K"/>
@@ -1397,7 +1414,9 @@
 						<xs:enumeration value="A &amp; B Solo"/>
 						<xs:enumeration value="A (F#m)"/>
 						<xs:enumeration value="A&amp;B Solo"/>
+						<xs:enumeration value="A-Dist"/>
 						<xs:enumeration value="A/B Solo"/>
+						<xs:enumeration value="AC GUITAR SIM"/>
 						<xs:enumeration value="AC.PROCESSOR "/>
 						<xs:enumeration value="ADV.COMP "/>
 						<xs:enumeration value="AMP: Amp Ctl Sw"/>
@@ -1462,7 +1481,9 @@
 						<xs:enumeration value="Bb (Gm)"/>
 						<xs:enumeration value="Bi-Phase"/>
 						<xs:enumeration value="Blues OD"/>
+						<xs:enumeration value="Bogner Uber"/>
 						<xs:enumeration value="Boss Comp"/>
+						<xs:enumeration value="Both"/>
 						<xs:enumeration value="Branch Out"/>
 						<xs:enumeration value="Bright"/>
 						<xs:enumeration value="Bypassed"/>
@@ -1492,6 +1513,7 @@
 						<xs:enumeration value="Channel B"/>
 						<xs:enumeration value="Chorus"/>
 						<xs:enumeration value="Chorus: Depth"/>
+						<xs:enumeration value="Chorus: Direct Mix"/>
 						<xs:enumeration value="Chorus: Effect Level"/>
 						<xs:enumeration value="Chorus: High Cut"/>
 						<xs:enumeration value="Chorus: Low Cut"/>
@@ -1573,6 +1595,7 @@
 						<xs:enumeration value="Divider: Channel Select"/>
 						<xs:enumeration value="Divider: Mode"/>
 						<xs:enumeration value="Down"/>
+						<xs:enumeration value="Drop D"/>
 						<xs:enumeration value="Dry Out"/>
 						<xs:enumeration value="Dual"/>
 						<xs:enumeration value="Dual parallel"/>
@@ -1610,6 +1633,10 @@
 						<xs:enumeration value="F#"/>
 						<xs:enumeration value="F# (D#m)   "/>
 						<xs:enumeration value="FAT"/>
+						<xs:enumeration value="FEEL 1"/>
+						<xs:enumeration value="FEEL 2"/>
+						<xs:enumeration value="FEEL 3"/>
+						<xs:enumeration value="FEEL 4"/>
 						<xs:enumeration value="FLANGER"/>
 						<xs:enumeration value="FLAT"/>
 						<xs:enumeration value="FV"/>
@@ -1618,6 +1645,7 @@
 						<xs:enumeration value="FX-2"/>
 						<xs:enumeration value="FX1"/>
 						<xs:enumeration value="FX1: 2X2-Chorus Crossover f"/>
+						<xs:enumeration value="FX1: 2X2-Chorus Direct Mix"/>
 						<xs:enumeration value="FX1: 2X2-Chorus High Depth"/>
 						<xs:enumeration value="FX1: 2X2-Chorus High Level"/>
 						<xs:enumeration value="FX1: 2X2-Chorus High Pre Dly"/>
@@ -1633,6 +1661,10 @@
 						<xs:enumeration value="FX1: A-Wah Mode"/>
 						<xs:enumeration value="FX1: A-Wah Peak"/>
 						<xs:enumeration value="FX1: A-Wah Rate"/>
+						<xs:enumeration value="FX1: AC-Sim Body"/>
+						<xs:enumeration value="FX1: AC-Sim High"/>
+						<xs:enumeration value="FX1: AC-Sim Level"/>
+						<xs:enumeration value="FX1: AC-Sim Low"/>
 						<xs:enumeration value="FX1: Acoustic-Pro Bass"/>
 						<xs:enumeration value="FX1: Acoustic-Pro Level"/>
 						<xs:enumeration value="FX1: Acoustic-Pro Mid Freq"/>
@@ -1753,6 +1785,15 @@
 						<xs:enumeration value="FX1: Ring-Mod Effect Level"/>
 						<xs:enumeration value="FX1: Ring-Mod Frequency"/>
 						<xs:enumeration value="FX1: Ring-Mod Mode"/>
+						<xs:enumeration value="FX1: Rotary 2 Balance"/>
+						<xs:enumeration value="FX1: Rotary 2 Depth"/>
+						<xs:enumeration value="FX1: Rotary 2 Direct Mix"/>
+						<xs:enumeration value="FX1: Rotary 2 Fall Time"/>
+						<xs:enumeration value="FX1: Rotary 2 Level"/>
+						<xs:enumeration value="FX1: Rotary 2 Rate Fast"/>
+						<xs:enumeration value="FX1: Rotary 2 Rate Slow"/>
+						<xs:enumeration value="FX1: Rotary 2 Rise Time"/>
+						<xs:enumeration value="FX1: Rotary 2 Speed Select"/>
 						<xs:enumeration value="FX1: Rotary Depth"/>
 						<xs:enumeration value="FX1: Rotary Fall Time"/>
 						<xs:enumeration value="FX1: Rotary Level"/>
@@ -1826,6 +1867,7 @@
 						<xs:enumeration value="FX1: Wave-Synth Wave"/>
 						<xs:enumeration value="FX2"/>
 						<xs:enumeration value="FX2: 2X2-Chorus Crossover f"/>
+						<xs:enumeration value="FX2: 2X2-Chorus Direct Mix"/>
 						<xs:enumeration value="FX2: 2X2-Chorus High Depth"/>
 						<xs:enumeration value="FX2: 2X2-Chorus High Level"/>
 						<xs:enumeration value="FX2: 2X2-Chorus High Pre Dly"/>
@@ -1841,6 +1883,10 @@
 						<xs:enumeration value="FX2: A-Wah Mode"/>
 						<xs:enumeration value="FX2: A-Wah Peak"/>
 						<xs:enumeration value="FX2: A-Wah Rate"/>
+						<xs:enumeration value="FX2: AC-Sim Body"/>
+						<xs:enumeration value="FX2: AC-Sim High"/>
+						<xs:enumeration value="FX2: AC-Sim Level"/>
+						<xs:enumeration value="FX2: AC-Sim Low"/>
 						<xs:enumeration value="FX2: Acoustic-Pro Bass"/>
 						<xs:enumeration value="FX2: Acoustic-Pro Level"/>
 						<xs:enumeration value="FX2: Acoustic-Pro Mid Freq"/>
@@ -1919,6 +1965,11 @@
 						<xs:enumeration value="FX2: Octaver Octaverave Level"/>
 						<xs:enumeration value="FX2: Octaver Range"/>
 						<xs:enumeration value="FX2: Off/On"/>
+						<xs:enumeration value="FX2: OverTone Detune"/>
+						<xs:enumeration value="FX2: OverTone Direct Mix"/>
+						<xs:enumeration value="FX2: OverTone Lower Level"/>
+						<xs:enumeration value="FX2: OverTone Tone"/>
+						<xs:enumeration value="FX2: OverTone Upper Level"/>
 						<xs:enumeration value="FX2: PAN Depth"/>
 						<xs:enumeration value="FX2: PAN Level"/>
 						<xs:enumeration value="FX2: PAN Position"/>
@@ -1961,6 +2012,15 @@
 						<xs:enumeration value="FX2: Ring-Mod Effect Level"/>
 						<xs:enumeration value="FX2: Ring-Mod Frequency"/>
 						<xs:enumeration value="FX2: Ring-Mod Mode"/>
+						<xs:enumeration value="FX2: Rotary 2 Balance"/>
+						<xs:enumeration value="FX2: Rotary 2 Depth"/>
+						<xs:enumeration value="FX2: Rotary 2 Direct Mix"/>
+						<xs:enumeration value="FX2: Rotary 2 Fall Time"/>
+						<xs:enumeration value="FX2: Rotary 2 Level"/>
+						<xs:enumeration value="FX2: Rotary 2 Rate Fast"/>
+						<xs:enumeration value="FX2: Rotary 2 Rate Slow"/>
+						<xs:enumeration value="FX2: Rotary 2 Rise Time"/>
+						<xs:enumeration value="FX2: Rotary 2 Speed Select"/>
 						<xs:enumeration value="FX2: Rotary Depth"/>
 						<xs:enumeration value="FX2: Rotary Fall Time"/>
 						<xs:enumeration value="FX2: Rotary Level"/>
@@ -2006,6 +2066,13 @@
 						<xs:enumeration value="FX2: T-Wah Peak"/>
 						<xs:enumeration value="FX2: T-Wah Polarity"/>
 						<xs:enumeration value="FX2: T-Wah Sens"/>
+						<xs:enumeration value="FX2: TeraEcho Direct Mix"/>
+						<xs:enumeration value="FX2: TeraEcho Effect Level"/>
+						<xs:enumeration value="FX2: TeraEcho Feedback"/>
+						<xs:enumeration value="FX2: TeraEcho Hold"/>
+						<xs:enumeration value="FX2: TeraEcho Mode"/>
+						<xs:enumeration value="FX2: TeraEcho S.Time"/>
+						<xs:enumeration value="FX2: TeraEcho Tone"/>
 						<xs:enumeration value="FX2: Tone-Mod High"/>
 						<xs:enumeration value="FX2: Tone-Mod Level"/>
 						<xs:enumeration value="FX2: Tone-Mod Low"/>
@@ -2038,6 +2105,8 @@
 						<xs:enumeration value="Fat"/>
 						<xs:enumeration value="Fat DS"/>
 						<xs:enumeration value="Fat WAH"/>
+						<xs:enumeration value="Favorite Dec"/>
+						<xs:enumeration value="Favorite Inc"/>
 						<xs:enumeration value="FeedBacker"/>
 						<xs:enumeration value="Fixed"/>
 						<xs:enumeration value="Foot Volume"/>
@@ -2048,6 +2117,7 @@
 						<xs:enumeration value="G (Em)"/>
 						<xs:enumeration value="GRAPHIC EQ "/>
 						<xs:enumeration value="GT-100"/>
+						<xs:enumeration value="GTR TO MIDI"/>
 						<xs:enumeration value="GUITAR SIM. "/>
 						<xs:enumeration value="GuV DS"/>
 						<xs:enumeration value="H"/>
@@ -2132,7 +2202,6 @@
 						<xs:enumeration value="Metal Zone"/>
 						<xs:enumeration value="Mid Boost"/>
 						<xs:enumeration value="Middle"/>
-						<xs:enumeration value="Midi Page Select"/>
 						<xs:enumeration value="Midi Start"/>
 						<xs:enumeration value="Mild"/>
 						<xs:enumeration value="Mixer: CH A/B Balance"/>
@@ -2144,7 +2213,9 @@
 						<xs:enumeration value="Modulate"/>
 						<xs:enumeration value="Moment"/>
 						<xs:enumeration value="Mono"/>
+						<xs:enumeration value="Monophonic"/>
 						<xs:enumeration value="Muff Fuzz"/>
+						<xs:enumeration value="Multi"/>
 						<xs:enumeration value="Mute"/>
 						<xs:enumeration value="N"/>
 						<xs:enumeration value="NS Input"/>
@@ -2160,7 +2231,9 @@
 						<xs:enumeration value="NS_2"/>
 						<xs:enumeration value="Natural Clean"/>
 						<xs:enumeration value="Natural OD"/>
+						<xs:enumeration value="No Dynamics"/>
 						<xs:enumeration value="Normal"/>
+						<xs:enumeration value="Num Pedal"/>
 						<xs:enumeration value="Number Dec"/>
 						<xs:enumeration value="Number Inc"/>
 						<xs:enumeration value="O"/>
@@ -2191,6 +2264,7 @@
 						<xs:enumeration value="OFF"/>
 						<xs:enumeration value="ORIGINAL"/>
 						<xs:enumeration value="OUTPUT SELECT"/>
+						<xs:enumeration value="OVER TONE"/>
 						<xs:enumeration value="Off"/>
 						<xs:enumeration value="Off (Stop)"/>
 						<xs:enumeration value="Off Mic"/>
@@ -2199,6 +2273,7 @@
 						<xs:enumeration value="On Mic"/>
 						<xs:enumeration value="Open"/>
 						<xs:enumeration value="Orange"/>
+						<xs:enumeration value="Orange Rocker"/>
 						<xs:enumeration value="Osc"/>
 						<xs:enumeration value="P"/>
 						<xs:enumeration value="P-&gt;AC"/>
@@ -2433,6 +2508,8 @@
 						<xs:enumeration value="PARA EQ "/>
 						<xs:enumeration value="PATCH: Bank Decrement"/>
 						<xs:enumeration value="PATCH: Bank Increment"/>
+						<xs:enumeration value="PATCH: Favorite Dec *"/>
+						<xs:enumeration value="PATCH: Favorite Inc *"/>
 						<xs:enumeration value="PATCH: Level + 20"/>
 						<xs:enumeration value="PATCH: Level - 10"/>
 						<xs:enumeration value="PATCH: Level - 20"/>
@@ -2540,6 +2617,7 @@
 						<xs:enumeration value="Plate"/>
 						<xs:enumeration value="Polar+"/>
 						<xs:enumeration value="Polar-"/>
+						<xs:enumeration value="Polyphonic"/>
 						<xs:enumeration value="Power"/>
 						<xs:enumeration value="Power Drive"/>
 						<xs:enumeration value="PreAmp"/>
@@ -2557,13 +2635,15 @@
 						<xs:enumeration value="R-Fier Modern"/>
 						<xs:enumeration value="R-Fier Vintage"/>
 						<xs:enumeration value="RING MOD."/>
-						<xs:enumeration value="ROTARY"/>
+						<xs:enumeration value="ROTARY 1"/>
+						<xs:enumeration value="ROTARY 2"/>
 						<xs:enumeration value="RV"/>
 						<xs:enumeration value="Rack 160D"/>
 						<xs:enumeration value="Random"/>
 						<xs:enumeration value="Rat"/>
 						<xs:enumeration value="Re-Amp"/>
 						<xs:enumeration value="Receive"/>
+						<xs:enumeration value="Regular"/>
 						<xs:enumeration value="Reso WAH"/>
 						<xs:enumeration value="Resonator1"/>
 						<xs:enumeration value="Resonator2"/>
@@ -2629,6 +2709,7 @@
 						<xs:enumeration value="Stereo Comp"/>
 						<xs:enumeration value="Stereo1"/>
 						<xs:enumeration value="Stereo2"/>
+						<xs:enumeration value="Strum"/>
 						<xs:enumeration value="Studio"/>
 						<xs:enumeration value="Sub CTL 1 PDL"/>
 						<xs:enumeration value="Sub CTL 2 PDL"/>
@@ -2648,12 +2729,12 @@
 						<xs:enumeration value="System 7"/>
 						<xs:enumeration value="System 8"/>
 						<xs:enumeration value="System 9"/>
-						<xs:enumeration value="System page select"/>
 						<xs:enumeration value="T"/>
 						<xs:enumeration value="T-Amp Lead"/>
 						<xs:enumeration value="T.WAH "/>
 						<xs:enumeration value="TAP: BPM Tap"/>
 						<xs:enumeration value="TAP: Delay Tap"/>
+						<xs:enumeration value="TERA ECHO"/>
 						<xs:enumeration value="TONE MODIFY "/>
 						<xs:enumeration value="TREMOLO"/>
 						<xs:enumeration value="TUNER"/>
@@ -2672,6 +2753,9 @@
 						<xs:enumeration value="Turbo OD"/>
 						<xs:enumeration value="Tweed"/>
 						<xs:enumeration value="Twist"/>
+						<xs:enumeration value="Type 1"/>
+						<xs:enumeration value="Type 2"/>
+						<xs:enumeration value="Type 3"/>
 						<xs:enumeration value="U"/>
 						<xs:enumeration value="U01-1"/>
 						<xs:enumeration value="U01-2"/>
@@ -2876,6 +2960,7 @@
 						<xs:enumeration value="UNI-V"/>
 						<xs:enumeration value="USB"/>
 						<xs:enumeration value="USB (Auto)"/>
+						<xs:enumeration value="USB only"/>
 						<xs:enumeration value="Unison"/>
 						<xs:enumeration value="Up"/>
 						<xs:enumeration value="User"/>
@@ -2898,6 +2983,22 @@
 						<xs:enumeration value="Y"/>
 						<xs:enumeration value="Z"/>
 						<xs:enumeration value="["/>
+						<xs:enumeration value="[Category] 70&apos;s Hard Rock"/>
+						<xs:enumeration value="[Category] Acoustic"/>
+						<xs:enumeration value="[Category] Blues"/>
+						<xs:enumeration value="[Category] Country"/>
+						<xs:enumeration value="[Category] Jazz"/>
+						<xs:enumeration value="[Category] Metal"/>
+						<xs:enumeration value="[Category] Punk Rock"/>
+						<xs:enumeration value="[Category] Rock"/>
+						<xs:enumeration value="[Category] Soul/Funk"/>
+						<xs:enumeration value="[Category] Studio"/>
+						<xs:enumeration value="[Category] Surf Rock"/>
+						<xs:enumeration value="[Category] User 1"/>
+						<xs:enumeration value="[Category] User 2"/>
+						<xs:enumeration value="[Category] User 3"/>
+						<xs:enumeration value="[Category] Vocal"/>
+						<xs:enumeration value="[Category] West Coast"/>
 						<xs:enumeration value="\"/>
 						<xs:enumeration value="]"/>
 						<xs:enumeration value="^"/>
@@ -2908,7 +3009,6 @@
 						<xs:enumeration value="c"/>
 						<xs:enumeration value="closed        "/>
 						<xs:enumeration value="d"/>
-						<xs:enumeration value="disable"/>
 						<xs:enumeration value="doted eighth note"/>
 						<xs:enumeration value="doted half note"/>
 						<xs:enumeration value="doted quarter note"/>
@@ -2916,7 +3016,6 @@
 						<xs:enumeration value="e"/>
 						<xs:enumeration value="eighth note"/>
 						<xs:enumeration value="eighth note triplet"/>
-						<xs:enumeration value="enable"/>
 						<xs:enumeration value="f"/>
 						<xs:enumeration value="g"/>
 						<xs:enumeration value="h"/>
@@ -3045,15 +3144,28 @@
 						<xs:enumeration value=" x8"/>
 						<xs:enumeration value="%"/>
 						<xs:enumeration value="&apos;60s Fuzz"/>
+						<xs:enumeration value="+1"/>
 						<xs:enumeration value="+1 Octave"/>
+						<xs:enumeration value="+12dB"/>
+						<xs:enumeration value="+2"/>
 						<xs:enumeration value="+2 Octave"/>
+						<xs:enumeration value="+24dB"/>
+						<xs:enumeration value="+3"/>
 						<xs:enumeration value="+3 Octave"/>
+						<xs:enumeration value="+4"/>
 						<xs:enumeration value="+4 Octave"/>
 						<xs:enumeration value="+4 dB"/>
+						<xs:enumeration value="+5"/>
+						<xs:enumeration value="-1"/>
 						<xs:enumeration value="-1 Octave"/>
 						<xs:enumeration value="-10 dB"/>
+						<xs:enumeration value="-2"/>
 						<xs:enumeration value="-2 Octave"/>
+						<xs:enumeration value="-3"/>
 						<xs:enumeration value="-3 Octave"/>
+						<xs:enumeration value="-4"/>
+						<xs:enumeration value="-5"/>
+						<xs:enumeration value="0"/>
 						<xs:enumeration value="0.5"/>
 						<xs:enumeration value="00"/>
 						<xs:enumeration value="01"/>
@@ -3065,6 +3177,7 @@
 						<xs:enumeration value="07"/>
 						<xs:enumeration value="08"/>
 						<xs:enumeration value="09"/>
+						<xs:enumeration value="0dB"/>
 						<xs:enumeration value="1"/>
 						<xs:enumeration value="1 (7th string, open to 1st string, 24th fret)"/>
 						<xs:enumeration value="1/1"/>
@@ -3142,10 +3255,19 @@
 						<xs:enumeration value="A &amp; B Solo"/>
 						<xs:enumeration value="A (F#m)"/>
 						<xs:enumeration value="A&amp;B Solo"/>
+						<xs:enumeration value="A-Dist"/>
 						<xs:enumeration value="A/B Solo"/>
 						<xs:enumeration value="AC:"/>
 						<xs:enumeration value="ACCL/CTL Pedal"/>
 						<xs:enumeration value="ACS:"/>
+						<xs:enumeration value="ADV-Combo Crunch"/>
+						<xs:enumeration value="ADV-Core Metal"/>
+						<xs:enumeration value="ADV-Extreme Lead"/>
+						<xs:enumeration value="ADV-Full Range"/>
+						<xs:enumeration value="ADV-HiGain Stack"/>
+						<xs:enumeration value="ADV-Natural Clean"/>
+						<xs:enumeration value="ADV-Power Drive"/>
+						<xs:enumeration value="ADV-Stack Crunch"/>
 						<xs:enumeration value="AW:"/>
 						<xs:enumeration value="Ab (Fm)"/>
 						<xs:enumeration value="Accel"/>
@@ -3176,7 +3298,9 @@
 						<xs:enumeration value="Bank Inc"/>
 						<xs:enumeration value="Bb (Gm)"/>
 						<xs:enumeration value="Blues OD"/>
+						<xs:enumeration value="Bogner Uber"/>
 						<xs:enumeration value="Boss Comp"/>
+						<xs:enumeration value="Both"/>
 						<xs:enumeration value="Bypassed"/>
 						<xs:enumeration value="C (Am)"/>
 						<xs:enumeration value="CH A+B Solo"/>
@@ -3224,6 +3348,7 @@
 						<xs:enumeration value="Dist"/>
 						<xs:enumeration value="Distortion"/>
 						<xs:enumeration value="Down"/>
+						<xs:enumeration value="Drop D"/>
 						<xs:enumeration value="Dry Out"/>
 						<xs:enumeration value="Dual parallel"/>
 						<xs:enumeration value="DualL/R"/>
@@ -3248,6 +3373,10 @@
 						<xs:enumeration value="F (Dm)"/>
 						<xs:enumeration value="F# (D#m)   "/>
 						<xs:enumeration value="FAT"/>
+						<xs:enumeration value="FEEL 1"/>
+						<xs:enumeration value="FEEL 2"/>
+						<xs:enumeration value="FEEL 3"/>
+						<xs:enumeration value="FEEL 4"/>
 						<xs:enumeration value="FL:"/>
 						<xs:enumeration value="FLAT"/>
 						<xs:enumeration value="FX-1"/>
@@ -3257,6 +3386,8 @@
 						<xs:enumeration value="Fast  Rise"/>
 						<xs:enumeration value="Fat"/>
 						<xs:enumeration value="Fat DS"/>
+						<xs:enumeration value="Favorite Dec"/>
+						<xs:enumeration value="Favorite Inc"/>
 						<xs:enumeration value="FeedBacker"/>
 						<xs:enumeration value="Fixed"/>
 						<xs:enumeration value="Foot Volume"/>
@@ -3266,6 +3397,7 @@
 						<xs:enumeration value="G (Em)"/>
 						<xs:enumeration value="GEQ:"/>
 						<xs:enumeration value="GS:"/>
+						<xs:enumeration value="GTR TO MIDI"/>
 						<xs:enumeration value="GuV DS"/>
 						<xs:enumeration value="H-&gt;AC"/>
 						<xs:enumeration value="H-&gt;HF"/>
@@ -3340,11 +3472,15 @@
 						<xs:enumeration value="Modulate"/>
 						<xs:enumeration value="Moment"/>
 						<xs:enumeration value="Mono"/>
+						<xs:enumeration value="Monophonic"/>
 						<xs:enumeration value="Muff Fuzz"/>
+						<xs:enumeration value="Multi"/>
 						<xs:enumeration value="Mute"/>
 						<xs:enumeration value="Natural Clean"/>
 						<xs:enumeration value="Natural OD"/>
+						<xs:enumeration value="No Dynamics"/>
 						<xs:enumeration value="Normal"/>
+						<xs:enumeration value="Num Pedal"/>
 						<xs:enumeration value="Number Dec"/>
 						<xs:enumeration value="Number Inc"/>
 						<xs:enumeration value="OC:"/>
@@ -3359,6 +3495,7 @@
 						<xs:enumeration value="OFF"/>
 						<xs:enumeration value="ORIGINAL"/>
 						<xs:enumeration value="OUTPUT SELECT"/>
+						<xs:enumeration value="OVT:"/>
 						<xs:enumeration value="Off"/>
 						<xs:enumeration value="Off (Stop)"/>
 						<xs:enumeration value="Off Mic"/>
@@ -3367,6 +3504,7 @@
 						<xs:enumeration value="On Mic"/>
 						<xs:enumeration value="Open"/>
 						<xs:enumeration value="Orange"/>
+						<xs:enumeration value="Orange Rocker"/>
 						<xs:enumeration value="Output &amp; Global EQ settings"/>
 						<xs:enumeration value="P-&gt;AC"/>
 						<xs:enumeration value="P-Loop Clear"/>
@@ -3596,6 +3734,7 @@
 						<xs:enumeration value="Phrase Loop"/>
 						<xs:enumeration value="Picking"/>
 						<xs:enumeration value="Plate"/>
+						<xs:enumeration value="Polyphonic"/>
 						<xs:enumeration value="Power"/>
 						<xs:enumeration value="Power Drive"/>
 						<xs:enumeration value="PreAmp"/>
@@ -3609,13 +3748,15 @@
 						<xs:enumeration value="R-Fier Modern"/>
 						<xs:enumeration value="R-Fier Vintage"/>
 						<xs:enumeration value="RM:"/>
-						<xs:enumeration value="RT:"/>
+						<xs:enumeration value="RT1:"/>
+						<xs:enumeration value="RT2:"/>
 						<xs:enumeration value="Rack 160D"/>
 						<xs:enumeration value="Random"/>
 						<xs:enumeration value="Rat"/>
 						<xs:enumeration value="Rate"/>
 						<xs:enumeration value="Ratio"/>
 						<xs:enumeration value="Re-Amp"/>
+						<xs:enumeration value="Regular"/>
 						<xs:enumeration value="Reverb"/>
 						<xs:enumeration value="Reverse"/>
 						<xs:enumeration value="Ring Mod"/>
@@ -3653,6 +3794,7 @@
 						<xs:enumeration value="Stereo 1"/>
 						<xs:enumeration value="Stereo 2"/>
 						<xs:enumeration value="Stereo Comp"/>
+						<xs:enumeration value="Strum"/>
 						<xs:enumeration value="Studio"/>
 						<xs:enumeration value="Sub CTL 1 PDL"/>
 						<xs:enumeration value="Sub CTL 2 PDL"/>
@@ -3674,6 +3816,7 @@
 						<xs:enumeration value="System PreAmp 3 Channel A"/>
 						<xs:enumeration value="System PreAmp 3 Channel B"/>
 						<xs:enumeration value="T-Amp Lead"/>
+						<xs:enumeration value="TEC:"/>
 						<xs:enumeration value="TM:"/>
 						<xs:enumeration value="TR:"/>
 						<xs:enumeration value="TUNER"/>
@@ -3689,6 +3832,9 @@
 						<xs:enumeration value="Turbo OD"/>
 						<xs:enumeration value="Tweed"/>
 						<xs:enumeration value="Twist"/>
+						<xs:enumeration value="Type 1"/>
+						<xs:enumeration value="Type 2"/>
+						<xs:enumeration value="Type 3"/>
 						<xs:enumeration value="U01-1"/>
 						<xs:enumeration value="U01-2"/>
 						<xs:enumeration value="U01-3"/>
@@ -3891,11 +4037,29 @@
 						<xs:enumeration value="U50-4"/>
 						<xs:enumeration value="USB"/>
 						<xs:enumeration value="USB (Auto)"/>
+						<xs:enumeration value="USB only"/>
 						<xs:enumeration value="UV:"/>
 						<xs:enumeration value="Up"/>
 						<xs:enumeration value="VB:"/>
 						<xs:enumeration value="VO Drive"/>
 						<xs:enumeration value="VO Lead"/>
+						<xs:enumeration value="Vint-5150 Drive"/>
+						<xs:enumeration value="Vint-BG Drive"/>
+						<xs:enumeration value="Vint-BG Lead"/>
+						<xs:enumeration value="Vint-Clean Twin"/>
+						<xs:enumeration value="Vint-Deluxe Crunch"/>
+						<xs:enumeration value="Vint-JC-120"/>
+						<xs:enumeration value="Vint-MS-1959 I"/>
+						<xs:enumeration value="Vint-MS-1959 I+II"/>
+						<xs:enumeration value="Vint-Match Drive"/>
+						<xs:enumeration value="Vint-Pro Crunch"/>
+						<xs:enumeration value="Vint-R-Fier Modern"/>
+						<xs:enumeration value="Vint-R-Fier Vintage"/>
+						<xs:enumeration value="Vint-SLDN"/>
+						<xs:enumeration value="Vint-T-Amp Lead"/>
+						<xs:enumeration value="Vint-Tweed"/>
+						<xs:enumeration value="Vint-VO Drive"/>
+						<xs:enumeration value="Vint-VO Lead"/>
 						<xs:enumeration value="Vtg Rack U"/>
 						<xs:enumeration value="WAH"/>
 						<xs:enumeration value="WAH/FV"/>
@@ -3905,13 +4069,26 @@
 						<xs:enumeration value="Warp"/>
 						<xs:enumeration value="Wave PEDAL"/>
 						<xs:enumeration value="West Coast"/>
+						<xs:enumeration value="[Category] 70&apos;s Hard Rock"/>
+						<xs:enumeration value="[Category] Acoustic"/>
+						<xs:enumeration value="[Category] Blues"/>
+						<xs:enumeration value="[Category] Country"/>
+						<xs:enumeration value="[Category] Jazz"/>
+						<xs:enumeration value="[Category] Metal"/>
+						<xs:enumeration value="[Category] Punk Rock"/>
+						<xs:enumeration value="[Category] Rock"/>
+						<xs:enumeration value="[Category] Soul/Funk"/>
+						<xs:enumeration value="[Category] Studio"/>
+						<xs:enumeration value="[Category] Surf Rock"/>
+						<xs:enumeration value="[Category] User 1"/>
+						<xs:enumeration value="[Category] User 2"/>
+						<xs:enumeration value="[Category] User 3"/>
+						<xs:enumeration value="[Category] Vocal"/>
+						<xs:enumeration value="[Category] West Coast"/>
 						<xs:enumeration value="closed        "/>
 						<xs:enumeration value="dB"/>
-						<xs:enumeration value="disable"/>
-						<xs:enumeration value="enable"/>
 						<xs:enumeration value="ms"/>
 						<xs:enumeration value="open"/>
-						<xs:enumeration value="page select"/>
 						<xs:enumeration value="same as RX  "/>
 					</xs:restriction>
 				</xs:simpleType>
@@ -3921,7 +4098,8 @@
 				<xs:simpleType>
 					<xs:restriction base="xs:string">
 						<xs:enumeration value=""/>
-						<xs:enumeration value="page select"/>
+						<xs:enumeration value="GT-001"/>
+						<xs:enumeration value="obsolete"/>
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:attribute>
@@ -3953,6 +4131,7 @@
 						<xs:enumeration value="0D"/>
 						<xs:enumeration value="0E"/>
 						<xs:enumeration value="0F"/>
+						<xs:enumeration value="10"/>
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:attribute>
@@ -3977,6 +4156,7 @@
 						<xs:enumeration value="Text_3"/>
 						<xs:enumeration value="Text_4"/>
 						<xs:enumeration value="Text_5"/>
+						<xs:enumeration value="Ver_2 "/>
 						<xs:enumeration value="midi"/>
 						<xs:enumeration value="midi stuff 1"/>
 						<xs:enumeration value="midi stuff 2"/>
@@ -3990,6 +4170,7 @@
 						<xs:enumeration value="page 1"/>
 						<xs:enumeration value="page 2"/>
 						<xs:enumeration value="page 3"/>
+						<xs:enumeration value="page 4"/>
 						<xs:enumeration value="system 1"/>
 						<xs:enumeration value="system 2"/>
 					</xs:restriction>
@@ -4017,6 +4198,7 @@
 						<xs:enumeration value="Text_3"/>
 						<xs:enumeration value="Text_4"/>
 						<xs:enumeration value="Text_5"/>
+						<xs:enumeration value="Ver_2 "/>
 						<xs:enumeration value="midi"/>
 						<xs:enumeration value="system 1"/>
 						<xs:enumeration value="system 2"/>
@@ -4055,6 +4237,7 @@
 						<xs:enumeration value="Text_3"/>
 						<xs:enumeration value="Text_4"/>
 						<xs:enumeration value="Text_5"/>
+						<xs:enumeration value="Ver_2 "/>
 						<xs:enumeration value="midi"/>
 						<xs:enumeration value="system 1"/>
 						<xs:enumeration value="system 2"/>
@@ -4221,6 +4404,7 @@
 				<xs:simpleType>
 					<xs:restriction base="xs:string">
 						<xs:enumeration value=""/>
+						<xs:enumeration value="Accel"/>
 						<xs:enumeration value="Accel Fx"/>
 						<xs:enumeration value="Amp Control"/>
 						<xs:enumeration value="Assign"/>
@@ -4239,6 +4423,8 @@
 						<xs:enumeration value="COMP attack"/>
 						<xs:enumeration value="COMP level"/>
 						<xs:enumeration value="COMP sustain"/>
+						<xs:enumeration value="Ch A&amp;B Solo"/>
+						<xs:enumeration value="Ch A/B Solo"/>
 						<xs:enumeration value="Chain"/>
 						<xs:enumeration value="Channel mode"/>
 						<xs:enumeration value="Chorus"/>
@@ -4272,10 +4458,13 @@
 						<xs:enumeration value="EQ low"/>
 						<xs:enumeration value="EXP PDL SW"/>
 						<xs:enumeration value="EZ-Edit"/>
+						<xs:enumeration value="Equaliser"/>
 						<xs:enumeration value="Equalizer"/>
 						<xs:enumeration value="FX"/>
 						<xs:enumeration value="FX-1"/>
 						<xs:enumeration value="FX-2"/>
+						<xs:enumeration value="FX1"/>
+						<xs:enumeration value="FX2"/>
 						<xs:enumeration value="Global EQ High"/>
 						<xs:enumeration value="Global EQ Low"/>
 						<xs:enumeration value="Global EQ Mid"/>
@@ -4308,7 +4497,9 @@
 						<xs:enumeration value="Name9"/>
 						<xs:enumeration value="Noise Suppressor 1"/>
 						<xs:enumeration value="Noise Suppressor 2"/>
+						<xs:enumeration value="OD/DS"/>
 						<xs:enumeration value="OD/DS Effect level"/>
+						<xs:enumeration value="OD/DS Solo"/>
 						<xs:enumeration value="OD/DS Solo level"/>
 						<xs:enumeration value="OD/DS drive"/>
 						<xs:enumeration value="ODDS tone"/>
@@ -4349,6 +4540,7 @@
 						<xs:enumeration value="Send/Return"/>
 						<xs:enumeration value="System page select"/>
 						<xs:enumeration value="Text"/>
+						<xs:enumeration value="USB Level"/>
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:attribute>
@@ -4368,6 +4560,7 @@
 						<xs:enumeration value="ACS:"/>
 						<xs:enumeration value="ASL:"/>
 						<xs:enumeration value="AW:"/>
+						<xs:enumeration value="Accel"/>
 						<xs:enumeration value="Accel/CTRL:"/>
 						<xs:enumeration value="Amp Control"/>
 						<xs:enumeration value="Assign"/>
@@ -4390,7 +4583,11 @@
 						<xs:enumeration value="COMP sustain"/>
 						<xs:enumeration value="CS:"/>
 						<xs:enumeration value="CTL:"/>
+						<xs:enumeration value="Ch A&amp;B Solo"/>
+						<xs:enumeration value="Ch A/B Solo"/>
 						<xs:enumeration value="Chain"/>
+						<xs:enumeration value="Chorus"/>
+						<xs:enumeration value="Compressor"/>
 						<xs:enumeration value="DD:"/>
 						<xs:enumeration value="DD: Delay1"/>
 						<xs:enumeration value="DD: Delay2"/>
@@ -4410,6 +4607,7 @@
 						<xs:enumeration value="DF:"/>
 						<xs:enumeration value="DIV CH SELECT"/>
 						<xs:enumeration value="DIV:"/>
+						<xs:enumeration value="Delay"/>
 						<xs:enumeration value="Delay Time"/>
 						<xs:enumeration value="EQ H mid"/>
 						<xs:enumeration value="EQ Hi cut"/>
@@ -4418,14 +4616,18 @@
 						<xs:enumeration value="EQ lo cut"/>
 						<xs:enumeration value="EQ low"/>
 						<xs:enumeration value="EQ:"/>
+						<xs:enumeration value="EXP"/>
 						<xs:enumeration value="EXP PDL SW:"/>
 						<xs:enumeration value="EXP Sw:"/>
+						<xs:enumeration value="Equaliser"/>
 						<xs:enumeration value="Exp1 Switch:"/>
 						<xs:enumeration value="FL:"/>
 						<xs:enumeration value="FV:"/>
 						<xs:enumeration value="FX-1 Select:"/>
 						<xs:enumeration value="FX-2 Select:"/>
+						<xs:enumeration value="FX1"/>
 						<xs:enumeration value="FX1:"/>
+						<xs:enumeration value="FX2"/>
 						<xs:enumeration value="FX2:"/>
 						<xs:enumeration value="FX:"/>
 						<xs:enumeration value="GEQ"/>
@@ -4453,11 +4655,14 @@
 						<xs:enumeration value="NS2 threshold"/>
 						<xs:enumeration value="NS2:"/>
 						<xs:enumeration value="OC:"/>
+						<xs:enumeration value="OD/DS"/>
 						<xs:enumeration value="OD/DS Effect level"/>
+						<xs:enumeration value="OD/DS Solo"/>
 						<xs:enumeration value="OD/DS Solo level"/>
 						<xs:enumeration value="OD/DS drive"/>
 						<xs:enumeration value="ODDS tone"/>
 						<xs:enumeration value="ODDS:"/>
+						<xs:enumeration value="OVT:"/>
 						<xs:enumeration value="Off"/>
 						<xs:enumeration value="Output Select"/>
 						<xs:enumeration value="PAN:"/>
@@ -4491,16 +4696,22 @@
 						<xs:enumeration value="PS :Voice2:Pre Delay(LSB)"/>
 						<xs:enumeration value="PS:"/>
 						<xs:enumeration value="Patch level"/>
+						<xs:enumeration value="Patch:"/>
+						<xs:enumeration value="Pedal FX"/>
 						<xs:enumeration value="Pedal FX:"/>
 						<xs:enumeration value="Pedal PB Level"/>
 						<xs:enumeration value="Pedal WAH Level"/>
 						<xs:enumeration value="Pedal/Fx:"/>
+						<xs:enumeration value="PreAmp"/>
 						<xs:enumeration value="REVERB E level"/>
 						<xs:enumeration value="REVERB H cut"/>
 						<xs:enumeration value="REVERB time"/>
 						<xs:enumeration value="RM:"/>
+						<xs:enumeration value="RT1:"/>
+						<xs:enumeration value="RT2:"/>
 						<xs:enumeration value="RT:"/>
 						<xs:enumeration value="RV:"/>
+						<xs:enumeration value="Reverb"/>
 						<xs:enumeration value="Reverb:"/>
 						<xs:enumeration value="S/R return level"/>
 						<xs:enumeration value="S/R send level"/>
@@ -4524,10 +4735,12 @@
 						<xs:enumeration value="Sub CTRL1:"/>
 						<xs:enumeration value="Sub CTRL2:"/>
 						<xs:enumeration value="Sub EXP:"/>
+						<xs:enumeration value="TER:"/>
 						<xs:enumeration value="TM:"/>
 						<xs:enumeration value="TR:"/>
 						<xs:enumeration value="TW:"/>
 						<xs:enumeration value="Target"/>
+						<xs:enumeration value="USB Level"/>
 						<xs:enumeration value="UV:"/>
 						<xs:enumeration value="VB:"/>
 						<xs:enumeration value="Voice 1 User Scale A"/>
@@ -4583,6 +4796,7 @@
 						<xs:enumeration value="A"/>
 						<xs:enumeration value="A-FLAT"/>
 						<xs:enumeration value="Accel/CTRL"/>
+						<xs:enumeration value="Adjust"/>
 						<xs:enumeration value="Attack"/>
 						<xs:enumeration value="B"/>
 						<xs:enumeration value="B-FLAT"/>
@@ -4599,6 +4813,7 @@
 						<xs:enumeration value="Buzz"/>
 						<xs:enumeration value="C"/>
 						<xs:enumeration value="Cabinet back"/>
+						<xs:enumeration value="Catagory"/>
 						<xs:enumeration value="Chain"/>
 						<xs:enumeration value="Channel"/>
 						<xs:enumeration value="Character"/>
@@ -4609,6 +4824,7 @@
 						<xs:enumeration value="Cutoff Freq"/>
 						<xs:enumeration value="D"/>
 						<xs:enumeration value="D-FLAT"/>
+						<xs:enumeration value="DeTune"/>
 						<xs:enumeration value="Delay 1 Time"/>
 						<xs:enumeration value="Delay 2 Time"/>
 						<xs:enumeration value="Delay Time"/>
@@ -4665,6 +4881,7 @@
 						<xs:enumeration value="Lo Mid Q"/>
 						<xs:enumeration value="Low"/>
 						<xs:enumeration value="Low Cut"/>
+						<xs:enumeration value="Lower"/>
 						<xs:enumeration value="Manual"/>
 						<xs:enumeration value="Master Beat"/>
 						<xs:enumeration value="Master Key"/>
@@ -4694,6 +4911,8 @@
 						<xs:enumeration value="Output Select"/>
 						<xs:enumeration value="PAGE SELECT"/>
 						<xs:enumeration value="Patch Level"/>
+						<xs:enumeration value="Patch Level Max"/>
+						<xs:enumeration value="Patch Level Min"/>
 						<xs:enumeration value="Patch Mode Output Select"/>
 						<xs:enumeration value="Pattern"/>
 						<xs:enumeration value="Peak"/>
@@ -4703,6 +4922,7 @@
 						<xs:enumeration value="Pedal Position"/>
 						<xs:enumeration value="Phrase Loop"/>
 						<xs:enumeration value="Pitch"/>
+						<xs:enumeration value="Pitch Detect"/>
 						<xs:enumeration value="Polarity"/>
 						<xs:enumeration value="Position"/>
 						<xs:enumeration value="Pre Delay"/>
@@ -4719,11 +4939,12 @@
 						<xs:enumeration value="Ratio"/>
 						<xs:enumeration value="Release"/>
 						<xs:enumeration value="Reson."/>
-						<xs:enumeration value="Return Level"/>
+						<xs:enumeration value="Return"/>
 						<xs:enumeration value="Reverb Time"/>
 						<xs:enumeration value="Ring Level"/>
 						<xs:enumeration value="Rise Time"/>
-						<xs:enumeration value="Send Level"/>
+						<xs:enumeration value="S Time"/>
+						<xs:enumeration value="Send"/>
 						<xs:enumeration value="Sens"/>
 						<xs:enumeration value="Separ"/>
 						<xs:enumeration value="Shape"/>
@@ -4751,6 +4972,7 @@
 						<xs:enumeration value="Treble"/>
 						<xs:enumeration value="Trig.Sens"/>
 						<xs:enumeration value="Type"/>
+						<xs:enumeration value="Upper"/>
 						<xs:enumeration value="Variation"/>
 						<xs:enumeration value="Vibe Depth"/>
 						<xs:enumeration value="Vibe Rate"/>
@@ -4790,6 +5012,7 @@
 						<xs:enumeration value="05"/>
 						<xs:enumeration value="CH_A"/>
 						<xs:enumeration value="CH_B"/>
+						<xs:enumeration value="COMP: Quick setting"/>
 						<xs:enumeration value="Feedbacker"/>
 						<xs:enumeration value="GT-10B_to_GT-100"/>
 						<xs:enumeration value="GT-10_to_GT-100"/>

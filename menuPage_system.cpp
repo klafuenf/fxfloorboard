@@ -57,17 +57,20 @@ void menuPage_system::setEditPages()
     editDetails()->page()->addGroupBox(1, 0, 1, 3);
 
     editDetails()->page()->newGroupBox("USB settings");
-    editDetails()->page()->addComboBox(0, 0, 1, 1, "00", "00", "50", "System"); //usb I/O mode
-    editDetails()->page()->addLabel(0, 1, 1, 1, "     ");
-    editDetails()->page()->addComboBox(0, 2, 1, 1, "00", "00", "55", "System"); //usb monitor cmd
-    editDetails()->page()->addKnob(0, 3, 1, 1, "00", "00", "51", "System"); //usb input level
-    editDetails()->page()->addKnob(0, 4, 1, 1, "00", "00", "52", "System"); //usb mix level
-    editDetails()->page()->addKnob(0, 5, 1, 1, "00", "00", "53", "System"); //usb mix level
+    editDetails()->page()->addKnob(0, 0, 1, 1, "00", "00", "53", "System"); //usb monitor cmd
+    editDetails()->page()->addKnob(0, 1, 1, 1, "00", "00", "52", "System"); //usb input level
+    editDetails()->page()->addKnob(0, 2, 1, 1, "00", "00", "51", "System"); //usb mix level
+    editDetails()->page()->addKnob(0, 3, 1, 1, "00", "00", "57", "System"); //usb mix level
+    editDetails()->page()->addKnob(0, 4, 1, 1, "00", "00", "54", "System"); //usb mix level
     editDetails()->page()->addGroupBox(2, 0, 1, 2);
 
     editDetails()->page()->newGroupBox("Tuner");
     editDetails()->page()->addComboBox(0, 0, 1, 1, "00", "00", "20", "System"); // tuner pitch
-    editDetails()->page()->addLabel(0, 1, 1, 1, "               ");
+    editDetails()->page()->addComboBox(0, 1, 1, 1, "00", "03", "24", "System"); // num1/2 pedal
+    editDetails()->page()->addComboBox(1, 0, 1, 1, "00", "03", "25", "System"); // poly select
+    editDetails()->page()->addComboBox(1, 1, 1, 1, "00", "03", "26", "System"); // tuner type
+    editDetails()->page()->addComboBox(1, 2, 1, 1, "00", "03", "27", "System"); // tuner offset
+    //editDetails()->page()->addLabel(0, 1, 1, 1, "               ");
     editDetails()->page()->addComboBox(0, 2, 1, 1, "00", "00", "21", "System"); //tuner output
     editDetails()->page()->addKnob(0, 3, 1, 1, "00", "00", "34", "System"); //metronome level
     editDetails()->page()->addGroupBox(2, 2, 1, 1);

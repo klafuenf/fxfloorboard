@@ -54,13 +54,13 @@ const int patchPerBank = 4;			// Number of patches in a bank.
 const int bankSize = 100;       // Number of patches in a midi bank before bank change message is required. 
 
 /* Midi Send & Receive */
-const int patchReplySize = 2026;    // size of bytes in a patch before trimming.
-const int patchSize = 2152;    // size of bytes in a patch after trimming.
-const int fullPatchSize = 2152;    // size of bytes in a patch with user text data.
-const int systemSize = 1617;    // size of bytes for system data.
+const int patchReplySize = 2203; //2026;    // size of bytes in a patch before trimming.
+const int patchSize = 2329;    // 2152 size of bytes in a patch after trimming.
+const int fullPatchSize = 2329;    // size of bytes in a patch with user text data.
+const int systemSize = 1667;    // was 1617 size of bytes for system data.
 const int nameReplySize = 29;    // size of bytes for name data.
-const QString patchRequestDataSize = "00000F18";
-const QString systemRequest = "F04100000060110000000000087F0079F7";
+const QString patchRequestDataSize = "00001100";
+const QString systemRequest = "F04100000060110000000000087F0079F7"; //was 087F00
 
 //const int maxWait = 40;			 // Maximum times we loop through the receive handle before we give up waiting.(for whole patch) tempory used by midi prefs
 //const int minWait = 5;			 // Minimum times we loop through the receive handle before we give up waiting.(for small data)   "      "       "       "

@@ -140,17 +140,23 @@ void mainWindow::updateSize(QSize floorSize, QSize oldFloorSize)
 
 void mainWindow::createActions()
 {
-    openAct = new QAction(QIcon(":/images/fileopen.png"), tr("&Load Patch File... (*.syx, *.mid, *.gcl *.gxg *.gxb)"), this);
+    openAct = new QAction(QIcon(":/images/fileopen.png"), tr("&Load Patch File... (*.tsl, *.syx, *.mid, *.gcl *.gxg *.gxb)"), this);
     openAct->setShortcut(tr("Ctrl+O"));
     openAct->setStatusTip(tr("Open an existing file, any GT-100, GT-10, GT-8, GT-10B, GT-6B patch file"));
     openAct->setWhatsThis(tr("Open an existing file, any GT-100, GT-10, GT-8, GT-10B, GT-6B patch file"));
     connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
 
-    saveAct = new QAction(QIcon(":/images/filesave.png"), tr("&Save currently open Patch file...       (*.gcl *.mid *.syx)"), this);
+    saveAct = new QAction(QIcon(":/images/filesave.png"), tr("&Save currently open Patch file...       (*.tsl *.gcl *.mid *.syx)"), this);
     saveAct->setShortcut(tr("Ctrl+S"));
     saveAct->setStatusTip(tr("Save the current patch to the last opened file to disk"));
     saveAct->setWhatsThis(tr("Save the current patch to the last opened file to disk"));
     connect(saveAct, SIGNAL(triggered()), this, SLOT(save()));
+
+    saveAsAct = new QAction(QIcon(":/images/filesave.png"), tr("Save as Tone Central Patch...  (*.tsl)"), this);
+    saveAsAct->setShortcut(tr("Ctrl+Shift+T"));
+    saveAsAct->setStatusTip(tr("Save as a Tone Central File"));
+    saveAsAct->setWhatsThis(tr("Save as a Tone Cntral File"));
+    connect(saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
 
     saveGCLAct = new QAction(QIcon(":/images/filesave.png"), tr("Save As Librarian compatable GCL Patch... (*.gcl)"), this);
     saveGCLAct->setShortcut(tr("Ctrl+Shift+G"));
@@ -158,17 +164,17 @@ void mainWindow::createActions()
     saveGCLAct->setWhatsThis(tr("Save to disk as a Boss Librarian File"));
     connect(saveGCLAct, SIGNAL(triggered()), this, SLOT(saveGCL()));
 
-    saveAsAct = new QAction(QIcon(":/images/filesave.png"), tr("Export System Exclusive Patch...  (*.syx)"), this);
-    saveAsAct->setShortcut(tr("Ctrl+Shift+S"));
-    saveAsAct->setStatusTip(tr("Export as a System Exclusive File"));
-    saveAsAct->setWhatsThis(tr("Export as a System Exclusive File"));
-    connect(saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
+    saveSYXAct = new QAction(QIcon(":/images/filesave.png"), tr("Save as System Exclusive Patch...  (*.syx)"), this);
+    saveSYXAct->setShortcut(tr("Ctrl+Shift+S"));
+    saveSYXAct->setStatusTip(tr("Save as a System Exclusive File"));
+    saveSYXAct->setWhatsThis(tr("Save as a System Exclusive File"));
+    connect(saveSYXAct, SIGNAL(triggered()), this, SLOT(saveSYX()));
 
-    exportSMFAct = new QAction(QIcon(":/images/filesave.png"), tr("Export Standard Midi Format Patch... (*.mid)"), this);
-    exportSMFAct->setShortcut(tr("Ctrl+Shift+E"));
-    exportSMFAct->setStatusTip(tr("Export as a Standard Midi File"));
-    exportSMFAct->setWhatsThis(tr("Export as a Standard Midi File"));
-    connect(exportSMFAct, SIGNAL(triggered()), this, SLOT(exportSMF()));
+    saveSMFAct = new QAction(QIcon(":/images/filesave.png"), tr("Save as Standard Midi Format Patch... (*.mid)"), this);
+    saveSMFAct->setShortcut(tr("Ctrl+Shift+E"));
+    saveSMFAct->setStatusTip(tr("Save as a Standard Midi File"));
+    saveSMFAct->setWhatsThis(tr("Save as a Standard Midi File"));
+    connect(saveSMFAct, SIGNAL(triggered()), this, SLOT(saveSMF()));
 
     systemLoadAct = new QAction(QIcon(":/images/fileopen.png"), tr("&Load System and Global Data..."), this);
     systemLoadAct->setShortcut(tr("Ctrl+L"));
@@ -206,7 +212,7 @@ void mainWindow::createActions()
     settingsAct->setWhatsThis(tr("FxFloorBoard Preferences\n Select midi device, language,splash, directories"));
     connect(settingsAct, SIGNAL(triggered()), this, SLOT(settings()));
 
-    uploadAct = new QAction(QIcon(":/images/upload.png"), tr("Upload patch to GT-Central"), this);
+    uploadAct = new QAction(QIcon(":/images/upload.png"), tr("Upload patch to V-Guitars Site"), this);
     uploadAct->setStatusTip(tr("Upload any saved patch file to a shared patch library\n via the internet."));
     uploadAct->setWhatsThis(tr("Upload any saved patch file to a shared patch library\n via the internet."));
     connect(uploadAct, SIGNAL(triggered()), this, SLOT(upload()));
@@ -277,9 +283,10 @@ void mainWindow::createMenus()
     fileMenu->addAction(openAct);
     fileMenu->addSeparator();
     fileMenu->addAction(saveAct);
-    fileMenu->addAction(saveGCLAct);
     fileMenu->addAction(saveAsAct);
-    fileMenu->addAction(exportSMFAct);
+    fileMenu->addAction(saveGCLAct);
+    fileMenu->addAction(saveSYXAct);
+    fileMenu->addAction(saveSMFAct);
     fileMenu->addSeparator();
     fileMenu->addAction(bulkLoadAct);
     fileMenu->addAction(bulkSaveAct);
@@ -342,7 +349,7 @@ void mainWindow::open()
                 this,
                 tr("Choose a file"),
                 dir,
-                tr("for GT-100, 10, 8, 10B, 6B (*.syx *.mid *.gcl *.gxg *.gxb)"));
+                tr("for GT-100, 10, 8, 10B, 6B (*.syx *.mid *.gcl *.gxg *.gxb *.tsl)"));
     if (!fileName.isEmpty())
     {
         file.setFile(fileName);
@@ -378,18 +385,19 @@ void mainWindow::save()
                         this,
                         tr("Save As"),
                         dir,
-                        tr(" (*.gcl *.mid *.syx)"));
+                        tr(" (*.gcl *.mid *.syx *.tsl)"));
             if (!fileName.isEmpty())
             {
-                if(!fileName.contains(".syx") && !fileName.contains(".mid") && !fileName.contains(".gcl"))
+                if(!fileName.contains(".syx") && !fileName.contains(".mid") && !fileName.contains(".gcl") && !fileName.contains(".tsl"))
                 {
-                    fileName.append(".gcl");
+                    fileName.append(".tsl");
                 };
 
             };
-            if(fileName.contains(".syx"))      { file.writeFile(fileName); }
+            if(fileName.contains(".syx"))      { file.writeSYX(fileName); }
             else if(fileName.contains(".mid")) { file.writeSMF(fileName); }
-            else if(fileName.contains(".gcl")) {file.writeGCL(fileName); };
+            else if(fileName.contains(".gcl")) {file.writeGCL(fileName); }
+            else if(fileName.contains(".tsl")) {file.writeTSL(fileName); };
 
             file.setFile(fileName);
             if(file.readFile())
@@ -403,7 +411,8 @@ void mainWindow::save()
         }
         else
         {
-            if(file.getFileName().contains(".syx"))      { file.writeFile(file.getFileName()); }
+            if(file.getFileName().contains(".syx"))      { file.writeSYX(file.getFileName()); }
+            else if(file.getFileName().contains(".tsl")) { file.writeTSL(file.getFileName()); }
             else if(file.getFileName().contains(".mid")) { file.writeSMF(file.getFileName()); }
             else if(file.getFileName().contains(".gcl")) {file.writeGCL(file.getFileName()); };
         };
@@ -421,14 +430,14 @@ void mainWindow::saveAs()
                     this,
                     tr("Save As"),
                     dir,
-                    tr("System Exclusive (*.syx)"));
+                    tr("Tone Central (*.tsl)"));
         if (!fileName.isEmpty())
         {
-            if(!fileName.contains(".syx"))
+            if(!fileName.contains(".tsl"))
             {
-                fileName.append(".gcl");
+                fileName.append(".tsl");
             };
-            file.writeFile(fileName);
+            file.writeTSL(fileName);
 
             file.setFile(fileName);
             if(file.readFile())
@@ -445,36 +454,7 @@ void mainWindow::saveAs()
     };
 }
 
-void mainWindow::importSMF()
-{
-    Preferences *preferences = Preferences::Instance();
-    QString dir = preferences->getPreferences("General", "Files", "dir");
-
-    QString fileName = QFileDialog::getOpenFileName(
-                this,
-                tr("Choose a file"),
-                dir,
-                tr("Standard Midi File (*.mid)"));
-    if (!fileName.isEmpty())
-    {
-        file.setFile(fileName);
-        if(file.readFile())
-        {
-            // DO SOMETHING AFTER READING THE FILE (UPDATE THE GUI)
-            SysxIO *sysxIO = SysxIO::Instance();
-            QString area = "Structure";
-            sysxIO->setFileSource(area, file.getFileSource());
-            sysxIO->setFileName(fileName);
-            sysxIO->setSyncStatus(false);
-            sysxIO->setDevice(false);
-            emit updateSignal();
-            if(sysxIO->isConnected())
-            {sysxIO->writeToBuffer(); };
-        };
-    };
-}
-
-void mainWindow::exportSMF()
+void mainWindow::saveSYX()
 {
     if(reg == true)
     {
@@ -483,7 +463,41 @@ void mainWindow::exportSMF()
 
         QString fileName = QFileDialog::getSaveFileName(
                     this,
-                    tr("Export SMF"),
+                    tr("Save As SYX"),
+                    dir,
+                    tr("System Exclusive File (*.syx)"));
+        if (!fileName.isEmpty())
+        {
+            if(!fileName.contains(".syx"))
+            {
+                fileName.append(".syx");
+            };
+            file.writeSYX(fileName);
+
+            file.setFile(fileName);
+            if(file.readFile())
+            {
+                // DO SOMETHING AFTER READING THE FILE (UPDATE THE GUI)
+                SysxIO *sysxIO = SysxIO::Instance();
+                QString area = "Structure";
+                sysxIO->setFileSource(area, file.getFileSource());
+
+                emit updateSignal();
+            };
+        };
+    };
+}
+
+void mainWindow::saveSMF()
+{
+    if(reg == true)
+    {
+        Preferences *preferences = Preferences::Instance();
+        QString dir = preferences->getPreferences("General", "Files", "dir");
+
+        QString fileName = QFileDialog::getSaveFileName(
+                    this,
+                    tr("Save As SMF"),
                     dir,
                     tr("Standard Midi File (*.mid)"));
         if (!fileName.isEmpty())
@@ -508,32 +522,38 @@ void mainWindow::exportSMF()
     };
 }
 
-void mainWindow::openGCL()
+void mainWindow::saveTSL()
 {
-    Preferences *preferences = Preferences::Instance();
-    QString dir = preferences->getPreferences("General", "Files", "dir");
 
-    QString fileName = QFileDialog::getOpenFileName(
-                this,
-                tr("Choose a file"),
-                dir,
-                tr("Boss Librarian File (*.gcl *.gxg *.gxb)"));
-    if (!fileName.isEmpty())
+    if(reg == true)
     {
-        file.setFile(fileName);
-        if(file.readFile())
-        {
-            // DO SOMETHING AFTER READING THE FILE (UPDATE THE GUI)
-            SysxIO *sysxIO = SysxIO::Instance();
-            QString area = "Structure";
-            sysxIO->setFileSource(area, file.getFileSource());
-            sysxIO->setFileName(fileName);
-            sysxIO->setSyncStatus(false);
-            sysxIO->setDevice(false);
 
-            emit updateSignal();
-            if(sysxIO->isConnected())
-            {sysxIO->writeToBuffer(); };
+        Preferences *preferences = Preferences::Instance();
+        QString dir = preferences->getPreferences("General", "Files", "dir");
+
+        QString fileName = QFileDialog::getSaveFileName(
+                    this,
+                    tr("Export TSL"),
+                    dir,
+                    tr("Boss Tone Central File (*.tsl)"));
+        if (!fileName.isEmpty())
+        {
+            if(!fileName.contains(".tsl"))
+            {
+                fileName.append(".tsl");
+            };
+            file.writeGCL(fileName);
+
+            file.setFile(fileName);
+            if(file.readFile())
+            {
+                // DO SOMETHING AFTER READING THE FILE (UPDATE THE GUI)
+                SysxIO *sysxIO = SysxIO::Instance();
+                QString area = "Structure";
+                sysxIO->setFileSource(area, file.getFileSource());
+
+                emit updateSignal();
+            };
         };
     };
 }
@@ -549,7 +569,7 @@ void mainWindow::saveGCL()
 
         QString fileName = QFileDialog::getSaveFileName(
                     this,
-                    tr("Export GCL"),
+                    tr("Save As GCL"),
                     dir,
                     tr("Boss Librarian File (*.gcl)"));
         if (!fileName.isEmpty())
@@ -801,7 +821,7 @@ void mainWindow::whatsThis()
 void mainWindow::upload()
 {
     //Preferences *preferences = Preferences::Instance();
-    QDesktopServices::openUrl(QUrl( "http://www.bossgtcentral.com/dm/" ));
+    QDesktopServices::openUrl(QUrl( "http://www.vguitarforums.com/smf/index.php?board=150.0" ));
 }
 
 void mainWindow::summaryPage()

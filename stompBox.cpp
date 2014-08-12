@@ -214,7 +214,7 @@ void stompBox::mouseMoveEvent(QMouseEvent *event)
             drag->setMimeData(mimeData);
             drag->setHotSpot(event->pos() - rect().topLeft());
 
-            QPixmap screen = QPixmap::grabWidget(this);
+            QPixmap screen = QWidget::grab();//QPixmap::grabWidget(this);
             screen.setMask(image.mask());
 
             QRectF source(4, 4, stompSize.width()-8, stompSize.height()-8);

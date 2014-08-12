@@ -119,8 +119,8 @@ floorBoardDisplay::floorBoardDisplay(QWidget *parent, QPoint pos)
     this->output = new customControlListMenu(this, "00", "00", "10", "right");
     output->setGeometry(945, patchDisplayRowOffset, 162, 30);
     output->setWhatsThis(tr("This is the Patch Mode setting of Output Select<br>this is only active if the SYSTEM setting<br>is set to Patch Mode."));
-    //this->catagory = new customControlListMenu(this, "00", "00", "10", "right");
-    //catagory->setGeometry(845, patchDisplayRowOffset+19, 280, 30);
+    this->catagory = new customControlListMenu(this, "07", "00", "0F", "right");
+    catagory->setGeometry(945, patchDisplayRowOffset+19, 280, 30);
 
     this->autoButton = new customButton(tr("Auto Sync"), false, QPoint(570, patchDisplayRowOffset), this, ":/images/greenledbutton.png");
     this->autoButton->setWhatsThis(tr("Auto refresh<br>used to automatically update editor settings changes made on the GR-55"));
@@ -1437,13 +1437,16 @@ void floorBoardDisplay::autosyncResult(QString sysxMsg)
         part14.prepend("0D00").prepend(addressMsb).prepend(header).append(part14B).append(footer);
         QString part15 = sysxMsg.mid(3744, 256); //y
         part15.prepend("0E00").prepend(addressMsb).prepend(header).append(footer);
-        QString part16 = sysxMsg.mid(4000, 48); //y
-        part16.prepend("0F00").prepend(addressMsb).prepend(header).append(footer);
+        QString part16 = sysxMsg.mid(4000, 76); //y was 48
+        QString part16B = sysxMsg.mid(4106, 180) + footer;
+        part16.prepend("0F00").prepend(addressMsb).prepend(header);
+        QString part17 = header + "1000" + addressMsb + sysxMsg.mid(4282, 120) + footer; //4286, 118
+
 
         sysxMsg.clear();
         sysxMsg.append(part1).append(part2).append(part3).append(part4).append(part5).append(part6)
                 .append(part7).append(part8).append(part9).append(part10).append(part11).append(part12)
-                .append(part13).append(part14).append(part15).append(part16);
+                .append(part13).append(part14).append(part15).append(part16).append(part16B).append(part17);
 
         QString reBuild = "";       /* Add correct checksum to patch strings */
         QString sysxEOF = "";

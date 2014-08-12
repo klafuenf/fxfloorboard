@@ -2,8 +2,8 @@
 <!-- Preferences of the GT-100 Fx FloorBoard application. -->
 <Preferences>
 	<General>
-		<Application version="20140628"/>
-		<Donate url=""/>
+		<Application version="20140724"/>
+		<Donate url="true"/>
 		<Files dir=""/>
 		<Start count="6"/>
 	</General>

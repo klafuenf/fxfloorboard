@@ -317,7 +317,7 @@ void menuPage::systemReply(QString replyMsg)
 
     if(sysxIO->noError())
     {
-        if(replyMsg.size()/2 == 1617)
+        if(replyMsg.size()/2 == systemSize)
         {
             /* TRANSLATE SYSX MESSAGE FORMAT to 128 byte data blocks */
             QString header = "F0410000006012";
@@ -330,42 +330,45 @@ void menuPage::systemReply(QString replyMsg)
             QString part2B = replyMsg.mid(532, 28);
             part2.prepend("00000100").prepend(header).append(part2B).append(footer);
 
-            QString part3 = replyMsg.mid(560, 236);
+            QString part3 = replyMsg.mid(560, 256);  //was 236
             part3.prepend("00000200").prepend(header).append(footer);
 
-            QString part4 = replyMsg.mid(822, 256);
+            QString part3A = replyMsg.mid(816, 80);  //added ver 2
+            part3A.prepend("00000300").prepend(header).append(footer);
+
+            QString part4 = replyMsg.mid(922, 256);
             part4.prepend("00020000").prepend(header).append(footer);
 
-            QString part5 = replyMsg.mid(1078, 228);
-            QString part5B = replyMsg.mid(1332, 28);
+            QString part5 = replyMsg.mid(1178, 228);
+            QString part5B = replyMsg.mid(1432, 28);
             part5.prepend("00020100").prepend(header).append(part5B).append(footer);
 
-            QString part6 = replyMsg.mid(1360, 256);
+            QString part6 = replyMsg.mid(1460, 256);
             part6.prepend("00020200").prepend(header).append(footer);
 
-            QString part7 = replyMsg.mid(1616, 200);
-            QString part7B = replyMsg.mid(1842, 56);
+            QString part7 = replyMsg.mid(1716, 200);
+            QString part7B = replyMsg.mid(1942, 56);
             part7.prepend("00020300").prepend(header).append(part7B).append(footer);
 
-            QString part8 = replyMsg.mid(1898,256);
+            QString part8 = replyMsg.mid(1998,256);
             part8.prepend("00020400").prepend(header).append(footer);
 
-            QString part10 = replyMsg.mid(2154, 172);
-            QString part10B = replyMsg.mid(2352, 84);
+            QString part10 = replyMsg.mid(2254, 172);
+            QString part10B = replyMsg.mid(2452, 84);
             part10.prepend("00020500").prepend(header).append(part10B).append(footer);
 
-            QString part11 = replyMsg.mid(2436, 256);
+            QString part11 = replyMsg.mid(2536, 256);
             part11.prepend("00020600").prepend(header).append(footer);
 
-            QString part12 = replyMsg.mid(2692, 144);
-            QString part12B = replyMsg.mid(2862, 112);
+            QString part12 = replyMsg.mid(2792, 144);
+            QString part12B = replyMsg.mid(2962, 112);
             part12.prepend("00020700").prepend(header).append(part12B).append(footer);
 
-            QString part13 = replyMsg.mid(2974, 256);
+            QString part13 = replyMsg.mid(3074, 256);
             part13.prepend("00020800").prepend(header).append(footer);
 
             replyMsg = "";
-            replyMsg.append(part1).append(part2).append(part3).append(part4).append(part5)
+            replyMsg.append(part1).append(part2).append(part3).append(part3A).append(part4).append(part5)
                     .append(part6).append(part7).append(part8).append(part10).append(part11)
                     .append(part12).append(part13);
 

@@ -66,7 +66,8 @@ void stompbox_ce::setEditPages()
 	editDetails()->page()->addGroupBox(0, 2, 2, 1);
 
 	editDetails()->page()->newGroupBox(tr("Level"));
-    editDetails()->page()->addKnob(0, 0, 1, 1, "06", "00", "07");
+    editDetails()->page()->addKnob(0, 0, 1, 1, "06", "00", "07"); //effect
+    editDetails()->page()->addKnob(0, 1, 1, 1, "06", "00", "08"); //direct
     editDetails()->page()->addGroupBox(0, 3, 2, 1);
 
 	editDetails()->addPage();

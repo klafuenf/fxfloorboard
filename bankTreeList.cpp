@@ -604,8 +604,10 @@ void bankTreeList::updatePatch(QString replyMsg)
         part14.prepend("0D00").prepend(addressMsb).prepend(header).append(part14B).append(footer);
         QString part15 = replyMsg.mid(3744, 256); //y
         part15.prepend("0E00").prepend(addressMsb).prepend(header).append(footer);
-        QString part16 = replyMsg.mid(4000, 48); //y
-        part16.prepend("0F00").prepend(addressMsb).prepend(header).append(footer);
+        QString part16 = replyMsg.mid(4000, 76); //y was 48
+        QString part16B = replyMsg.mid(4106, 180) + footer;
+        part16.prepend("0F00").prepend(addressMsb).prepend(header);
+        QString part17 = header + "1000" + addressMsb + replyMsg.mid(4282, 120) + footer;
 
         QString QFX = "false";
         if (replyMsg.contains("F041000000601230") || replyMsg.contains("F041000000601240")) // if a QFX patch
@@ -614,7 +616,7 @@ void bankTreeList::updatePatch(QString replyMsg)
         replyMsg = "";
         replyMsg.append(part1).append(part2).append(part3).append(part4).append(part5).append(part6)
                 .append(part7).append(part8).append(part9).append(part10).append(part11).append(part12)
-                .append(part13).append(part14).append(part15).append(part16);
+                .append(part13).append(part14).append(part15).append(part16).append(part16B).append(part17);
 
         QString reBuild = "";       /* Add correct checksum to patch strings */
         QString sysxEOF = "";
@@ -643,7 +645,7 @@ void bankTreeList::updatePatch(QString replyMsg)
                 i=i+2;
             };
         };
-        replyMsg = reBuild.simplified().toUpper().remove("0X").remove(" ");
+        replyMsg = reBuild.toUpper();
         emit setStatusMessage(tr("Ready"));
 
         QString area = "Structure";
@@ -664,7 +666,7 @@ void bankTreeList::updatePatch(QString replyMsg)
         //emit notConnectedSignal();				// No message returned so connection must be lost.
         /* NO-REPLY WARNING */
         QMessageBox *msgBox = new QMessageBox();
-        msgBox->setWindowTitle(QObject::tr("Warning - Patch data received is incorrect!")+(QString::number(replyMsg.size()/2, 10)));
+        msgBox->setWindowTitle(QObject::tr("Warning - Patch data received is incorrect!"));
         msgBox->setIcon(QMessageBox::Warning);
         msgBox->setTextFormat(Qt::RichText);
         QString msgText;
@@ -672,6 +674,7 @@ void bankTreeList::updatePatch(QString replyMsg)
         msgText.append(QObject::tr("Patch data transfer wrong size or data error"));
         msgText.append("<b></font><br>");
         msgText.append(QObject::tr("Please make sure the ") + deviceType + QObject::tr(" is connected correctly and re-try."));
+        msgText.append(QObject::tr("<br> data size received = ")+(QString::number(replyMsg.size()/2, 10)));
         msgBox->setText(msgText);
         msgBox->setStandardButtons(QMessageBox::Ok);
         msgBox->exec();

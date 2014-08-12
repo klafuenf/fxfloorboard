@@ -80,7 +80,7 @@ void stompbox_ch_a::setEditPages()
     editDetails()->page()->addGroupBox(0, 2, 4, 1);
 
 
-    editDetails()->page()->newGroupBox(tr("Speaker"));
+    editDetails()->page()->newGroupBox(tr("Speaker - only active while Output-Select set to Line/Phones"));
     editDetails()->page()->newStackControl(1);
     editDetails()->page()->addComboBox(0, 0, 1, 1, "00", "00", "5D", "large");     //type
     editDetails()->page()->addStackControl();
@@ -204,6 +204,12 @@ void stompbox_ch_a::setEditPages()
     editDetails()->page()->addKnob(0, 2, 1, 1, "00", "00", "6D", "normal","right", 40);
     editDetails()->page()->addComboBox(0, 3, 1, 1, "00", "00", "6E", "bottom", Qt::AlignHCenter);
     editDetails()->page()->addComboBox(0, 4, 1, 1, "00", "00", "6F", "bottom", Qt::AlignHCenter);
+    editDetails()->page()->addStackField();
+
+    editDetails()->page()->newStackField(0); // bogner
+    editDetails()->page()->addStackField();
+
+    editDetails()->page()->newStackField(0);  // orange
     editDetails()->page()->addStackField();
 
     editDetails()->addPage();

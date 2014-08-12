@@ -106,5 +106,7 @@ void stompbox_od::setEditPages()
     editDetails()->page()->addGroupBox(1, 0, 1, 5);
     editDetails()->page()->addStackField();
 
+    editDetails()->page()->newStackField(0);editDetails()->page()->addStackField();
+
     editDetails()->addPage();
 }
