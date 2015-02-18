@@ -59,7 +59,7 @@ protected:
 
 private:
 	QString imagePathPanelBar;
-	QSize panelBarSize;
+    QSize panelBarSize;
 	QPixmap image;
 
 	int r_value;

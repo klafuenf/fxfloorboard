@@ -256,7 +256,8 @@ void bulkSaveDialog::updatePatch(QString replyMsg)
         QString part16 = replyMsg.mid(4000, 76); //y was 48
         QString part16B = replyMsg.mid(4106, 180) + footer;
         part16.prepend("0F00").prepend(addressMsb).prepend(header);
-        QString part17 = header + "1000" + addressMsb + replyMsg.mid(4286, 120) + footer;
+        QString part17 = replyMsg.mid(4282, 120);
+        part17.prepend("1000").prepend(addressMsb).prepend(header).append(footer);
 
 
         replyMsg.clear();
@@ -1644,11 +1645,11 @@ void bulkSaveDialog::writeTSL()        //********************************* TSL F
                 AppendTSL(temp.mid(2318, 1), "prm_fx2_teraecho_effect_level");  //copy FX2
                 AppendTSL(temp.mid(2319, 1), "prm_fx2_teraecho_direct_mix");    //copy FX2
                 AppendTSL(temp.mid(2320, 1), "prm_fx2_teraecho_hold");          //copy FX2
-                AppendTSL(temp.mid(2321, 1), "prm_fx2_overtone_detune");        //copy FX2
-                AppendTSL(temp.mid(2322, 1), "prm_fx2_overtone_tone");          //copy FX2
-                AppendTSL(temp.mid(2323, 1), "prm_fx2_overtone_upper_level");   //copy FX2
-                AppendTSL(temp.mid(2324, 1), "prm_fx2_overtone_lower_level");   //copy FX2
-                AppendTSL(temp.mid(2325, 1), "prm_fx2_overtone_direct_level");  //copy FX2
+                AppendTSL(temp.mid(2322, 1), "prm_fx2_overtone_detune");        //copy FX2
+                AppendTSL(temp.mid(2323, 1), "prm_fx2_overtone_tone");          //copy FX2
+                AppendTSL(temp.mid(2324, 1), "prm_fx2_overtone_upper_level");   //copy FX2
+                AppendTSL(temp.mid(2325, 1), "prm_fx2_overtone_lower_level");   //copy FX2
+                AppendTSL(temp.mid(2326, 1), "prm_fx2_overtone_direct_level");  //copy FX2
 
                 AppendTSL(temp.mid(1030, 1), "position1");
                 AppendTSL(temp.mid(1031, 1), "position2");
@@ -1732,23 +1733,19 @@ void bulkSaveDialog::AppendTSL(QByteArray hex, const char* Json_name)
     QString val = QString::number(a, 16).toUpper();
     int value = val.toInt(&ok, 16);
     QByteArray name(Json_name);
-    int start_index = TSL_default.indexOf(name)+(name.size()+2); //find pointer to start of Json value.
+    int start_index = TSL_default.indexOf(name)+(name.size()+2); //find pointer to start of Json value.//removed +2 from end
     QByteArray b(":");
-    unsigned int incr = 20;
+    unsigned int incr = 5;
 LOOP:
     incr--;
-    if(TSL_default.mid(start_index-1, 1) != b)
+    if((TSL_default.mid(start_index-1, 1).contains(b)) && (TSL_default.mid(start_index-name.size()-3, 1 ).contains((char)34)))
     {
-        start_index = TSL_default.indexOf(name, start_index)+(name.size()+2);
-    };
-    if(TSL_default.mid(start_index-1, 1) == b)
-    {
-    int end_index = TSL_default.indexOf(",", start_index)-start_index;                  //find pointer to end of value to get the size of the value.
-    QByteArray v;
-    v.setNum(value);
-    TSL_default.replace(start_index, end_index, v);
-    incr=0;
-    }else if (incr>0) {goto LOOP; };
+        int end_index = TSL_default.indexOf(",", start_index)-start_index;                  //find pointer to end of value to get the size of the value.
+        QByteArray v;
+        v.setNum(value);
+        TSL_default.replace(start_index, end_index, v);
+        incr=0;
+    }else if (incr>0) {start_index = TSL_default.indexOf(name, start_index)+(name.size()+2); goto LOOP; };
 }
 
 void bulkSaveDialog::TextTSL(QByteArray hex, const char* Json_name)

@@ -1704,11 +1704,11 @@ void sysxWriter::writeTSL(QString fileName)
         AppendTSL(temp.mid(2318, 1), "prm_fx2_teraecho_effect_level");  //copy FX2
         AppendTSL(temp.mid(2319, 1), "prm_fx2_teraecho_direct_mix");    //copy FX2
         AppendTSL(temp.mid(2320, 1), "prm_fx2_teraecho_hold");          //copy FX2
-        AppendTSL(temp.mid(2321, 1), "prm_fx2_overtone_detune");        //copy FX2
-        AppendTSL(temp.mid(2322, 1), "prm_fx2_overtone_tone");          //copy FX2
-        AppendTSL(temp.mid(2323, 1), "prm_fx2_overtone_upper_level");   //copy FX2
-        AppendTSL(temp.mid(2324, 1), "prm_fx2_overtone_lower_level");   //copy FX2
-        AppendTSL(temp.mid(2325, 1), "prm_fx2_overtone_direct_level");  //copy FX2
+        AppendTSL(temp.mid(2322, 1), "prm_fx2_overtone_detune");        //copy FX2
+        AppendTSL(temp.mid(2323, 1), "prm_fx2_overtone_tone");          //copy FX2
+        AppendTSL(temp.mid(2324, 1), "prm_fx2_overtone_upper_level");   //copy FX2
+        AppendTSL(temp.mid(2325, 1), "prm_fx2_overtone_lower_level");   //copy FX2
+        AppendTSL(temp.mid(2326, 1), "prm_fx2_overtone_direct_level");  //copy FX2
 
         AppendTSL(temp.mid(1030, 1), "position1");
         AppendTSL(temp.mid(1031, 1), "position2");
@@ -1785,23 +1785,19 @@ void sysxWriter::AppendTSL(QByteArray hex, const char* Json_name)
     QString val = QString::number(a, 16).toUpper();
     int value = val.toInt(&ok, 16);
     QByteArray name(Json_name);
-    int start_index = TSL_default.indexOf(name)+(name.size()+2); //find pointer to start of Json value.
+    int start_index = TSL_default.indexOf(name)+(name.size()+2); //find pointer to start of Json value.//removed +2 from end
     QByteArray b(":");
-    unsigned int incr = 20;
+    unsigned int incr = 5;
 LOOP:
     incr--;
-    if(TSL_default.mid(start_index-1, 1) != b)
-    {
-        start_index = TSL_default.indexOf(name, start_index)+(name.size()+2);
-    };
-    if(TSL_default.mid(start_index-1, 1) == b)
+    if((TSL_default.mid(start_index-1, 1).contains(b)) && (TSL_default.mid(start_index-name.size()-3, 1 ).contains((char)34)))
     {
         int end_index = TSL_default.indexOf(",", start_index)-start_index;                  //find pointer to end of value to get the size of the value.
         QByteArray v;
         v.setNum(value);
         TSL_default.replace(start_index, end_index, v);
         incr=0;
-    }else if (incr>0) {goto LOOP; };
+    }else if (incr>0) {start_index = TSL_default.indexOf(name, start_index)+(name.size()+2); goto LOOP; };
 }
 
 void sysxWriter::TextTSL(QByteArray hex, const char* Json_name)
@@ -4438,11 +4434,11 @@ void sysxWriter::convertFromTSL()
         GT100_default_replace(2318, 1, GetJsonHex("prm_fx2_teraecho_effect_level", a));  //copy FX2
         GT100_default_replace(2319, 1, GetJsonHex("prm_fx2_teraecho_direct_mix", a));    //copy FX2
         GT100_default_replace(2320, 1, GetJsonHex("prm_fx2_teraecho_hold", a));          //copy FX2
-        GT100_default_replace(2321, 1, GetJsonHex("prm_fx2_overtone_detune", a));        //copy FX2
-        GT100_default_replace(2322, 1, GetJsonHex("prm_fx2_overtone_tone", a));          //copy FX2
-        GT100_default_replace(2323, 1, GetJsonHex("prm_fx2_overtone_upper_level", a));   //copy FX2
-        GT100_default_replace(2324, 1, GetJsonHex("prm_fx2_overtone_lower_level", a));   //copy FX2
-        GT100_default_replace(2325, 1, GetJsonHex("prm_fx2_overtone_direct_level", a));  //copy FX2
+        GT100_default_replace(2322, 1, GetJsonHex("prm_fx2_overtone_detune", a));        //copy FX2
+        GT100_default_replace(2323, 1, GetJsonHex("prm_fx2_overtone_tone", a));          //copy FX2
+        GT100_default_replace(2324, 1, GetJsonHex("prm_fx2_overtone_upper_level", a));   //copy FX2
+        GT100_default_replace(2325, 1, GetJsonHex("prm_fx2_overtone_lower_level", a));   //copy FX2
+        GT100_default_replace(2326, 1, GetJsonHex("prm_fx2_overtone_direct_level", a));  //copy FX2
         temp.clear();
         temp.resize(200);
         temp.fill(' ');

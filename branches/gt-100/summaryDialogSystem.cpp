@@ -135,6 +135,11 @@ summaryDialogSystem::summaryDialogSystem(QWidget *parent)
     start = 0;
     finish = 15;
     makeList();
+    address1= "00";
+    address2= "03";
+    start = 0;
+    finish = 40;
+    makeList();
 
     text.append("<br><br><b><u>********** MIDI MAPPING ***********</b></u><br><br>");
     text.append("<u>BANK 0</u><br>");

@@ -101,9 +101,9 @@ MidiPage::MidiPage(QWidget *parent)
     {
         midiInCombo->setCurrentIndex(midiInDeviceID + 1); // +1 because there is a default entry at 0
     };
-    if ( midiInDevices.contains("GT-100") )
+    if ( midiInDevices.contains("GT-100 Ver2") )
     {
-        int inputDevice = midiInDevices.indexOf("GT-100") + 1;
+        int inputDevice = midiInDevices.indexOf("GT-100 Ver2") + 1;
         midiInCombo->setCurrentIndex(inputDevice);
     };
 
@@ -121,9 +121,9 @@ MidiPage::MidiPage(QWidget *parent)
     {
         midiOutCombo->setCurrentIndex(midiOutDeviceID + 1); // +1 because there is a default entry at 0
     };
-    if ( midiOutDevices.contains("GT-100") )
+    if ( midiOutDevices.contains("GT-100 Ver2") )
     {
-        int outputDevice = midiOutDevices.indexOf("GT-100") + 1;
+        int outputDevice = midiOutDevices.indexOf("GT-100 Ver2") + 1;
         midiOutCombo->setCurrentIndex(outputDevice);
     };
 
@@ -212,12 +212,14 @@ MidiPage::MidiPage(QWidget *parent)
 WindowPage::WindowPage(QWidget *parent)
     : QWidget(parent)
 {
+    bool ok;
     Preferences *preferences = Preferences::Instance();
     QString windowRestore = preferences->getPreferences("Window", "Restore", "window");
     QString sidepanelRestore = preferences->getPreferences("Window", "Restore", "sidepanel");
     QString splashScreen = preferences->getPreferences("Window", "Splash", "bool");
     QString SingleWindow = preferences->getPreferences("Window", "Single", "bool");
-    QString WidgetsUse = preferences->getPreferences("Window", "Widgets", "bool");
+    //QString WidgetsUse = preferences->getPreferences("Window", "Widgets", "bool");
+    QString Scale = preferences->getPreferences("Window", "Scale", "ratio");
 
     QGroupBox *windowGroup = new QGroupBox(QObject::tr("Window settings"));
 
@@ -225,16 +227,23 @@ WindowPage::WindowPage(QWidget *parent)
     QCheckBox *windowCheckBox = new QCheckBox(QObject::tr("Restore window"));
     QCheckBox *sidepanelCheckBox = new QCheckBox(QObject::tr("Restore sidepanel"));
     QCheckBox *singleWindowCheckBox = new QCheckBox(QObject::tr("Single Window Layout"));
-    QCheckBox *widgetsCheckBox = new QCheckBox(QObject::tr("Graphical Assistance"));
+    QSpinBox *scaleSpinBox = new QSpinBox;
+    //QCheckBox *widgetsCheckBox = new QCheckBox(QObject::tr("Graphical Assistance"));
     this->windowCheckBox = windowCheckBox;
     this->sidepanelCheckBox = sidepanelCheckBox;
     this->singleWindowCheckBox = singleWindowCheckBox;
-    this->widgetsCheckBox = widgetsCheckBox;
+    this->scaleSpinBox = scaleSpinBox;
+    const int ratio = preferences->getPreferences("Window", "Scale", "ratio").toInt(&ok, 10);
+    scaleSpinBox->setValue(ratio);
+    scaleSpinBox->setRange(1, 100);
+    scaleSpinBox->setPrefix(QObject::tr("Scale ratio "));
+    scaleSpinBox->setSuffix(QObject::tr("0%"));
+    //this->widgetsCheckBox = widgetsCheckBox;
 
     if(windowRestore=="true") { windowCheckBox->setChecked(true); };
     if(sidepanelRestore=="true") { sidepanelCheckBox->setChecked(true); };
     if(SingleWindow=="true") { singleWindowCheckBox->setChecked(true); };
-    if(WidgetsUse=="true") { widgetsCheckBox->setChecked(true); };
+    //if(WidgetsUse=="true") { widgetsCheckBox->setChecked(true); };
 
     QVBoxLayout *restoreLayout = new QVBoxLayout;
     restoreLayout->addWidget(restoreDescriptionLabel);
@@ -242,7 +251,8 @@ WindowPage::WindowPage(QWidget *parent)
     restoreLayout->addWidget(windowCheckBox);
     restoreLayout->addWidget(sidepanelCheckBox);
     restoreLayout->addWidget(singleWindowCheckBox);
-    restoreLayout->addWidget(widgetsCheckBox);
+    //restoreLayout->addWidget(widgetsCheckBox);
+    restoreLayout->addWidget(scaleSpinBox);
 
     QVBoxLayout *windowLayout = new QVBoxLayout;
     windowLayout->addLayout(restoreLayout);

@@ -76,7 +76,7 @@ macx{
         LIBS += -ljack
         message("X-Code LIBRARIES SHOULD BE INSTALLED or ERROR will Occur")
         message("Please install the X-Code Audio System packages if not present")
-        ICON = ME-25-Edit.icns
+        ICON = GT-100FxFloorBoard.icns
         message(Including Mac OS X specific headers and sources...)
 }
 

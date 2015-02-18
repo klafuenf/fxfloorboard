@@ -2,9 +2,10 @@
 <!-- Preferences of the GT-100 Fx FloorBoard application. -->
 <Preferences>
 	<General>
-		<Application version="20140724"/>
-		<Donate url="true"/>
+		<Application version="20141028"/>
+		<Donate url="false"/>
 		<Files dir=""/>
+    <Help url="help/help.html"/>
 		<Start count="6"/>
 	</General>
 	<Language>
@@ -29,6 +30,7 @@
 		<Restore window="true" sidepanel="true"/>
 		<Single bool="true"/>
 		<Size width="1330" height="720"/>
+    <Scale ratio="10"/>
 		<Splash bool="true"/>
 		<Widgets bool="false"/>
 	</Window>

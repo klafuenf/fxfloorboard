@@ -210,10 +210,10 @@ int main(int argc, char **argv)
         msgBox->setTextFormat(Qt::RichText);
         QString msgText;
         msgText.append("<font size='+1'><b>");
-        msgText.append(QObject::tr("This software is free to use, but....<br>"));
+        msgText.append(QObject::tr("This software is fully functional and free to use, but....<br>"));
         msgText.append("<b></font><br>");
         msgText.append(QObject::tr("To ensure further development and continued support<br><br>"));
-        msgText.append(QObject::tr("please donate (link in Help menu)<br><br>"));
+        msgText.append(QObject::tr("please donate (link in Help menu) if You appreciate this software<br><br>"));
         msgText.append(QObject::tr(" This software is developed out of my own time and cost"));
         msgText.append(QObject::tr("<br><br> I am not supported or sponsored by Boss/Roland"));
         msgText.append(QObject::tr("<br><br> Thank You !! I hope you enjoy the software"));

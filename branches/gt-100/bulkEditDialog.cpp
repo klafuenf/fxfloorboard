@@ -159,7 +159,7 @@ void bulkEditDialog::comboValueChanged(int value)
     if(finish<1){finish=1; };
     if(start>finish){start = finish-1; };
     if(finish<start){finish = start+1; };
-    if(start<0){start=0; };
+    //if(start<0){start=0; };
     if(finish>199){finish=199; };
 
     this->startPatchCombo->setCurrentIndex(this->start);
@@ -325,7 +325,7 @@ void bulkEditDialog::DialogClose()
 {
     bank = 100;
     SysxIO *sysxIO = SysxIO::Instance();
-    QObject::disconnect(sysxIO, SIGNAL(sysxReply(QString)), this, SLOT(updatePatch(QString)));
+    QObject::disconnect(sysxIO, SIGNAL(sysxReply(QString)), this, SLOT(sendSequence(QString)));
     this->deleteLater();
     this->close();
 }
