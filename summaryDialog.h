@@ -68,6 +68,7 @@ int finish;
 QString mode;
 QString effect;
 QString filter;
+QPushButton *viewButton;
 };
 
 #endif // FILEDIALOG_H

@@ -170,7 +170,7 @@ void Preferences::savePreferences()
 
     QHash<QString, QString> attrs;
 
-	xout.writeComment("Preferences of the GT-100 Fx FloorBoard application.");
+    xout.writeComment("Preferences of the GT-100FxFloorBoard application.");
 	xout.writeOpenTag("Preferences");
 
 	unsigned int aSize = this->metaSearch.size();

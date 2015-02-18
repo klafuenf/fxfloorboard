@@ -92,7 +92,7 @@ mainWindow::mainWindow()
     if(count == 0 && preferences->getPreferences("General", "Donate", "url")!="true")
     { donate(); };
     count++;
-    if(count >= 8) {count = 0; };
+    if(count >= 15) {count = 0; };
     QString index = QString::number(count, 10).toUpper();
     preferences->setPreferences("General", "Start", "count", index);
 }
@@ -758,7 +758,8 @@ void mainWindow::settings()
         QString sidepanel = (dialog->windowSettings->sidepanelCheckBox->checkState())?QString("true"):QString("false");
         QString window = (dialog->windowSettings->windowCheckBox->checkState())?QString("true"):QString("false");
         QString singleWindow = (dialog->windowSettings->singleWindowCheckBox->checkState())?QString("true"):QString("false");
-        QString widgetHelp = (dialog->windowSettings->widgetsCheckBox->checkState())?QString("true"):QString("false");
+        QString scale =QString::number(dialog->windowSettings->scaleSpinBox->value());
+        //QString widgetHelp = (dialog->windowSettings->widgetsCheckBox->checkState())?QString("true"):QString("false");
         QString splash = (dialog->windowSettings->splashCheckBox->checkState())?QString("true"):QString("false");
         QString dBug = (dialog->midiSettings->dBugCheckBox->checkState())?QString("true"):QString("false");
         QString midiIn = QString::number(dialog->midiSettings->midiInCombo->currentIndex() - 1, 10); // -1 because there is a default entry at index 0
@@ -798,8 +799,9 @@ void mainWindow::settings()
         preferences->setPreferences("Midi", "Delay", "set", receiveTimeout);
         preferences->setPreferences("Window", "Restore", "sidepanel", sidepanel);
         preferences->setPreferences("Window", "Restore", "window", window);
+        preferences->setPreferences("Window", "Scale", "ratio", scale);
         preferences->setPreferences("Window", "Single", "bool", singleWindow);
-        preferences->setPreferences("Window", "Widgets", "bool", widgetHelp);
+        //preferences->setPreferences("Window", "Widgets", "bool", widgetHelp);
         preferences->setPreferences("Window", "Splash", "bool", splash);
         preferences->savePreferences();
     };
@@ -808,8 +810,7 @@ void mainWindow::settings()
 /* HELP MENU */
 void mainWindow::help()
 {
-    Preferences *preferences = Preferences::Instance();
-    QDesktopServices::openUrl(QUrl( preferences->getPreferences("General", "Help", "url") ));
+    QDesktopServices::openUrl(QUrl("file:help/help.html" ));
 }
 
 void mainWindow::whatsThis()
@@ -868,7 +869,7 @@ void mainWindow::manual()
 
 void mainWindow::license()
 {
-    QDesktopServices::openUrl(QUrl(":license.txt"));
+    QDesktopServices::openUrl(QUrl("file:license.txt"));
 }
 
 void mainWindow::about()

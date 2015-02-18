@@ -420,7 +420,7 @@ void floorBoardDisplay::setPatchNumDisplay(int bank, int patch)
             this->patchNumDisplay->resetAllColor();
             this->patchNumDisplay->setSubText(tr("Quick"));
         }
-        else
+        else if (bank > 101)
         {
             this->patchNumDisplay->setAllColor(QColor(255,0,0));
             this->patchNumDisplay->setSubText(tr("Quick"));
@@ -451,7 +451,6 @@ void floorBoardDisplay::setPatchNumDisplay(int bank, int patch)
     }
     else
     {
-        //this->patchNumDisplay->clearAll();
         this->patchNumDisplay->setSubText(tr("Temp"));
         QString str = tr("Buffer");
         this->patchNumDisplay->setMainText(str, Qt::AlignCenter);
@@ -1440,7 +1439,8 @@ void floorBoardDisplay::autosyncResult(QString sysxMsg)
         QString part16 = sysxMsg.mid(4000, 76); //y was 48
         QString part16B = sysxMsg.mid(4106, 180) + footer;
         part16.prepend("0F00").prepend(addressMsb).prepend(header);
-        QString part17 = header + "1000" + addressMsb + sysxMsg.mid(4282, 120) + footer; //4286, 118
+        QString part17 = sysxMsg.mid(4282, 120);
+        part17.prepend("1000").prepend(addressMsb).prepend(header).append(footer);
 
 
         sysxMsg.clear();

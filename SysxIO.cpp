@@ -184,12 +184,14 @@ void SysxIO::setFileSource(QString area, QString data)
         this->fileSource.address.clear();
         this->fileSource.hex.clear();
     };
-
+    //QString texts;
     QList<QString> sysxBuffer;
     for(int i=0;i<data.size();i++)
     {
+
         QString hex = data.mid(i, 2);
         sysxBuffer.append(hex);
+        //texts.append(hex);
         i++;
 
         if(hex == "F7")
@@ -204,7 +206,20 @@ void SysxIO::setFileSource(QString area, QString data)
                 this->fileSource.address.append( sysxBuffer.at(sysxAddressOffset + 2) + sysxBuffer.at(sysxAddressOffset + 3) );
                 this->fileSource.hex.append(sysxBuffer);
             };
+
+            /*QMessageBox *msgBox = new QMessageBox();
+            msgBox->setWindowTitle(QObject::tr("data received"));
+            msgBox->setIcon(QMessageBox::Warning);
+            msgBox->setTextFormat(Qt::RichText);
+            QString msgText;
+            msgText.append(QObject::tr("<br> data = "));
+            msgText.append(texts);
+            msgBox->setText(msgText);
+            msgBox->setStandardButtons(QMessageBox::Ok);
+            msgBox->exec();*/
+
             sysxBuffer.clear();
+            //texts.clear();
         };
     };
 }

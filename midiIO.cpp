@@ -45,20 +45,20 @@ midiIO::midiIO()
 {
 if (!midiin || !midiout){
 #ifdef Q_OS_WIN
-midiout = new RtMidiOut(midiout->WINDOWS_MM, clientName);
-midiin = new RtMidiIn(midiin->WINDOWS_MM, clientName);
+midiout = new RtMidiOut();
+midiin = new RtMidiIn();
 #endif
 #ifdef Q_OS_MAC
-midiout = new RtMidiOut(midiout->MACOSX_CORE, clientName);
-midiin = new RtMidiIn(midiin->MACOSX_CORE, clientName);
+midiout = new RtMidiOut();
+midiin = new RtMidiIn();
 #endif
 #ifdef Q_OS_LINUX
-midiout = new RtMidiOut(midiout->LINUX_ALSA, clientName);
-midiin = new RtMidiIn(midiin->LINUX_ALSA, clientName);
+midiout = new RtMidiOut();
+midiin = new RtMidiIn();
 #endif
 #ifdef Q_PROCESSOR_ARM
-midiout = new RtMidiOut(midiout->RTMIDI_DUMMY, clientName);
-midiin = new RtMidiIn(midiin->RTMIDI_DUMMY, clientName);
+midiout = new RtMidiOut();
+midiin = new RtMidiIn();
 #endif
 };
     this->midi = false; // Set this to false until required;
@@ -101,7 +101,7 @@ void midiIO::queryMidiOutDevices()
             this->midiOutDevices.append(QString::fromStdString(portName));
         };
     }
-    catch (RtError &error)
+    catch (RtMidiError &error)
     {
         emit errorSignal(tr("Midi Output Error"), tr("port availability error"));
         emit setStatusdBugMessage(QString::fromStdString( error.getMessage()));
@@ -137,7 +137,7 @@ void midiIO::queryMidiInDevices()
             this->midiInDevices.append(QString::fromStdString(portName));
         };
     }
-    catch (RtError &error)
+    catch (RtMidiError &error)
     {
         emit errorSignal(tr("Midi Input Error"), tr("port availability error"));
         emit setStatusdBugMessage(QString::fromStdString( error.getMessage()));
@@ -171,7 +171,7 @@ void midiIO::sendSyxMsg(QString sysxOutMsg, int midiOutPort)
     int p=0;
     int retryCount = 0;
     std::vector<unsigned char> message;
-    message.reserve(1024);
+    //message.reserve(1024);
     int msgLength = 0;
     msgLength = sysxOutMsg.length()/2;
     char *ptr  = new char[msgLength];		// Convert QString to char* (hex value)
@@ -196,7 +196,7 @@ RETRY:
             midiout->sendMessage(&message);
         goto cleanup;
     }
-    catch (RtError &error)
+    catch (RtMidiError &error)
     {
         msleep(100);
         retryCount = retryCount + 1;
@@ -234,7 +234,7 @@ void midiIO::sendMidiMsg(QString sysxOutMsg, int midiOutPort)
         midiout->sendMessage(&message);  // send the midi data as a std::vector
         goto cleanup;
     }
-    catch (RtError &error)
+    catch (RtMidiError &error)
     {
         emit errorSignal(tr("Midi Output Error"), tr("data error"));
         emit setStatusdBugMessage(QString::fromStdString( error.getMessage()));
@@ -264,7 +264,7 @@ void midicallback(double deltatime, std::vector<unsigned char> *message, void *u
     midiIO *midi = new midiIO();
     if (rxData.contains("F0") || rxData.contains("F7"))   // filter out non-syx events
     { midi->callbackMsg(rxData); };
-    midi->deleteLater();
+    //midi->deleteLater();
 }
 
 void midiIO::callbackMsg(QString rxData)
@@ -307,24 +307,22 @@ void midiIO::receiveMsg(int midiInPort)
             emit setStatusProgress(t);
             x++;
         };                   // time it takes to get all sysx messages in.
-        midiin->cancelCallback();
-        midiin->closePort();             // close the midi in port
-        this->sysxInMsg = this->sysxBuffer;		   //get the returning data string
         goto cleanup;
     }
-    catch (RtError &error)
+    catch (RtMidiError &error)
     {
         emit errorSignal(tr("Midi Input Error"), tr("data error"));
         emit setStatusdBugMessage(QString::fromStdString( error.getMessage()));
-        midiin->cancelCallback();
-        midiin->closePort();
         goto cleanup;
     };
     /*Clean up */
 cleanup:
     emit setStatusProgress(100);
+    midiin->cancelCallback();
+    this->sysxInMsg = this->sysxBuffer;		   //get the returning data string
     dataReceive = true;
-     msleep(25);
+    midiin->closePort();             // close the midi in port
+    msleep(25);
 }
 
 /**************************** run() **************************************
@@ -377,9 +375,9 @@ void midiIO::run()
     else   // if not a midi message, then it must be a sysx message
     {
 RECEIVE:
-        this->dataReceive = false;
-        this->sysxBuffer.clear();
-        this->sysxInMsg.clear();
+        dataReceive = false;
+        sysxBuffer.clear();
+        sysxInMsg.clear();
         /* Check if we are going to receive something on sending */
         bool receive;
         (this->sysxOutMsg.mid(sysxAddressOffset*2-2, 2) != "12")? receive = true: receive = false;

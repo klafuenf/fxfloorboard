@@ -347,6 +347,12 @@ void menuPage_system::setEditPages()
     editDetails()->page()->addKnob(0, 6, 1, 1, "00", "01", "2A", "System");  //character
     editDetails()->page()->addGroupBox(0, 0, 1, 1);
     editDetails()->page()->addStackField();
+    
+    editDetails()->page()->newStackField(0); // bogner
+    editDetails()->page()->addStackField();
+
+    editDetails()->page()->newStackField(0);  // orange 
+    editDetails()->page()->addStackField();
 
 
     editDetails()->page()->newStackField(1);editDetails()->page()->addStackField();
@@ -552,6 +558,12 @@ void menuPage_system::setEditPages()
     editDetails()->page()->addKnob(0, 5, 1, 1, "00", "01", "49", "System");  //pre-hi
     editDetails()->page()->addKnob(0, 6, 1, 1, "00", "01", "4A", "System");  //character
     editDetails()->page()->addGroupBox(0, 0, 1, 1);
+    editDetails()->page()->addStackField();
+    
+    editDetails()->page()->newStackField(0); // bogner
+    editDetails()->page()->addStackField();
+
+    editDetails()->page()->newStackField(0);  // orange 
     editDetails()->page()->addStackField();
 
 
@@ -760,6 +772,12 @@ void menuPage_system::setEditPages()
     editDetails()->page()->addKnob(0, 6, 1, 1, "00", "01", "6A", "System");  //character
     editDetails()->page()->addGroupBox(0, 0, 1, 1);
     editDetails()->page()->addStackField();
+    
+    editDetails()->page()->newStackField(0); // bogner
+    editDetails()->page()->addStackField();
+
+    editDetails()->page()->newStackField(0);  // orange 
+    editDetails()->page()->addStackField();
 
 
     editDetails()->page()->newStackField(1);editDetails()->page()->addStackField();
@@ -966,6 +984,12 @@ void menuPage_system::setEditPages()
     editDetails()->page()->addKnob(0, 5, 1, 1, "00", "02", "09", "System");  //pre-hi
     editDetails()->page()->addKnob(0, 6, 1, 1, "00", "02", "0A", "System");  //character
     editDetails()->page()->addGroupBox(0, 0, 1, 1);
+    editDetails()->page()->addStackField();
+    
+    editDetails()->page()->newStackField(0); // bogner
+    editDetails()->page()->addStackField();
+
+    editDetails()->page()->newStackField(0);  // orange 
     editDetails()->page()->addStackField();
 
 
@@ -1174,6 +1198,12 @@ void menuPage_system::setEditPages()
     editDetails()->page()->addKnob(0, 6, 1, 1, "00", "02", "2A", "System");  //character
     editDetails()->page()->addGroupBox(0, 0, 1, 1);
     editDetails()->page()->addStackField();
+    
+    editDetails()->page()->newStackField(0); // bogner
+    editDetails()->page()->addStackField();
+
+    editDetails()->page()->newStackField(0);  // orange 
+    editDetails()->page()->addStackField();
 
 
     editDetails()->page()->newStackField(1);editDetails()->page()->addStackField();
@@ -1379,6 +1409,12 @@ void menuPage_system::setEditPages()
     editDetails()->page()->addKnob(0, 5, 1, 1, "00", "02", "49", "System");  //pre-hi
     editDetails()->page()->addKnob(0, 6, 1, 1, "00", "02", "4A", "System");  //character
     editDetails()->page()->addGroupBox(0, 0, 1, 1);
+    editDetails()->page()->addStackField();
+    
+    editDetails()->page()->newStackField(0); // bogner
+    editDetails()->page()->addStackField();
+
+    editDetails()->page()->newStackField(0);  // orange 
     editDetails()->page()->addStackField();
 
 

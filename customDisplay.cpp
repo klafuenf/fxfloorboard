@@ -161,15 +161,20 @@ void customDisplay::setAllColor(QColor color)
 	red = QString::number(color.red(), 10);
 	green = QString::number(color.green(), 10);
 	blue = QString::number(color.blue(), 10);
-	this->mainLabel->setStyleSheet("color: rgb("+ red +","+ green +","+ blue +");");
-	this->subLabelLeft->setStyleSheet("color: rgb("+ red +","+ green +","+ blue +");");
-	this->subLabelRight->setStyleSheet("color: rgb("+ red +","+ green +","+ blue +");");
+    this->mainLabel->setStyleSheet("color: rgb("+ red +","+ green +","+ blue +");");
+    this->subLabelLeft->setStyleSheet("color: rgb("+ red +","+ green +","+ blue +");");
+    this->subLabelRight->setStyleSheet("color: rgb("+ red +","+ green +","+ blue +");");
 }
 
 void customDisplay::resetAllColor()
 {
-	this->mainLabel->setPalette(this->mainPal);
-	this->subLabelLeft->setPalette(this->subPal);
-	this->subLabelRight->setPalette(this->subPal);
+    QColor color = this->mainPal.color(QPalette::Normal, QPalette::WindowText);
+    QString red, green, blue;;
+    red = QString::number(color.red(), 10);
+    green = QString::number(color.green(), 10);
+    blue = QString::number(color.blue(), 10);
+    this->mainLabel->setStyleSheet("color: rgb("+ red +","+ green +","+ blue +");");
+    this->subLabelLeft->setStyleSheet("color: rgb("+ red +","+ green +","+ blue +");");
+    this->subLabelRight->setStyleSheet("color: rgb("+ red +","+ green +","+ blue +");");
 }
 

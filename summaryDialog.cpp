@@ -294,6 +294,10 @@ summaryDialog::summaryDialog(QWidget *parent)
     start = 0;
     finish = 75;
     makeList();
+    address= "10";
+    start = 16;
+    finish = 31;
+    makeList();
     large_text.append(text2);
     if(effect == "on") { small_text.append(text); };
     this->filter = "off";
@@ -312,6 +316,10 @@ summaryDialog::summaryDialog(QWidget *parent)
     address= "05";
     start = 0;
     finish = 87;
+    makeList();
+    address= "10";
+    start = 31;
+    finish = 60;
     makeList();
     large_text.append(text2);
     if(effect == "on") { small_text.append(text); };
@@ -414,7 +422,7 @@ summaryDialog::summaryDialog(QWidget *parent)
     connect(saveAsButton, SIGNAL(clicked()), this, SLOT(saveAs()));
     saveAsButton->setWhatsThis(tr("Will save the current dialog page to file in a *.txt format."));
 
-    QPushButton *viewButton = new QPushButton(tr("Change View"));
+    viewButton = new QPushButton(tr("Expanded View"));
     connect(viewButton, SIGNAL(clicked()), this, SLOT(view()));
     viewButton->setWhatsThis(tr("Will Expand the summary dialog to include all patch parameters."));
 
@@ -512,11 +520,13 @@ void summaryDialog::view()
 {
     if (mode == "Compact")
     {
+        viewButton->setText("Compact veiw");
         textDialog->setText(large_text);
         this->mode = "Expanded";
     }
     else
     {
+        viewButton->setText("Expanded veiw");
         textDialog->setText(small_text);
         this->mode = "Compact";
     };

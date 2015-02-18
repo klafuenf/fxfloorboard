@@ -30,6 +30,14 @@
 #include "Preferences.h"
 #include "globalVariables.h"
 
+// Platform-dependent sleep routines.
+#ifdef Q_OS_WIN
+#include <windows.h>
+#define SLEEP( milliseconds ) Sleep( (DWORD) milliseconds )
+#else // Unix variants & Mac
+#include <unistd.h>
+#define SLEEP( milliseconds ) usleep( (unsigned long) (milliseconds * 1000.0) )
+#endif
 
 bulkLoadDialog::bulkLoadDialog()
 { 
@@ -177,21 +185,12 @@ bulkLoadDialog::bulkLoadDialog()
             QFile hexfile(":HexLookupTable.hex");           // Read the HexLookupTable for the SMF header file .
             if (hexfile.open(QIODevice::ReadOnly))
             {	this->hextable = hexfile.readAll(); };
-            /*
-      patchNum = QString::number(r, 16).toUpper().toInt(&ok, 16);
-      bool isPatch = false;
-      if (patchNum >= bankUserStart) { isPatch = true; };    // check the sysx file is a valid patch & not system data- patchNum matches patch address.
 
-      r = (char)data[(patchSize)+1];     // find sysx product id number in file roland = 41
-      patchNum = QString::number(r, 16).toUpper().toInt(&ok, 16);
-      bool isGTM = false;
-      if ((patchNum != 65) && (data.size() > patchSize) )  {isGTM = true; };
-       */
             QByteArray default_header = default_data.mid(0, 7);           // copy header from default.syx
             QByteArray file_header = data.mid(0, 7);                      // copy header from read file.syx
             QByteArray GCL_header = GCL_default.mid(3, 20);                // copy header from default.gcl
             QByteArray SMF_header = hextable.mid(288,18);
-            QByteArray SMF_file = data.mid(0, 18);
+            //QByteArray SMF_file = data.mid(0, 18);
             unsigned char r = (char)data[7];     // find patch number in file (msb))
             bool ok;
             int patchNum;
@@ -201,10 +200,6 @@ bulkLoadDialog::bulkLoadDialog()
 
             bool isHeader = false;
             if (default_header == file_header) {isHeader = true;};
-            QByteArray GTM_bit =  default_data.mid(1765, 5);              // see if the file has a GT-Manager signature.
-            QByteArray GTM_file = data.mid(1764, 5);
-            bool isGTM = false;
-            if (GTM_bit == GTM_file) {isGTM = true;};
             bool isGCL = false;
             if (data.contains(GCL_header)){isGCL = true; };             // see if file is a GCL type and set isGCL flag.
             bool isSMF = false;
@@ -333,7 +328,7 @@ void bulkLoadDialog::sendData()
     patch = bank/patchPerBank; patch = patch*patchPerBank; patch=bank-patch;
     steps=0;
     dataSent=0;
-    sendSequence("");
+    sendSequence();
 }
 
 void bulkLoadDialog::sendPatch(QString data)
@@ -342,14 +337,16 @@ void bulkLoadDialog::sendPatch(QString data)
     bulkStatusProgress(progress);                         // advance the progressbar.
 
     SysxIO *sysxIO = SysxIO::Instance();
-    QObject::connect(sysxIO, SIGNAL(sysxReply(QString)), this, SLOT(sendSequence(QString)));
+    QObject::connect(sysxIO, SIGNAL(sysxReply(QString)), this, SLOT(sendSequence()));
+    int count=100;
+    while(!sysxIO->deviceReady() && count>0){SLEEP(20); --count;};
     sysxIO->sendSysx(data);
 }
 
-void bulkLoadDialog::sendSequence(QString value)
+void bulkLoadDialog::sendSequence()
 { 
     SysxIO *sysxIO = SysxIO::Instance();
-    QObject::disconnect(sysxIO, SIGNAL(sysxReply(QString)), this, SLOT(sendSequence(QString)));
+    QObject::disconnect(sysxIO, SIGNAL(sysxReply(QString)), this, SLOT(sendSequence()));
     sysxIO->setDeviceReady(true); // Free the device after finishing interaction.
     msg=bulk.mid(steps*(patchSize*2), (patchSize*2));
 
@@ -392,7 +389,7 @@ void bulkLoadDialog::sendSequence(QString value)
         sendPatch(msg);                                 //request the next patch.
         setStatusMessage(tr("Sending Data"));
     } else {
-        QObject::disconnect(sysxIO, SIGNAL(sysxReply(QString)), this, SLOT(sendSequence(QString)));
+        QObject::disconnect(sysxIO, SIGNAL(sysxReply(QString)), this, SLOT(sendSequence()));
         sysxIO->setDeviceReady(true); // Free the device after finishing interaction.
         setStatusMessage(tr("Ready"));
         DialogClose();
@@ -1532,11 +1529,11 @@ void bulkLoadDialog::loadTSL()         // ************************************ T
             GT100_default_replace(2318, 1, GetJsonHex("prm_fx2_teraecho_effect_level", a));  //copy FX2
             GT100_default_replace(2319, 1, GetJsonHex("prm_fx2_teraecho_direct_mix", a));    //copy FX2
             GT100_default_replace(2320, 1, GetJsonHex("prm_fx2_teraecho_hold", a));          //copy FX2
-            GT100_default_replace(2321, 1, GetJsonHex("prm_fx2_overtone_detune", a));        //copy FX2
-            GT100_default_replace(2322, 1, GetJsonHex("prm_fx2_overtone_tone", a));          //copy FX2
-            GT100_default_replace(2323, 1, GetJsonHex("prm_fx2_overtone_upper_level", a));   //copy FX2
-            GT100_default_replace(2324, 1, GetJsonHex("prm_fx2_overtone_lower_level", a));   //copy FX2
-            GT100_default_replace(2325, 1, GetJsonHex("prm_fx2_overtone_direct_level", a));  //copy FX2
+            GT100_default_replace(2322, 1, GetJsonHex("prm_fx2_overtone_detune", a));        //copy FX2
+            GT100_default_replace(2323, 1, GetJsonHex("prm_fx2_overtone_tone", a));          //copy FX2
+            GT100_default_replace(2324, 1, GetJsonHex("prm_fx2_overtone_upper_level", a));   //copy FX2
+            GT100_default_replace(2325, 1, GetJsonHex("prm_fx2_overtone_lower_level", a));   //copy FX2
+            GT100_default_replace(2326, 1, GetJsonHex("prm_fx2_overtone_direct_level", a));  //copy FX2
             this->sysxPatches.append(GT100_default.mid(0, patchSize));
         }
         else if(device.contains("ME-80"))
@@ -1661,8 +1658,8 @@ void bulkLoadDialog::DialogClose()
 {
     steps = 300;
     SysxIO *sysxIO = SysxIO::Instance();
-    QObject::disconnect(sysxIO, SIGNAL(sysxReply(QString)), this, SLOT(sendSequence(QString)));
+    QObject::disconnect(sysxIO, SIGNAL(sysxReply(QString)), this, SLOT(sendSequence()));
     sysxIO->setDeviceReady(true); // Free the device after finishing interaction.
     setStatusMessage(tr("Ready"));
-    this->deleteLater();
+    close();
 }

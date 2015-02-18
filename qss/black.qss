@@ -20,14 +20,14 @@
 ** 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 **
 ****************************************************************************/
- 
+
 /* CUSTOM QTREEWIDGET STYLE */
 bankTreeList#banklist{
 background-color rgb(34,24,25);
 }
 QTreeWidget#banklist {
 font-family: Arial;
-font-size: 10px;
+font-size: 12px;
 font-weight: bold;
 color: rgb(222,110,64);
 background-color: rgba(34,24,25,255);
@@ -40,14 +40,14 @@ border-color: rgb(150,150,150);
 }
 QTreeWidget#banklist QHeaderView::section:only-one {
 font-family: Arial;
-font-size: 9px;
+font-size: 12px;
 font-weight: bold;
 /*padding-top: 15px;*/
 border-style: solid;
 border-radius: 3px;
 border-width: 1px;
 border-color: rgba(150,150,150,255);
-background-color: rgb(34,24,25);
+background-color: rgb(34,24,75);
 
 color: rgb(222,110,64);
 }

@@ -560,7 +560,7 @@ void bankTreeList::updatePatch(QString replyMsg)
                         this, SLOT(updatePatch(QString)));
 
 
-    replyMsg = replyMsg.remove(" ").toUpper();       /* TRANSLATE SYSX MESSAGE FORMAT to 128 byte data blocks */
+    replyMsg = replyMsg.toUpper();       /* TRANSLATE SYSX MESSAGE FORMAT to 128 byte data blocks */
     if (replyMsg.size()/2 == patchReplySize){
         QString header = "F0410000006012";
         QString footer ="00F7";
@@ -607,23 +607,25 @@ void bankTreeList::updatePatch(QString replyMsg)
         QString part16 = replyMsg.mid(4000, 76); //y was 48
         QString part16B = replyMsg.mid(4106, 180) + footer;
         part16.prepend("0F00").prepend(addressMsb).prepend(header);
-        QString part17 = header + "1000" + addressMsb + replyMsg.mid(4282, 120) + footer;
+        QString part17 = replyMsg.mid(4282, 120);
+        part17.prepend("1000").prepend(addressMsb).prepend(header).append(footer);
 
         QString QFX = "false";
         if (replyMsg.contains("F041000000601230") || replyMsg.contains("F041000000601240")) // if a QFX patch
         {QFX = "true"; };                                                     // update the temp buffer
 
-        replyMsg = "";
+        replyMsg.clear();
         replyMsg.append(part1).append(part2).append(part3).append(part4).append(part5).append(part6)
                 .append(part7).append(part8).append(part9).append(part10).append(part11).append(part12)
                 .append(part13).append(part14).append(part15).append(part16).append(part16B).append(part17);
 
-        QString reBuild = "";       /* Add correct checksum to patch strings */
-        QString sysxEOF = "";
-        QString hex = "";
+        QString reBuild;       /* Add correct checksum to patch strings */
+        QString hex;
+        QString sysxEOF;
         int msgLength = replyMsg.length()/2;
         for(int i=0;i<msgLength*2;++i)
         {
+
             hex.append(replyMsg.mid(i*2, 2));
             sysxEOF = (replyMsg.mid((i*2)+4, 2));
             if (sysxEOF == "F7")
@@ -639,13 +641,23 @@ void bankTreeList::updatePatch(QString replyMsg)
                 hex.append(checksum);
                 hex.append("F7");
                 reBuild.append(hex);
-
-                hex = "";
-                sysxEOF = "";
                 i=i+2;
+                hex.clear();
+                sysxEOF.clear();
             };
         };
-        replyMsg = reBuild.toUpper();
+       /* QMessageBox *msgBox = new QMessageBox();
+        msgBox->setWindowTitle(QObject::tr("Patch data received"));
+        msgBox->setIcon(QMessageBox::Warning);
+        msgBox->setTextFormat(Qt::RichText);
+        QString msgText;
+        msgText.append(QObject::tr("<br> data size received = ")+(QString::number(replyMsg.size()/2, 10)));
+        msgText.append(QObject::tr("<br> data size rebuilt = ")+(QString::number(reBuild.size()/2, 10)));
+        msgBox->setText(msgText);
+        msgBox->setStandardButtons(QMessageBox::Ok);
+        msgBox->exec();*/
+
+        replyMsg = reBuild;
         emit setStatusMessage(tr("Ready"));
 
         QString area = "Structure";
@@ -660,6 +672,7 @@ void bankTreeList::updatePatch(QString replyMsg)
         emit updateSignal();
         emit setStatusProgress(0);
         if (QFX == "true") { sysxIO->writeToBuffer(); };
+
     };
     if(!replyMsg.isEmpty() && replyMsg.size()/2 != fullPatchSize)
     {

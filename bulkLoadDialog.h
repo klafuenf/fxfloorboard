@@ -54,7 +54,7 @@ public slots:
     void sendData();
     void updatePatch();
     void bulkStatusProgress(int value);
-    void sendSequence(QString value);
+    void sendSequence();
     void sendPatch(QString data);
     void DialogClose();
 

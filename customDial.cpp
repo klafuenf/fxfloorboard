@@ -53,7 +53,7 @@ customDial::customDial(double value, double min, double max, double single, doub
 
 void customDial::paintEvent(QPaintEvent *)
 {
-	QRectF target(0.0 , 0.0, dialSize.width(), dialSize.height());
+    QRectF target(0.0 , 0.0, dialSize.width(), dialSize.height());
 	QRectF source(xOffset, 0.0, dialSize.width(), dialSize.height());
 	QPixmap image(imagePath);
 	//image.setMask(image.mask());

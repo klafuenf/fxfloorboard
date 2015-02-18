@@ -31,36 +31,37 @@
 
 class GeneralPage : public QWidget
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	GeneralPage(QWidget *parent = 0);
-	QLineEdit* dirEdit;
+    GeneralPage(QWidget *parent = 0);
+    QLineEdit* dirEdit;
 
 public slots:
-	void browseDir();
+    void browseDir();
 };
 
 class MidiPage : public QWidget
 {
 public:
-	MidiPage(QWidget *parent = 0);
-	QComboBox* midiInCombo;
-	QComboBox* midiOutCombo;
-	QCheckBox* dBugCheckBox;
-	QSpinBox* midiTimeSpinBox;
-	QSpinBox* midiDelaySpinBox;
+    MidiPage(QWidget *parent = 0);
+    QComboBox* midiInCombo;
+    QComboBox* midiOutCombo;
+    QCheckBox* dBugCheckBox;
+    QSpinBox* midiTimeSpinBox;
+    QSpinBox* midiDelaySpinBox;
 };
 
 class WindowPage : public QWidget
 {
 public:
-	WindowPage(QWidget *parent = 0);
-	QCheckBox* windowCheckBox;
-	QCheckBox* sidepanelCheckBox;
-	QCheckBox* singleWindowCheckBox;
-  QCheckBox* widgetsCheckBox;
-	QCheckBox* splashCheckBox;
+    WindowPage(QWidget *parent = 0);
+    QCheckBox* windowCheckBox;
+    QCheckBox* sidepanelCheckBox;
+    QCheckBox* singleWindowCheckBox;
+    QCheckBox* widgetsCheckBox;
+    QCheckBox* splashCheckBox;
+    QSpinBox* scaleSpinBox;
 };
 
 class LanguagePage : public QWidget
