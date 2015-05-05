@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2014 Colin Willcocks.
+** Copyright (C) 2007~2015 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag. 
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -24,55 +24,60 @@
 #include "customKnobRange.h"
 #include "MidiTable.h"
 #include "SysxIO.h"
+#include "Preferences.h"
 
 customKnobRange::customKnobRange(QWidget *parent, QString area, QString hex1, QString hex2, QString hexMin, QString hexMax, QString type) : QWidget(parent)
 {
-  this->area = area;
-	this->hex1 = hex1;
-	this->hex2 = hex2;
-	this->hexMin = hexMin;
-	this->hexMax = hexMax;
-	this->type = type;
-	bool ok;
-	int range;
-	int rangeMin;
-	MidiTable *midiTable = MidiTable::Instance();
-	if (this->area != "System"){this->area = "Structure";};
-	if (this->type == "Min")
-  {
-    hex3 = hexMin;
-    range = QString(this->hexMax).toInt(&ok, 16) - 1;
-    rangeMin = midiTable->getRangeMinimum(this->area, hex1, hex2, hex3);
-  }
-   else 
-  {
-    hex3 = hexMax;
-    range = midiTable->getRange(this->area, hex1, hex2, hex3);
-    rangeMin = QString(this->hexMin).toInt(&ok, 16) + 1;
-  };
-	
-	
-	
-	QPoint bgPos = QPoint(0, -3); // Correction needed y-3.
-	QPoint knobPos = QPoint(5, 4); // Correction needed y+1 x-1.
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
 
-	QLabel *newBackGround = new QLabel(this);	
-	newBackGround->setPixmap(QPixmap(":/images/knobbgn.png"));
-	newBackGround->move(bgPos);
+    this->area = area;
+    this->hex1 = hex1;
+    this->hex2 = hex2;
+    this->hexMin = hexMin;
+    this->hexMax = hexMax;
+    this->type = type;
+    //bool ok;
+    int range;
+    int rangeMin;
+    MidiTable *midiTable = MidiTable::Instance();
+    if (this->area != "System"){this->area = "Structure";};
+    if (this->type == "Min")
+    {
+        hex3 = hexMin;
+        range = QString(this->hexMax).toInt(&ok, 16) - 1;
+        rangeMin = midiTable->getRangeMinimum(this->area, hex1, hex2, hex3);
+    }
+    else
+    {
+        hex3 = hexMax;
+        range = midiTable->getRange(this->area, hex1, hex2, hex3);
+        rangeMin = QString(this->hexMin).toInt(&ok, 16) + 1;
+    };
 
-	QString imagePath(":/images/knob.png");
-        unsigned int imageRange = 100;
-	this->knob = new customRangeDial(0, rangeMin, range, 1, 10, knobPos, this, this->area, hex1, hex2, hex3, this->type, imagePath, imageRange);
-        this->setFixedSize(newBackGround->pixmap()->size() - QSize(0, 4)); // Correction needed h-4.
 
-	QObject::connect(this, SIGNAL( updateSignal() ),
-                this->parent(), SIGNAL( updateSignal() ));
 
-	QObject::connect(this, SIGNAL( updateDisplayMin(QString) ),
-                this->parent(), SIGNAL( updateDisplayMin(QString) ));
-                
-  QObject::connect(this, SIGNAL( updateDisplayMax(QString) ),
-                this->parent(), SIGNAL( updateDisplayMax(QString) ));
+    QPoint bgPos = QPoint((5*ratio)-(6*ratio), (4*ratio)-(7*ratio)); // Correction needed y-3.
+    QPoint knobPos = QPoint(5*ratio, 4*ratio); // Correction needed y+1 x-1.
+
+    QLabel *newBackGround = new QLabel(this);
+    newBackGround->setPixmap(QPixmap(":/images/knobbgn.png").scaled(49*ratio,50*ratio));
+    newBackGround->move(bgPos);
+
+    QString imagePath(":/images/knob.png");
+    unsigned int imageRange = 100;
+    this->knob = new customRangeDial(0, rangeMin, range, 1, 10, knobPos, this, this->area, hex1, hex2, hex3, this->type, imagePath, imageRange);
+    this->setFixedSize(newBackGround->pixmap()->size() - QSize(0, 4)); // Correction needed h-4 - space between knob and bottom label.
+
+    QObject::connect(this, SIGNAL( updateSignal() ),
+                     this->parent(), SIGNAL( updateSignal() ));
+
+    QObject::connect(this, SIGNAL( updateDisplayMin(QString) ),
+                     this->parent(), SIGNAL( updateDisplayMin(QString) ));
+
+    QObject::connect(this, SIGNAL( updateDisplayMax(QString) ),
+                     this->parent(), SIGNAL( updateDisplayMax(QString) ));
 }
 
 void customKnobRange::paintEvent(QPaintEvent *)

@@ -23,7 +23,6 @@
 
 #include <QtWidgets>
 #include "midiIO.h"
-#include "RtMidi.h"
 #include "preferencesPages.h"
 #include "Preferences.h"
 
@@ -73,7 +72,7 @@ MidiPage::MidiPage(QWidget *parent)
     QString midiInDevice = preferences->getPreferences("Midi", "MidiIn", "device");
     QString midiOutDevice = preferences->getPreferences("Midi", "MidiOut", "device");
     QString dBugScreen = preferences->getPreferences("Midi", "DBug", "bool");
-    QString midiTimeSet = preferences->getPreferences("Midi", "Time", "set");
+    QString midiTxChSet = preferences->getPreferences("Midi", "TxCh", "set");
     QString midiDelaySet = preferences->getPreferences("Midi", "Delay", "set");
 
     int midiInDeviceID = midiInDevice.toInt(&ok, 10);
@@ -101,9 +100,9 @@ MidiPage::MidiPage(QWidget *parent)
     {
         midiInCombo->setCurrentIndex(midiInDeviceID + 1); // +1 because there is a default entry at 0
     };
-    if ( midiInDevices.contains("GT-100 Ver2") )
+    if ( midiInDevices.contains("GT-100") )
     {
-        int inputDevice = midiInDevices.indexOf("GT-100 Ver2") + 1;
+        int inputDevice = midiInDevices.indexOf("GT-100") + 1;
         midiInCombo->setCurrentIndex(inputDevice);
     };
 
@@ -121,9 +120,9 @@ MidiPage::MidiPage(QWidget *parent)
     {
         midiOutCombo->setCurrentIndex(midiOutDeviceID + 1); // +1 because there is a default entry at 0
     };
-    if ( midiOutDevices.contains("GT-100 Ver2") )
+    if ( midiOutDevices.contains("GT-100") )
     {
-        int outputDevice = midiOutDevices.indexOf("GT-100 Ver2") + 1;
+        int outputDevice = midiOutDevices.indexOf("GT-100") + 1;
         midiOutCombo->setCurrentIndex(outputDevice);
     };
 
@@ -153,12 +152,11 @@ MidiPage::MidiPage(QWidget *parent)
     QGroupBox *dBugScreenGroup = new QGroupBox(QObject::tr("Advanced settings"));
 
     QLabel *dBugDescriptionLabel = new QLabel(QObject::tr("Debug mode."));
-    //QLabel *midiTimeDescriptionLabel = new QLabel(tr("Data receive wait time."));
-    //QLabel *midiDelayDescriptionLabel = new QLabel(tr("Realtime edit send rate."));
+    QLabel *midiTxChDescriptionLabel = new QLabel(tr("Midi Tx Channel:"));
+    QLabel *midiDelayDescriptionLabel = new QLabel(tr("Realtime edit send rate."));
 
     QCheckBox *dBugCheckBox = new QCheckBox(QObject::tr("deBug Mode"));
-    QSpinBox *midiTimeSpinBox = new QSpinBox;
-    QSpinBox *midiDelaySpinBox = new QSpinBox;
+    QSpinBox *midiTxChSpinBox = new QSpinBox;
 
     this->dBugCheckBox = dBugCheckBox;
     if(dBugScreen=="true")
@@ -166,30 +164,20 @@ MidiPage::MidiPage(QWidget *parent)
         dBugCheckBox->setChecked(true);
     };
 
-    this->midiTimeSpinBox = midiTimeSpinBox;
-    const int tempDataWrite = preferences->getPreferences("Midi", "Time", "set").toInt(&ok, 10);
-    midiTimeSpinBox->setValue(tempDataWrite);
-    midiTimeSpinBox->setRange(1, 99);
-    midiTimeSpinBox->setPrefix("= ");
-    midiTimeSpinBox->setSuffix(QObject::tr("0 millisecond"));
-
-    this->midiDelaySpinBox = midiDelaySpinBox;
-    const int minWait = preferences->getPreferences("Midi", "Delay", "set").toInt(&ok, 10);
-    midiDelaySpinBox->setValue(minWait);
-    midiDelaySpinBox->setRange(1, 20);
-    midiDelaySpinBox->setPrefix("= ");
-    midiDelaySpinBox->setSuffix(QObject::tr(" times/second"));
-
+this->midiTxChSpinBox = midiTxChSpinBox;
+    const int tempDataWrite = preferences->getPreferences("Midi", "TxCh", "set").toInt(&ok, 10);
+    midiTxChSpinBox->setValue(tempDataWrite);
+    midiTxChSpinBox->setRange(1, 16);
+    midiTxChSpinBox->setPrefix("Channel ");
 
     QVBoxLayout *dBugLabelLayout = new QVBoxLayout;
     dBugLabelLayout->addWidget(dBugDescriptionLabel);
-    //dBugLabelLayout->addWidget(midiTimeDescriptionLabel);
-    //dBugLabelLayout->addWidget(midiDelayDescriptionLabel);
+    dBugLabelLayout->addWidget(midiTxChDescriptionLabel);
+    dBugLabelLayout->addWidget(midiDelayDescriptionLabel);
 
     QVBoxLayout *dBugTimeBoxLayout = new QVBoxLayout;
     dBugTimeBoxLayout->addWidget(dBugCheckBox);
-    //dBugTimeBoxLayout->addWidget(midiTimeSpinBox);
-    //dBugTimeBoxLayout->addWidget(midiDelaySpinBox);
+    dBugTimeBoxLayout->addWidget(midiTxChSpinBox);
 
     QHBoxLayout *dBugSelectLayout = new QHBoxLayout;
     dBugSelectLayout->addLayout(dBugLabelLayout);
@@ -218,8 +206,7 @@ WindowPage::WindowPage(QWidget *parent)
     QString sidepanelRestore = preferences->getPreferences("Window", "Restore", "sidepanel");
     QString splashScreen = preferences->getPreferences("Window", "Splash", "bool");
     QString SingleWindow = preferences->getPreferences("Window", "Single", "bool");
-    //QString WidgetsUse = preferences->getPreferences("Window", "Widgets", "bool");
-    QString Scale = preferences->getPreferences("Window", "Scale", "ratio");
+    QString WidgetsUse = preferences->getPreferences("Window", "AutoScale", "bool");
 
     QGroupBox *windowGroup = new QGroupBox(QObject::tr("Window settings"));
 
@@ -227,32 +214,36 @@ WindowPage::WindowPage(QWidget *parent)
     QCheckBox *windowCheckBox = new QCheckBox(QObject::tr("Restore window"));
     QCheckBox *sidepanelCheckBox = new QCheckBox(QObject::tr("Restore sidepanel"));
     QCheckBox *singleWindowCheckBox = new QCheckBox(QObject::tr("Single Window Layout"));
-    QSpinBox *scaleSpinBox = new QSpinBox;
-    //QCheckBox *widgetsCheckBox = new QCheckBox(QObject::tr("Graphical Assistance"));
+    QCheckBox *autoRatioCheckBox = new QCheckBox(QObject::tr("Auto Window Scaling"));
+    
     this->windowCheckBox = windowCheckBox;
     this->sidepanelCheckBox = sidepanelCheckBox;
     this->singleWindowCheckBox = singleWindowCheckBox;
-    this->scaleSpinBox = scaleSpinBox;
-    const int ratio = preferences->getPreferences("Window", "Scale", "ratio").toInt(&ok, 10);
-    scaleSpinBox->setValue(ratio);
-    scaleSpinBox->setRange(1, 100);
-    scaleSpinBox->setPrefix(QObject::tr("Scale ratio "));
-    scaleSpinBox->setSuffix(QObject::tr("0%"));
-    //this->widgetsCheckBox = widgetsCheckBox;
+    this->autoRatioCheckBox = autoRatioCheckBox;
 
     if(windowRestore=="true") { windowCheckBox->setChecked(true); };
     if(sidepanelRestore=="true") { sidepanelCheckBox->setChecked(true); };
     if(SingleWindow=="true") { singleWindowCheckBox->setChecked(true); };
-    //if(WidgetsUse=="true") { widgetsCheckBox->setChecked(true); };
+    if(WidgetsUse=="true") { autoRatioCheckBox->setChecked(true); };
 
+    QDoubleSpinBox *ratioSpinBox = new QDoubleSpinBox;
+    this->ratioSpinBox = ratioSpinBox;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+    ratioSpinBox->setDecimals(2);
+    ratioSpinBox->setValue(ratio);
+    ratioSpinBox->setRange(0.5, 10.0);
+    ratioSpinBox->setSingleStep(0.01);
+    ratioSpinBox->setPrefix("Resizing Scale = ");
+    ratioSpinBox->setSuffix(QObject::tr(" :1"));
+    
     QVBoxLayout *restoreLayout = new QVBoxLayout;
     restoreLayout->addWidget(restoreDescriptionLabel);
     restoreLayout->addSpacing(12);
     restoreLayout->addWidget(windowCheckBox);
     restoreLayout->addWidget(sidepanelCheckBox);
     restoreLayout->addWidget(singleWindowCheckBox);
-    //restoreLayout->addWidget(widgetsCheckBox);
-    restoreLayout->addWidget(scaleSpinBox);
+    restoreLayout->addWidget(autoRatioCheckBox);
+    restoreLayout->addWidget(ratioSpinBox);
 
     QVBoxLayout *windowLayout = new QVBoxLayout;
     windowLayout->addLayout(restoreLayout);
@@ -275,9 +266,12 @@ WindowPage::WindowPage(QWidget *parent)
     splashScreenLayout->addLayout(splashLayout);
     splashScreenGroup->setLayout(splashScreenLayout);
 
+    QLabel *note = new QLabel(QObject::tr("<b>***Changes take effect on next startup***</b>" ));
+    
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addWidget(windowGroup);
     mainLayout->addWidget(splashScreenGroup);
+    mainLayout->addWidget(note);
 
     mainLayout->addStretch(1);
     setLayout(mainLayout);

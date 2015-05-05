@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2014 Colin Willcocks.
+** Copyright (C) 2007~2015 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag. 
 ** All rights reserved.
 ** This file is part of "GT-100B Fx FloorBoard".
@@ -24,14 +24,21 @@
 #include "customTargetListMenu.h"
 #include "MidiTable.h"
 #include "SysxIO.h"
+#include "Preferences.h"
 
 customTargetListMenu::customTargetListMenu(QWidget *parent, 
                                            QString hex1, QString hex2, QString hex3, QString hexMsb,
                                            QString hexLsb, QString direction)
     : QWidget(parent)
 {
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+
+    QFont Sfont( "Arial", 9*ratio, QFont::Bold);
     this->controlListComboBox = new customComboBox(this);
     this->controlListComboBox->setObjectName("smallcombo");
+    this->controlListComboBox->setFont(Sfont);
     this->hex1 = hex1;
     this->hex2 = hex2;
     this->hex3 = hex3;
@@ -51,7 +58,7 @@ customTargetListMenu::customTargetListMenu(QWidget *parent,
     };
 
     setComboBox();
-    //QPoint labelPos, comboboxPos;
+
     if(direction == "left")
     {
 
@@ -73,7 +80,7 @@ customTargetListMenu::customTargetListMenu(QWidget *parent,
         mainLayout->addWidget(this->controlListComboBox, 0, Qt::AlignCenter);
 
         this->setLayout(mainLayout);
-        this->setFixedHeight(15);
+        this->setFixedHeight(15*ratio);
 
     }
     else
@@ -85,7 +92,7 @@ customTargetListMenu::customTargetListMenu(QWidget *parent,
         mainLayout->addWidget(this->controlListComboBox, 0, Qt::AlignCenter);
 
         this->setLayout(mainLayout);
-        this->setFixedHeight(15);
+        this->setFixedHeight(15*ratio);
 
     };
 
@@ -117,6 +124,10 @@ void customTargetListMenu::paintEvent(QPaintEvent *)
 
 void customTargetListMenu::setComboBox()
 {
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+
     this->hex1 = hex1;
     this->hex2 = hex2;
     this->hex3 = hex3;
@@ -253,11 +264,11 @@ void customTargetListMenu::setComboBox()
     };
     itemTotal = itemTotal + itemcount;
     int maxWidth = QFontMetrics( this->font() ).width( longestItem );
-    if(maxWidth < 30) { maxWidth = 30; };
+    if(maxWidth < 30*ratio) { maxWidth = 30*ratio; };
 
-    this->controlListComboBox->setFixedWidth(200);
+    this->controlListComboBox->setFixedWidth(200*ratio);
 
-    this->controlListComboBox->setFixedHeight(15);
+    this->controlListComboBox->setFixedHeight(15*ratio);
     this->controlListComboBox->setEditable(false);
     this->controlListComboBox->setFrame(false);
     this->controlListComboBox->setMaxVisibleItems(itemTotal);

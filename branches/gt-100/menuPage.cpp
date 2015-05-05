@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2014 Colin Willcocks.
+** Copyright (C) 2007~2015 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag.
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -28,14 +28,19 @@
 #include "floorBoardDisplay.h"
 #include "floorBoard.h"
 #include "Preferences.h"
+#include <QTimer>
 
 menuPage::menuPage(QWidget *parent, unsigned int id, QString imagePath, QPoint stompPos)
     : QWidget(parent)
 {
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+
     this->id = id;
     this->imagePath = imagePath;
-    this->stompSize = QPixmap(imagePath).size();
-    this->stompPos = stompPos;
+    this->stompSize = QPixmap(imagePath).size()*ratio;
+    stompPos = QPoint(100*ratio, 24*ratio);
     this->setWhatsThis(tr("Deep editing of the selected effect<br>pressing this button will open an edit page<br>allowing detailed setting of this effects parameters."));
 
 
@@ -118,12 +123,14 @@ menuPage::menuPage(QWidget *parent, unsigned int id, QString imagePath, QPoint s
 
 void menuPage::paintEvent(QPaintEvent *)
 {
-    QRectF target(0.0, 0.0, stompSize.width(), stompSize.height());
+     Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+
+    QRectF target(0.0, 0.0, stompSize.width()*ratio, stompSize.height()*ratio);
     QRectF source(0.0, 0.0, stompSize.width(), stompSize.height());
     QPixmap image(imagePath);
-
     this->image = image;
-
     QPainter painter(this);
     painter.drawPixmap(target, image, source);
 }
@@ -416,8 +423,8 @@ void menuPage::systemReply(QString replyMsg)
             msgText.append(tr("The Boss ") + deviceType + tr(" System data was not transfered !!."));
             msgText.append("<b></font><br>");
             msgBox->setText(msgText);
-            msgBox->setStandardButtons(QMessageBox::Ok);
-            msgBox->exec();
+            msgBox->show();
+            QTimer::singleShot(3000, msgBox, SLOT(deleteLater()));
         };
     };
     emit setStatusMessage(tr("Ready"));

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2014 Colin Willcocks.
+** Copyright (C) 2007~2015 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag. 
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -24,111 +24,122 @@
 #include "customControlKnob.h"
 #include "MidiTable.h"
 #include "SysxIO.h"
+#include "Preferences.h"
 
 customControlKnob::customControlKnob(QWidget *parent, 
 									 QString hex1, QString hex2, QString hex3, 
 									 QString background, QString direction, int lenght)
 	: QWidget(parent)
 {
-	this->display = new QLineEdit(this);
-	this->label = new customControlLabel(this);
-	this->hex1 = hex1;
-	this->hex2 = hex2;
-	this->hex3 = hex3;
-	this->area = background;
+  
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
 
-	MidiTable *midiTable = MidiTable::Instance();
-	if (this->area != "System") {this->area = "Structure";};
-	
-	Midi items = midiTable->getMidiMap(this->area, hex1, hex2, hex3);
-	
-	this->label->setText(items.customdesc);
-	this->label->setUpperCase(true);
-	
-	this->knob = new customKnob(this, hex1, hex2, hex3, background, this->area);
+    this->display = new QLineEdit(this);
+    this->label = new customControlLabel(this);
+    this->hex1 = hex1;
+    this->hex2 = hex2;
+    this->hex3 = hex3;
+    this->area = background;
 
-	this->display->setObjectName("editdisplay");
-	this->display->setFixedWidth(lenght);
-	this->display->setFixedHeight(15);
-	this->display->setAlignment(Qt::AlignCenter);
-	this->display->setDisabled(true);
+    MidiTable *midiTable = MidiTable::Instance();
+    if (this->area != "System") {this->area = "Structure";};
 
-	if(direction == "left")
-	{
-	
-	}
-	else if(direction == "right")
-	{
-		this->label->setAlignment(Qt::AlignLeft);
-		this->display->setFixedWidth(lenght);
-		
-		QVBoxLayout *displayLayout = new QVBoxLayout;
-		displayLayout->setMargin(0);
-		displayLayout->setSpacing(0);
-		displayLayout->addStretch(0);
-		displayLayout->addWidget(this->label, 0, Qt::AlignLeft);
-		displayLayout->addWidget(this->display, 0, Qt::AlignLeft);
-		displayLayout->addStretch(0);
+    Midi items = midiTable->getMidiMap(this->area, hex1, hex2, hex3);
 
-		QHBoxLayout *mainLayout = new QHBoxLayout;
-		mainLayout->setMargin(0);
-		mainLayout->setSpacing(0);
-		mainLayout->addWidget(this->knob, 0, Qt::AlignCenter);
-		mainLayout->addLayout(displayLayout);
+    this->label->setText(items.customdesc);
+    this->label->setUpperCase(true);
 
+    this->knob = new customKnob(this, hex1, hex2, hex3, background, this->area);
+    this->knob->setWhatsThis(tr("hold down mouse button and drag up/down for quick adjustment")
+                             + "<br>" + tr("use scroll wheel or up/down arrow keys for fine adjustment"));
 
-		this->setLayout(mainLayout);
-		this->setFixedHeight(this->knob->height());
-		
-	}
-	else if(direction == "top")
-	{
-	
-	}
-	else if(direction == "bottom")
-	{
-		this->label->setAlignment(Qt::AlignCenter);
-		this->display->setFixedWidth(lenght);
-		
-		QVBoxLayout *mainLayout = new QVBoxLayout;
-		mainLayout->setMargin(0);
-		mainLayout->setSpacing(0);
-		mainLayout->addWidget(this->label, 0, Qt::AlignCenter);
-		mainLayout->addWidget(this->knob, 0, Qt::AlignCenter);
-		mainLayout->addWidget(this->display, 0, Qt::AlignCenter);
-		mainLayout->addStretch(0);
+    this->display->setObjectName("editdisplay");
+    QFont Sfont( "Arial", 9*ratio, QFont::Bold);
+    this->display->setFont(Sfont);
+    this->display->setFixedWidth(lenght*ratio);
+    this->display->setFixedHeight(16*ratio);
+    this->display->setAlignment(Qt::AlignCenter);
+    this->display->setDisabled(true);
 
-		this->setLayout(mainLayout);
-		this->setFixedHeight(this->knob->height() + 15 + 12);
-		
-	}
-  else if(direction == "System")
-	{
-		this->label->setAlignment(Qt::AlignCenter);
-		this->display->setFixedWidth(lenght);
-		
-		QVBoxLayout *mainLayout = new QVBoxLayout;
-		mainLayout->setMargin(0);
-		mainLayout->setSpacing(0);
-		mainLayout->addWidget(this->label, 0, Qt::AlignCenter);
-		mainLayout->addWidget(this->knob, 0, Qt::AlignCenter);
-		mainLayout->addWidget(this->display, 0, Qt::AlignCenter);
-		mainLayout->addStretch(0);
+    if(direction == "left")
+    {
 
-		this->setLayout(mainLayout);
-		this->setFixedHeight(this->knob->height() + 15 + 12);
-		//this->area = "System";
-	};
+    }
+    else if(direction == "right")
+    {
+        this->label->setAlignment(Qt::AlignLeft);
+        this->display->setFixedWidth(lenght*ratio);
+
+        QVBoxLayout *displayLayout = new QVBoxLayout;
+        displayLayout->setMargin(0);
+        displayLayout->setSpacing(0);
+        displayLayout->addStretch(0);
+        displayLayout->addWidget(this->label, 0, Qt::AlignLeft);
+        displayLayout->addWidget(this->display, 0, Qt::AlignLeft);
+        displayLayout->addStretch(0);
+
+        QHBoxLayout *mainLayout = new QHBoxLayout;
+        mainLayout->setMargin(0);
+        mainLayout->setSpacing(0);
+        mainLayout->addWidget(this->knob, 0, Qt::AlignCenter);
+        mainLayout->addLayout(displayLayout);
 
 
-	QObject::connect(this->parent(), SIGNAL( dialogUpdateSignal() ),
-                this, SLOT( dialogUpdateSignal() ));
+        this->setLayout(mainLayout);
+        this->setFixedHeight(this->knob->height()*ratio);
 
-	QObject::connect(this, SIGNAL( updateSignal() ),
-                this->parent(), SIGNAL( updateSignal() ));
+    }
+    else if(direction == "top")
+    {
 
-	QObject::connect(this, SIGNAL( updateDisplay(QString) ),
-                this->display, SLOT( setText(QString) ));
+    }
+    else if(direction == "bottom")
+    {
+        this->label->setAlignment(Qt::AlignCenter);
+        this->display->setFixedWidth(lenght*ratio);
+
+        QVBoxLayout *mainLayout = new QVBoxLayout;
+        mainLayout->setMargin(0);
+        mainLayout->setSpacing(0);
+        mainLayout->addWidget(this->label, 0, Qt::AlignCenter);
+        mainLayout->addWidget(this->knob, 0, Qt::AlignCenter);
+        mainLayout->addWidget(this->display, 0, Qt::AlignCenter);
+        mainLayout->addStretch(0);
+
+        this->setLayout(mainLayout);
+        this->setFixedHeight((this->knob->height() + 16 + 12)*ratio);
+
+    }
+    else if(direction == "System")
+    {
+        this->label->setAlignment(Qt::AlignCenter);
+        this->display->setFixedWidth(lenght*ratio);
+
+        QVBoxLayout *mainLayout = new QVBoxLayout;
+        mainLayout->setMargin(0);
+        mainLayout->setSpacing(0);
+        mainLayout->addWidget(this->label, 0, Qt::AlignCenter);
+        mainLayout->addWidget(this->knob, 0, Qt::AlignCenter);
+        mainLayout->addWidget(this->display, 0, Qt::AlignCenter);
+        mainLayout->addStretch(0);
+
+
+        this->setLayout(mainLayout);
+        this->setFixedHeight((this->knob->height() + 16 + 12)*ratio);
+
+    };
+
+
+    QObject::connect(this->parent(), SIGNAL( dialogUpdateSignal() ),
+                     this, SLOT( dialogUpdateSignal() ));
+
+    QObject::connect(this, SIGNAL( updateSignal() ),
+                     this->parent(), SIGNAL( updateSignal() ));
+
+    QObject::connect(this, SIGNAL( updateDisplay(QString) ),
+                     this->display, SLOT( setText(QString) ));
 }
 
 void customControlKnob::paintEvent(QPaintEvent *)

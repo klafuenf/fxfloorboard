@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2014 Colin Willcocks.
+** Copyright (C) 2007~2015 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag. 
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -22,12 +22,16 @@
 ****************************************************************************/
 
 #include "customControlLabel.h"
-
+#include "Preferences.h"
 
 customControlLabel::customControlLabel(QWidget *parent)
 
 	: QWidget(parent)
 {
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+
 	this->label = new QLabel(this);
 	this->uppercase = false;
 	this->button = false;
@@ -35,6 +39,8 @@ customControlLabel::customControlLabel(QWidget *parent)
 	this->offset = 0;
 
 	this->label->setObjectName("customlabel");
+  QFont Sfont( "Arial", 7*ratio, QFont::Bold);
+  this->label->setFont(Sfont);
 
 	QHBoxLayout *layout = new QHBoxLayout;
 	layout->addWidget(this->label);
@@ -43,31 +49,18 @@ customControlLabel::customControlLabel(QWidget *parent)
 	mainLayout->addLayout(layout );
 	mainLayout->setMargin(0);
 	this->setLayout(mainLayout);
-	this->setFixedHeight(10);
+  this->setFixedHeight(10*ratio);
 }
 
 void customControlLabel::paintEvent(QPaintEvent *)
 {
 	if(button && isImage)
 	{
-		QRectF target(0.0, 0.0, this->image.width(), this->height());
+    QRectF target(0.0, 0.0, this->image.width(), this->height());
 		QRectF source(0.0, this->offset, this->image.width(), this->height());
-
-
 		QPainter painter(this);
 		painter.drawPixmap(target, this->image, source);
 	}
-	/*DRAWS RED BACKGROUND FOR DEBUGGING PURPOSE */
-	/*else 
-	{
-		QPixmap image(":images/dragbar.png");
-	
-		QRectF target(0.0, 0.0, this->width(), this->height());
-		QRectF source(0.0, 0.0, this->width(), this->height());
-
-		QPainter painter(this);
-		painter.drawPixmap(target, image, source);
-	}*/;
 }
 
 void customControlLabel::setOffset(int imageNr)
@@ -103,7 +96,11 @@ void customControlLabel::setText(QString text)
 
 void customControlLabel::setSize()
 {
-	int pixelWidth = QFontMetrics(this->label->font()).width(this->label->text());
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+
+    int pixelWidth = QFontMetrics(this->label->font()).width(this->label->text())*ratio;
 	if(pixelWidth<1) {pixelWidth = 1; };
 	this->labelWidth = pixelWidth;
 }
@@ -120,18 +117,23 @@ void customControlLabel::setButton(bool button)
 
 void customControlLabel::setImage(QString imagePath)
 {
-	this->image = QPixmap(imagePath);
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+
+    this->image = QPixmap(imagePath);
+    this->image = this->image.scaled(this->image.width()*ratio, this->image.height()*ratio);
 	this->isImage = true;
 	this->imageHeight = this->image.height() / 4;
 	if(button)
 	{
-		this->setFixedSize(this->image.width(), this->imageHeight);
+        this->setFixedSize(this->image.width(), this->imageHeight);
 		setOffset(0);
 	}
 	else
 	{
-		this->setFixedSize(this->image.width(), this->image.height());
-		this->label->setPixmap(this->image);
+        this->setFixedSize(this->image.width()*ratio, this->image.height()*ratio);
+        this->label->setPixmap(this->image.scaled(this->image.width()*ratio, this->image.height()*ratio));
 	};
 }
 
@@ -157,7 +159,7 @@ void customControlLabel::mouseReleaseEvent(QMouseEvent *event)
 
 void customControlLabel::enterEvent(QEvent *event)
 {
-	//event;
+    //event;
 	if(button)
 	{
 		if(isImage)
@@ -166,10 +168,6 @@ void customControlLabel::enterEvent(QEvent *event)
 		}
 		else
 		{
-			//this->labelPal.setColor(this->label->foregroundRole(), Qt::white);
-			//this->label->setPalette(labelPal);
-			//this->labelFont.setUnderline(true);
-			//this->label->setFont(this->labelFont);
 		};
 	};
 }
@@ -177,7 +175,7 @@ void customControlLabel::enterEvent(QEvent *event)
 
 void customControlLabel::leaveEvent( QEvent *event)
 {
-	//event;
+    //event;
 	if(button)
 	{
 		if(isImage)
@@ -186,10 +184,6 @@ void customControlLabel::leaveEvent( QEvent *event)
 		}
 		else
 		{
-			//this->labelPal.setColor(this->label->foregroundRole(), Qt::white);
-			//this->label->setPalette(labelPal);
-			//this->labelFont.setUnderline(false);
-			//this->label->setFont(this->labelFont);
 		};
 	};
 }

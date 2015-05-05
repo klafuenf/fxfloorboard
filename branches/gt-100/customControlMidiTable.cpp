@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2014 Colin Willcocks.
+** Copyright (C) 2007~2015 Colin Willcocks.
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
 **
@@ -23,12 +23,18 @@
 #include "customControlMidiTable.h"
 #include "MidiTable.h"
 #include "SysxIO.h"
+#include "Preferences.h"
 
 customControlMidiTable::customControlMidiTable(QWidget *parent,
                                                QString hex1, QString hex2, QString hex3,
                                                QString direction, QString list)
     : QWidget(parent)
 {
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+    QFont Sfont( "Arial", 9*ratio, QFont::Bold);
+
     this->hex1 = hex1;
     this->hex2 = hex2;
     this->hex3 = hex3;
@@ -43,10 +49,10 @@ customControlMidiTable::customControlMidiTable(QWidget *parent,
 
         this->display = new QLineEdit();
         this->display->setObjectName("editdisplay");
-        this->display->setFixedWidth(800);
-        this->display->setFixedHeight(16);
+        this->display->setFixedWidth(800*ratio);
+        this->display->setFixedHeight(16*ratio);
         this->display->setAlignment(Qt::AlignCenter);
-        this->display->setDisabled(true);
+        this->display->setFont(Sfont);
 
         QVBoxLayout *labelLayout = new QVBoxLayout;
         labelLayout->setMargin(0);
@@ -55,7 +61,7 @@ customControlMidiTable::customControlMidiTable(QWidget *parent,
         labelLayout->addWidget(this->label, 0, Qt::AlignCenter);
         labelLayout->addWidget(this->display, 0, Qt::AlignCenter);
         this->setLayout(labelLayout);
-        this->setFixedHeight(28);
+        this->setFixedHeight(28*ratio);
     }
     else
     {
@@ -77,20 +83,27 @@ void customControlMidiTable::paintEvent(QPaintEvent *)
 
 void customControlMidiTable::setComboBox()
 {
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+    QFont Sfont( "Arial", 12*ratio, QFont::Bold);
+    QFont Lfont( "Arial", 9*ratio, QFont::Bold);
     comboList = list.split(" ");
     comboList.removeLast();
 
     this->label = new customControlLabel(this);
     this->controlMidiComboBox = new customComboBox(this);
     this->controlMidiComboBox->setObjectName("largecombo");
-    this->controlMidiComboBox->setFixedWidth(80);
-    this->controlMidiComboBox->setFixedHeight(25);
+    this->controlMidiComboBox->setFixedWidth(80*ratio);
+    this->controlMidiComboBox->setFixedHeight(25*ratio);
     this->controlMidiComboBox->setEditable(false);
     this->controlMidiComboBox->setFrame(false);
     this->controlMidiComboBox->setMaxVisibleItems(200);
     this->controlMidiComboBox->addItems(comboList);
+    this->controlMidiComboBox->setFont(Sfont);
 
     this->label->setUpperCase(true);
+    this->label->setFont(Lfont);
     this->label->setText(this->text);
     this->label->setAlignment(Qt::AlignLeft);
 

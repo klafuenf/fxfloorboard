@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2014 Colin Willcocks.
+** Copyright (C) 2007~2015 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag. 
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -22,33 +22,37 @@
 ****************************************************************************/
 
 #include <QtWidgets>
-
 #include "customLed.h"
+#include "Preferences.h"
 
 customLed::customLed(bool active, QPoint ledPos, QWidget *parent,
-                     QString imagePath)
+					 QString imagePath)
     : QWidget(parent)
 {
-    this->active = active;
-    this->imagePath = imagePath;
-    QSize imageSize = QPixmap(imagePath).size();
-    this->ledSize = QSize(imageSize.width(), imageSize.height()/2);
-    this->ledPos = ledPos;
+	this->active = active;
+	this->imagePath = imagePath;
+	QSize imageSize = QPixmap(imagePath).size();
+	this->ledSize = QSize(imageSize.width(), imageSize.height()/2);
+	this->ledPos = ledPos;
 
-    setOffset(0);
-    setGeometry(ledPos.x(), ledPos.y(), ledSize.width(), ledSize.height());
+	setOffset(0);
+	setGeometry(ledPos.x(), ledPos.y(), ledSize.width(), ledSize.height());
 }
 
 void customLed::paintEvent(QPaintEvent *)
 {
-    QRectF target(0.0 , 0.0, ledSize.width(), ledSize.height());
-    QRectF source(0.0, yOffset, ledSize.width(), ledSize.height());
-    QPixmap image(imagePath);
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+
+    QRectF target(0.0 , 0.0, ledSize.width()*ratio, ledSize.height()*ratio);
+	QRectF source(0.0, yOffset, ledSize.width(), ledSize.height());
+	QPixmap image(imagePath);
     //image.setMask(image.mask());
 
-    QPainter painter(this);
-    //painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.drawPixmap(target, image, source);
+	QPainter painter(this);
+	//painter.setRenderHint(QPainter::Antialiasing, true);
+	painter.drawPixmap(target, image, source);
 }
 
 void customLed::setOffset(signed int imageNr)

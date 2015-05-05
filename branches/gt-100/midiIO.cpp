@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2014 Colin Willcocks.
+** Copyright (C) 2007~2015 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag.
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -56,7 +56,7 @@ midiin = new RtMidiIn();
 midiout = new RtMidiOut();
 midiin = new RtMidiIn();
 #endif
-#ifdef Q_PROCESSOR_ARM
+#if defined(Q_OS_LINUX) && !defined(Q_PROCESSOR_ARM)
 midiout = new RtMidiOut();
 midiin = new RtMidiIn();
 #endif
@@ -179,7 +179,7 @@ void midiIO::sendSyxMsg(QString sysxOutMsg, int midiOutPort)
     if ( nPorts < 1 ) { goto cleanup; };
 RETRY:
     try {
-            midiout->openPort(midiOutPort, clientName);	// Open selected port.
+            if(!midiout->isPortOpen()) { midiout->openPort(midiOutPort, clientName); };	// Open selected port.
             for(int i=0;i<msgLength*2;++i)
             {
                 unsigned int n;
@@ -207,7 +207,7 @@ RETRY:
     };
     /* Clean up */
 cleanup:
-    midiout->closePort();
+    if(midiout->isPortOpen()){ midiout->closePort(); };
     msleep(close);						// wait as long as the message is sending.
 }
 
@@ -217,7 +217,7 @@ void midiIO::sendMidiMsg(QString sysxOutMsg, int midiOutPort)
     unsigned int nPorts = midiout->getPortCount();   // Check available ports.
     if ( nPorts < 1 ){ goto cleanup; }
     try {
-        midiout->openPort(midiOutPort, clientName);	// Open selected port.
+        if(!midiout->isPortOpen()) { midiout->openPort(midiOutPort, clientName); };	// Open selected port.
         std::vector<unsigned char> message;
         int msgLength = sysxOutMsg.length()/2;
         char *ptr  = new char[msgLength];		// Convert QString to char* (hex value)
@@ -242,7 +242,7 @@ void midiIO::sendMidiMsg(QString sysxOutMsg, int midiOutPort)
     };
     /* Clean up*/
 cleanup:
-    midiout->closePort();
+    if(midiout->isPortOpen()){ midiout->closePort(); };
 }
 
 /*********************** receiveMsg() **********************************
@@ -274,6 +274,8 @@ void midiIO::callbackMsg(QString rxData)
 
 void midiIO::receiveMsg(int midiInPort)
 {
+    int retry_count = 10;
+REC_RETRY:
     count = 0;
     emit setStatusSymbol(3);
 #ifdef Q_OS_WIN
@@ -292,21 +294,23 @@ void midiIO::receiveMsg(int midiInPort)
     if ( nPorts < 1 || QString::fromStdString(midiin->getPortName(midiInPort))=="") { goto cleanup; };
     try {
         midiin->ignoreTypes(false, true, true);  //don,t ignore sysex messages, but ignore other crap like active-sensing
-        midiin->openPort(midiInPort, clientName);             // open the midi in port
-        midiin->setCallback(&midicallback);    // set the callback
-        sendSyxMsg(sysxOutMsg, midiOutPort);      // send the data request message out
-        int x = 0;
-        unsigned int s = 1;
-        unsigned int t = 1;
-        while (x<loopCount && sysxBuffer.size()/2 < count)  // wait until exact bytes received or timeout
-        {
-            msleep(5);
-            s = (this->sysxBuffer.size()*50)/count;
-            t = (x*100)/loopCount;
-            if (s>t) {t=s;};
-            emit setStatusProgress(t);
-            x++;
-        };                   // time it takes to get all sysx messages in.
+        if(!midiin->isPortOpen())
+        { midiin->openPort(midiInPort, clientName);             // open the midi in port
+            midiin->setCallback(&midicallback);    // set the callback
+            sendSyxMsg(sysxOutMsg, midiOutPort);      // send the data request message out
+            int x = 0;
+            unsigned int s = 1;
+            unsigned int t = 1;
+            while (x<loopCount && sysxBuffer.size()/2 < count)  // wait until exact bytes received or timeout
+            {
+                msleep(5);
+                s = (this->sysxBuffer.size()*50)/count;
+                t = (x*100)/loopCount;
+                if (s>t) {t=s;};
+                emit setStatusProgress(t);
+                x++;
+            };                   // time it takes to get all sysx messages in.
+        } else  { retry_count--; msleep(100); if(retry_count>0) {goto REC_RETRY; }; };
         goto cleanup;
     }
     catch (RtMidiError &error)
@@ -318,11 +322,13 @@ void midiIO::receiveMsg(int midiInPort)
     /*Clean up */
 cleanup:
     emit setStatusProgress(100);
-    midiin->cancelCallback();
+    if(midiin->isPortOpen())
+    {  midiin->cancelCallback();
     this->sysxInMsg = this->sysxBuffer;		   //get the returning data string
     dataReceive = true;
     midiin->closePort();             // close the midi in port
     msleep(25);
+    } else {dataReceive = false; };
 }
 
 /**************************** run() **************************************

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2014 Colin Willcocks.
+** Copyright (C) 2007~2015 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag.
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -24,12 +24,17 @@
 #include "customControlListMenu.h"
 #include "MidiTable.h"
 #include "SysxIO.h"
+#include "Preferences.h"
 
 customControlListMenu::customControlListMenu(QWidget *parent,
                                              QString hex1, QString hex2, QString hex3,
                                              QString direction)
     : QWidget(parent)
 {
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+
     this->direction = direction;
     this->label = new customControlLabel(this);
     this->controlListComboBox = new customComboBox(this);
@@ -37,16 +42,20 @@ customControlListMenu::customControlListMenu(QWidget *parent,
     if(direction.contains("Tables") || direction.contains("large"))
     {
         this->controlListComboBox->setObjectName("largecombo");
+        QFont Cfont( "Arial", 14*ratio, QFont::Bold);
+        this->controlListComboBox->setFont(Cfont);
     }
     else
     {
         this->controlListComboBox->setObjectName("smallcombo");
+        QFont Cfont( "Arial", 10*ratio, QFont::Bold);
+        this->controlListComboBox->setFont(Cfont);
     };
     this->hex1 = hex1;
     this->hex2 = hex2;
     this->hex3 = hex3;
-    if (this->direction.contains("System")) {this->area = "System"; }
-    else if (this->direction.contains("Tables")) {this->area = "Tables"; }
+    if (direction.contains("System")) {this->area = "System"; }
+    else if (direction.contains("Tables")) {this->area = "Tables"; }
     else {this->area = "Structure"; };
 
     MidiTable *midiTable = MidiTable::Instance();
@@ -88,21 +97,21 @@ customControlListMenu::customControlListMenu(QWidget *parent,
     }
     else
     {
-        this->label->setAlignment(Qt::AlignLeft);
+        this->label->setAlignment(Qt::AlignCenter);
 
         QVBoxLayout *mainLayout = new QVBoxLayout;
         mainLayout->setMargin(0);
         mainLayout->setSpacing(0);
         mainLayout->addStretch(0);
-        mainLayout->addWidget(this->label, 0, Qt::AlignLeft);
-        mainLayout->addWidget(this->controlListComboBox, 0, Qt::AlignLeft);
+        mainLayout->addWidget(this->label, 0, Qt::AlignCenter);
+        mainLayout->addWidget(this->controlListComboBox, 0, Qt::AlignCenter);
 
         this->setLayout(mainLayout);
     };
     if(direction.contains("Tables") || direction.contains("large"))
-    { this->setFixedHeight(12 + 25); }
+    { this->setFixedHeight((12 + 25)*ratio); }
     else
-    { this->setFixedHeight(12 + 16); };
+    { this->setFixedHeight((12 + 16)*ratio); };
 
     QObject::connect(this->parent(), SIGNAL( dialogUpdateSignal() ), this, SLOT( dialogUpdateSignal() ));
 
@@ -132,9 +141,9 @@ void customControlListMenu::paintEvent(QPaintEvent *)
 
 void customControlListMenu::setComboBox()
 {
-    //this->hex1 = hex1;
-    //this->hex2 = hex2;
-    //this->hex3 = hex3;
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
 
     MidiTable *midiTable = MidiTable::Instance();
     Midi items;
@@ -159,16 +168,16 @@ void customControlListMenu::setComboBox()
         this->controlListComboBox->addItem(item);
     };
     int maxWidth = QFontMetrics( this->font() ).width( longestItem );
-    if(maxWidth < 20) { maxWidth = 20; };
+    if(maxWidth < 20*ratio) { maxWidth = 20*ratio; };
     if(this->direction.contains("Tables") || this->direction.contains("large"))
     {
-        this->controlListComboBox->setFixedWidth(maxWidth + 70);
-        this->controlListComboBox->setFixedHeight(25);
+        this->controlListComboBox->setFixedWidth(maxWidth + (80*ratio));
+        this->controlListComboBox->setFixedHeight(25*ratio);
     }
     else
     {
-        this->controlListComboBox->setFixedWidth(maxWidth + 25);
-        this->controlListComboBox->setFixedHeight(16);
+        this->controlListComboBox->setFixedWidth(maxWidth + (40*ratio));
+        this->controlListComboBox->setFixedHeight(16*ratio);
     };
 
     this->controlListComboBox->setEditable(false);

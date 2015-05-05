@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2014 Colin Willcocks.
+** Copyright (C) 2007~2015 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag.
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -25,6 +25,7 @@
 #include <QPainter>
 #include <QMouseEvent>
 #include <QGraphicsPathItem>
+#include "Preferences.h"
 
 customParaEQGraph::customParaEQGraph (QWidget *parent) //: /*m_poly(5), */loMid(11), m_iDragNode(-1)
 {
@@ -205,15 +206,19 @@ unsigned short customParaEQGraph::Level (void) const
 
 void customParaEQGraph::paintEvent ( QPaintEvent *pPaintEvent )
 {
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+
     QPixmap image = QPixmap(":images/EQ_graph.png");
-    QRectF target(0.0, 0.0, image.width()*110/100, image.height()*50/100);
+    QRectF target(0.0, 0.0, image.width()*110/100*ratio, image.height()*40/100*ratio);
     QRectF source(0.0, 0.0, image.width(), image.height());
 
     QPainter painter(this);
     painter.drawPixmap(target, image, source);
 
-    int h  = height();
-    int w  = width();
+    int h  = height()/ratio;
+    int w  = width()/ratio;
 
     int lc  = (m_iLowCut*22);
     int lg  = h-(m_iLowGain*3)-12;
@@ -277,7 +282,7 @@ void customParaEQGraph::paintEvent ( QPaintEvent *pPaintEvent )
     QPen pen;
     pen.setWidth(3);
     painter.setPen(pen);
-    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.setRenderHint(QPainter::HighQualityAntialiasing, true);
 
     QPainterPath graph;
     graph.moveTo(0, h);
@@ -311,7 +316,8 @@ void customParaEQGraph::paintEvent ( QPaintEvent *pPaintEvent )
         x=x+5;
     };
     graph.lineTo(w, h);
-
+    painter.scale(ratio, ratio);
+    painter.setOpacity(0.6);
     painter.setBrush(grad);
     painter.drawPath(graph);
     painter.end();
