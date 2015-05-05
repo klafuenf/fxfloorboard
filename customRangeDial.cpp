@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2014 Colin Willcocks.
+** Copyright (C) 2007~2015 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag. 
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -24,12 +24,17 @@
 #include <QtWidgets>
 #include "customRangeDial.h"
 #include "SysxIO.h"
+#include "Preferences.h"
 
 customRangeDial::customRangeDial(double value, double min, double max, double single, double page, 
                                  QPoint dialPos, QWidget *parent, QString area, QString hex1, QString hex2, QString hex3,
                                  QString type, QString imagePath, unsigned int imageRange)
     : QWidget(parent)
 {
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+
     this->area = area;
     this->hex1 = hex1;
     this->hex2 = hex2;
@@ -47,7 +52,7 @@ customRangeDial::customRangeDial(double value, double min, double max, double si
     this->dialPos = dialPos;
 
     setOffset(value);
-    setGeometry(dialPos.x(), dialPos.y(), dialSize.width(), dialSize.height());
+    setGeometry(dialPos.x(), dialPos.y(), dialSize.width()*ratio, dialSize.height()*ratio);
 
     QObject::connect(this, SIGNAL( valueChanged(int, QString, QString, QString) ),
                      this->parent(), SLOT( valueChanged(int, QString, QString, QString) ));
@@ -56,12 +61,18 @@ customRangeDial::customRangeDial(double value, double min, double max, double si
 
 void customRangeDial::paintEvent(QPaintEvent *)
 {
-    QRectF target(0.0 , 0.0, dialSize.width(), dialSize.height());
-    QRectF source(xOffset, 0.0, dialSize.width(), dialSize.height());
-    QPixmap image(imagePath);
-    QPainter painter(this);
-    //painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.drawPixmap(target, image, source);
+  Preferences *preferences = Preferences::Instance();
+  bool ok;
+  const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+
+  QRectF target(0.0 , 0.0, dialSize.width()*ratio, dialSize.height()*ratio);
+	QRectF source(xOffset, 0.0, dialSize.width(), dialSize.height());
+	QPixmap image(imagePath);
+	//image.setMask(image.mask());
+
+	QPainter painter(this);
+	//painter.setRenderHint(QPainter::Antialiasing, true);
+	painter.drawPixmap(target, image, source);
 }
 
 void customRangeDial::setOffset(double _newValue)

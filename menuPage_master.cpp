@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2014 Colin Willcocks.
+** Copyright (C) 2007~2015 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag. 
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -42,16 +42,7 @@ void menuPage_master::setEditPages()
 
     editDetails()->page()->newGroupBox("Master EQ");
     editDetails()->page()->addMasterEQ(0, 1, 2, 4, "07", "00", "10");
-    /*editDetails()->page()->addKnob(0, 0, 1, 1, "07", "00", "11");                        // master low
-    editDetails()->page()->addKnob(0, 1, 1, 1, "07", "00", "14");                        // master mid gain
-    editDetails()->page()->addKnob(1, 1, 1, 1, "07", "00", "13");                        // master mid Q
-    editDetails()->page()->addKnob(2, 1, 1, 1, "07", "00", "12");                        // master mid freq
-    editDetails()->page()->addKnob(0, 2, 1, 1, "07", "00", "15");    */                    // master high
     editDetails()->page()->addGroupBox(0, 0, 2, 1);
-
-   /* editDetails()->page()->newGroupBox("Patch Level");
-    editDetails()->page()->addKnob(0, 3, 1, 1, "07", "00", "10");                        // patch level
-    editDetails()->page()->addGroupBox(0, 1, 1, 1); */
 
     editDetails()->page()->newGroupBox("Amp CTRL");
     editDetails()->page()->addComboBox(0, 0, 1, 1, "06", "00", "60");                     // amp control
@@ -64,16 +55,15 @@ void menuPage_master::setEditPages()
     editDetails()->page()->addComboBox(3, 0, 1, 1, "07", "00", "1A");                     // midi pitch detect
     editDetails()->page()->addGroupBox(0, 2, 2, 1);
 
-
     editDetails()->page()->newGroupBox("Manual Mode");
-    editDetails()->page()->addComboBox(0, 0, 1, 1, "07", "00", "40");                     //
-    editDetails()->page()->addComboBox(0, 1, 1, 1, "07", "00", "41");                     //
-    editDetails()->page()->addComboBox(2, 0, 1, 1, "07", "00", "42");                     //
-    editDetails()->page()->addComboBox(2, 1, 1, 1, "07", "00", "43");                     //
-    editDetails()->page()->addComboBox(2, 2, 1, 1, "07", "00", "44");                     //
-    editDetails()->page()->addComboBox(2, 3, 1, 1, "07", "00", "45");                     //
-    editDetails()->page()->addComboBox(4, 2, 1, 1, "07", "00", "46");                     //
-    editDetails()->page()->addComboBox(4, 3, 1, 1, "07", "00", "47");                     //
+    editDetails()->page()->addComboBox(0, 1, 1, 1, "07", "00", "40");                     //
+    editDetails()->page()->addComboBox(0, 2, 1, 1, "07", "00", "41");                     //
+    editDetails()->page()->addComboBox(1, 0, 1, 1, "07", "00", "42");                     //
+    editDetails()->page()->addComboBox(2, 0, 1, 1, "07", "00", "43");                     //
+    editDetails()->page()->addComboBox(3, 0, 1, 1, "07", "00", "44");                     //
+    editDetails()->page()->addComboBox(4, 0, 1, 1, "07", "00", "45");                     //
+    editDetails()->page()->addComboBox(6, 1, 1, 1, "07", "00", "46");                     //
+    editDetails()->page()->addComboBox(6, 2, 1, 1, "07", "00", "47");                     //
     editDetails()->page()->addGroupBox(0, 3, 2, 1);
 
     editDetails()->addPage();

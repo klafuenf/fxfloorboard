@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2014 Colin Willcocks.
+** Copyright (C) 2007~2015 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag. 
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -24,12 +24,17 @@
 #include "customControlSwitch.h"
 #include "MidiTable.h"
 #include "SysxIO.h"
+#include "Preferences.h"
 
 customControlSwitch::customControlSwitch(QWidget *parent, 
 									 QString hex1, QString hex2, QString hex3, 
 									 QString direction)
 	: QWidget(parent)
 {
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+
 	this->label = new customControlLabel(this);
 	this->hex1 = hex1;
 	this->hex2 = hex2;
@@ -64,7 +69,7 @@ customControlSwitch::customControlSwitch(QWidget *parent,
 		
 		QVBoxLayout *mainLayout = new QVBoxLayout;
 		mainLayout->setMargin(0);
-                mainLayout->setSpacing(5);
+                mainLayout->setSpacing(5*ratio);
                 mainLayout->addWidget(this->label, 0, Qt::AlignCenter);
                 mainLayout->addWidget(this->switchbutton, 0, Qt::AlignCenter);
 		mainLayout->addStretch(0);
@@ -84,7 +89,6 @@ customControlSwitch::customControlSwitch(QWidget *parent,
 		mainLayout->addWidget(this->switchbutton, 0, Qt::AlignCenter);
 
 		this->setLayout(mainLayout);
-                //this->setFixedHeight(12 + 20);
 	};
 
 	QObject::connect(this->parent(), SIGNAL( dialogUpdateSignal() ),

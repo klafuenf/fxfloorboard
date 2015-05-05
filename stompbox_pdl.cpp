@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2014 Colin Willcocks.
+** Copyright (C) 2007~2015 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag. 
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -22,15 +22,20 @@
 ****************************************************************************/
 
 #include "stompbox_pdl.h"
+#include "Preferences.h"
 
 stompbox_pdl::stompbox_pdl(QWidget *parent)
     : stompBox(parent)
 {
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+
     /* PDL */
     setImage(":/images/pdl.png");
     setLSB("06", "00");
     setComboBox("08", "00", "10");
-    setButton("06", "00", "20", QPoint(0, 110), ":/images/pedal.png");
+    setButton("06", "00", "20", QPoint(0, 110*ratio), ":/images/pedal.png");
     editDetails()->patchPos(1778, 40, "06", "20");
     setEditPages();
 }

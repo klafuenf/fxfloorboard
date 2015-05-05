@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2014 Colin Willcocks.
+** Copyright (C) 2007~2015 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag. 
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -24,105 +24,110 @@
 #include <QtWidgets>
 #include "preferencesDialog.h"
 #include "preferencesPages.h"
+#include "Preferences.h"
 
 
 preferencesDialog::preferencesDialog()
 {
-	contentsWidget = new QListWidget;
-	contentsWidget->setViewMode(QListView::IconMode);
-	contentsWidget->setIconSize(QSize(45, 40));
-	contentsWidget->setMovement(QListView::Static);
-	contentsWidget->setSpacing(10);
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
 
-	GeneralPage *generalSettings = new GeneralPage;
-	MidiPage *midiSettings = new MidiPage;
-	WindowPage *windowSettings = new WindowPage;
-	LanguagePage *languageSettings = new LanguagePage;
-	StylePage *styleSettings = new StylePage;
+    contentsWidget = new QListWidget;
+    contentsWidget->setViewMode(QListView::IconMode);
+    contentsWidget->setIconSize(QSize(45*ratio, 40*ratio));
+    contentsWidget->setMovement(QListView::Static);
+    contentsWidget->setSpacing(10*ratio);
 
-	this->generalSettings = generalSettings;
-	this->midiSettings = midiSettings;
-	this->windowSettings = windowSettings;
-	this->languageSettings = languageSettings;
-	this->styleSettings = styleSettings;
+    GeneralPage *generalSettings = new GeneralPage;
+    MidiPage *midiSettings = new MidiPage;
+    WindowPage *windowSettings = new WindowPage;
+    LanguagePage *languageSettings = new LanguagePage;
+    StylePage *styleSettings = new StylePage;
 
-	pagesWidget = new QStackedWidget;
-	pagesWidget->addWidget(generalSettings);
-	pagesWidget->addWidget(midiSettings);
-	pagesWidget->addWidget(windowSettings);
-	pagesWidget->addWidget(languageSettings);
-	pagesWidget->addWidget(styleSettings);
-	
-	QPushButton *okButton = new QPushButton(tr("Ok"));
-	QPushButton *cancelButton = new QPushButton(tr("Cancel"));
+    this->generalSettings = generalSettings;
+    this->midiSettings = midiSettings;
+    this->windowSettings = windowSettings;
+    this->languageSettings = languageSettings;
+    this->styleSettings = styleSettings;
 
-	createIcons();
-	contentsWidget->setCurrentRow(0);
+    pagesWidget = new QStackedWidget;
+    pagesWidget->addWidget(generalSettings);
+    pagesWidget->addWidget(midiSettings);
+    pagesWidget->addWidget(windowSettings);
+    pagesWidget->addWidget(languageSettings);
+    pagesWidget->addWidget(styleSettings);
 
-	connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
-	connect(cancelButton, SIGNAL(clicked()), this, SLOT(close()));
+    QPushButton *okButton = new QPushButton(tr("Ok"));
+    QPushButton *cancelButton = new QPushButton(tr("Cancel"));
 
-	QHBoxLayout *horizontalLayout = new QHBoxLayout;
-	horizontalLayout->addWidget(contentsWidget);
-	horizontalLayout->addWidget(pagesWidget, 1);
+    createIcons();
+    contentsWidget->setCurrentRow(0);
 
-	QHBoxLayout *buttonsLayout = new QHBoxLayout;
-	buttonsLayout->addStretch(1);
-	buttonsLayout->addWidget(okButton);
-	buttonsLayout->addWidget(cancelButton);
+    connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
+    connect(cancelButton, SIGNAL(clicked()), this, SLOT(close()));
 
-	QVBoxLayout *mainLayout = new QVBoxLayout;
-	mainLayout->addLayout(horizontalLayout);
-	mainLayout->addStretch(1);
-	mainLayout->addSpacing(12);
-	mainLayout->addLayout(buttonsLayout);
-	setLayout(mainLayout);
+    QHBoxLayout *horizontalLayout = new QHBoxLayout;
+    horizontalLayout->addWidget(contentsWidget);
+    horizontalLayout->addWidget(pagesWidget, 1);
 
-	setWindowTitle(tr("GT-100 Fx FloorBoard - Preferences"));
+    QHBoxLayout *buttonsLayout = new QHBoxLayout;
+    buttonsLayout->addStretch(1);
+    buttonsLayout->addWidget(okButton);
+    buttonsLayout->addWidget(cancelButton);
+
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout->addLayout(horizontalLayout);
+    mainLayout->addStretch(1);
+    mainLayout->addSpacing(12*ratio);
+    mainLayout->addLayout(buttonsLayout);
+    setLayout(mainLayout);
+
+    setWindowTitle(tr("GT-100 Fx FloorBoard - Preferences"));
 }
 
 void preferencesDialog::createIcons()
 {
-	QListWidgetItem *generalButton = new QListWidgetItem(contentsWidget);
-	generalButton->setIcon(QIcon(":images/general.png"));
-	generalButton->setText(tr("General"));
-	generalButton->setTextAlignment(Qt::AlignHCenter);
-	generalButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+    QListWidgetItem *generalButton = new QListWidgetItem(contentsWidget);
+    generalButton->setIcon(QIcon(":images/general.png"));
+    generalButton->setText(tr("General"));
+    generalButton->setTextAlignment(Qt::AlignHCenter);
+    generalButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-	QListWidgetItem *midiButton = new QListWidgetItem(contentsWidget);
-	midiButton->setIcon(QIcon(":images/midi.png"));
-        midiButton->setText(tr("USB/Midi"));
-	midiButton->setTextAlignment(Qt::AlignHCenter);
-	midiButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+    QListWidgetItem *midiButton = new QListWidgetItem(contentsWidget);
+    midiButton->setIcon(QIcon(":images/midi.png"));
+    midiButton->setText(tr("USB/Midi"));
+    midiButton->setTextAlignment(Qt::AlignHCenter);
+    midiButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-	QListWidgetItem *windowButton = new QListWidgetItem(contentsWidget);
-	windowButton->setIcon(QIcon(":images/window.png"));
-	windowButton->setText(tr("Window"));
-	windowButton->setTextAlignment(Qt::AlignHCenter);
-	windowButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-	
-	QListWidgetItem *languageButton = new QListWidgetItem(contentsWidget);
-	languageButton->setIcon(QIcon(":images/language.png"));
-	languageButton->setText(tr("Language"));
-	languageButton->setTextAlignment(Qt::AlignHCenter);
-	languageButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-	
-	QListWidgetItem *styleButton = new QListWidgetItem(contentsWidget);
-  styleButton->setIcon(QIcon(":images/style.png"));
-  styleButton->setText(tr("Look/Style"));
-  styleButton->setTextAlignment(Qt::AlignHCenter);
-  styleButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+    QListWidgetItem *windowButton = new QListWidgetItem(contentsWidget);
+    windowButton->setIcon(QIcon(":images/window.png"));
+    windowButton->setText(tr("Window"));
+    windowButton->setTextAlignment(Qt::AlignHCenter);
+    windowButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-	connect(contentsWidget,
-		SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)),
-		this, SLOT(changePage(QListWidgetItem *, QListWidgetItem*)));
+    QListWidgetItem *languageButton = new QListWidgetItem(contentsWidget);
+    languageButton->setIcon(QIcon(":images/language.png"));
+    languageButton->setText(tr("Language"));
+    languageButton->setTextAlignment(Qt::AlignHCenter);
+    languageButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+
+    QListWidgetItem *styleButton = new QListWidgetItem(contentsWidget);
+    styleButton->setIcon(QIcon(":images/style.png"));
+    styleButton->setText(tr("Look/Style"));
+    styleButton->setTextAlignment(Qt::AlignHCenter);
+    styleButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+
+    connect(contentsWidget,
+            SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)),
+            this, SLOT(changePage(QListWidgetItem *, QListWidgetItem*)));
 }
 
 void preferencesDialog::changePage(QListWidgetItem *current, QListWidgetItem *previous)
 {
-	if (!current)
-	{
-		current = previous;
-	};
-	pagesWidget->setCurrentIndex(contentsWidget->row(current));
+    if (!current)
+    {
+        current = previous;
+    };
+    pagesWidget->setCurrentIndex(contentsWidget->row(current));
 }

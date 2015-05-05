@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2014 Colin Willcocks.
+** Copyright (C) 2007~2015 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag. 
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -78,6 +78,10 @@ QDir initPatchListMenu::getInitPatchDir()
 
 void initPatchListMenu::setInitPatchComboBox(QRect geometry)
 {
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+
     QDir initPatchesDir = getInitPatchDir();
     if(initPatchesDir.exists())
     {	/* If the "Init Pathces" directory exists. */
@@ -90,6 +94,8 @@ void initPatchListMenu::setInitPatchComboBox(QRect geometry)
             this->initPatchComboBox = new customComboBox(this);
             this->available = true;
             this->initPatchComboBox->setObjectName("smallcombo");
+            QFont Sfont( "Arial", 8*ratio, QFont::Bold);
+            this->initPatchComboBox->setFont(Sfont);
             initPatchComboBox->addItem(tr("[ INIT Patches ]"));
 
             int itemcount;
@@ -117,6 +123,10 @@ void initPatchListMenu::setInitPatchComboBox(QRect geometry)
 
             QObject::connect(initPatchComboBox, SIGNAL(currentIndexChanged(int)),
                              this, SLOT(loadInitPatch(int)));
+                             
+            QObject::connect(initPatchComboBox, SIGNAL(highlighted(int)),
+                    this, SLOT(highLightInitPatch(int)));
+                                     
             QObject::connect(this, SIGNAL(updateSignal()),
                              this->parent()->parent(), SIGNAL(updateSignal()));
         };
@@ -156,4 +166,28 @@ void initPatchListMenu::loadInitPatch(int index)
             };
         };
     };
+}
+
+void initPatchListMenu::highLightInitPatch(int index)
+{
+  /*  if(index > 0)
+    {
+        QString fileName = this->initPatches.at(index - 1 );
+        if (!fileName.isEmpty())
+        {
+            sysxWriter file;
+            file.setFile(fileName);
+            if(file.readFile())
+            {
+                // DO SOMETHING AFTER READING THE FILE (UPDATE THE GUI)
+                SysxIO *sysxIO = SysxIO::Instance();
+                QString area = "Structure";
+                sysxIO->setFileSource(area, file.getFileSource());
+                sysxIO->setFileName(tr("init patch"));
+                sysxIO->setSyncStatus(false);
+                sysxIO->setDevice(false);
+                emit updateSignal();
+            };
+        };
+    };  */
 }

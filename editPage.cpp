@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2014 Colin Willcocks.
+** Copyright (C) 2007~2015 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag. 
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -37,6 +37,7 @@
 #include "customControlListMenu.h"
 #include "customMultiComboBox.h"
 #include "customRenameWidget.h"
+#include "Preferences.h"
 
 editPage::editPage(QWidget *parent)
     : QWidget(parent)
@@ -193,6 +194,8 @@ void editPage::addKnob(int row, int column, int rowSpan, int columnSpan,
     {
         this->layout->addWidget(knob, row, column, rowSpan, columnSpan, alignment);
     };
+    knob->setWhatsThis(tr("hold down mouse button and drag up/down for quick adjustment")
+                       + "<br>" + tr("use scroll wheel or up/down arrow keys for fine adjustment"));
 }
 
 void editPage::addTarget(int row, int column, int rowSpan, int columnSpan,
@@ -213,6 +216,10 @@ void editPage::addTarget(int row, int column, int rowSpan, int columnSpan,
     {
         this->layout->addWidget(target, row, column, rowSpan, columnSpan, alignment);
     };
+    target->setWhatsThis(tr("hold down mouse button and drag up/down for quick adjustment or")
+                         + "<br>" + tr("press arrow to open list box and click on an item to select")
+                         + "<br>" + tr(" or use scroll wheel or up/down arrow keys for fine adjustment"));
+
 }
 
 void editPage::addRange(int row, int column, int rowSpan, int columnSpan,
@@ -233,6 +240,8 @@ void editPage::addRange(int row, int column, int rowSpan, int columnSpan,
     {
         this->layout->addWidget(range, row, column, rowSpan, columnSpan, alignment);
     };
+    range->setWhatsThis(tr("hold down mouse button and drag up/down for quick adjustment")
+                        + "<br>" + tr("use scroll wheel or up/down arrow keys for fine adjustment"));
 }
 
 void editPage::addSwitch(int row, int column, int rowSpan, int columnSpan,
@@ -255,6 +264,8 @@ void editPage::addSwitch(int row, int column, int rowSpan, int columnSpan,
     {
         this->layout->addWidget(switchbutton, row, column, rowSpan, columnSpan, alignment);
     };
+    switchbutton->setWhatsThis(tr("press with mouse button to toggle switch state")
+                               + "<br>" + tr("a lit button indicates and effect is ON"));
 }
 
 void editPage::addComboBox(int row, int column, int rowSpan, int columnSpan,
@@ -284,6 +295,8 @@ void editPage::addComboBox(int row, int column, int rowSpan, int columnSpan,
     {
         this->layout->addWidget(combobox, row, column, rowSpan, columnSpan, alignment);
     };
+    combobox->setWhatsThis(tr("press arrow to open selection box and click on item to select")
+                           + "<br>" + tr("also use scroll wheel or up/down arrow keys to change selection"));
 }
 
 void editPage::addMultiComboBox(int row, int column, int rowSpan, int columnSpan,
@@ -368,6 +381,11 @@ void editPage::valueChanged(bool value, QString hex1, QString hex2, QString hex3
 
 void editPage::newGroupBox(QString title, Qt::Alignment alignment)
 {
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+    QFont Sfont( "Arial", 8*ratio, QFont::Bold);
+
     if(this->groupBoxMode)
     {
         if(this->groupBoxIndex == 0 && this->groupBoxLevel != 0)
@@ -389,8 +407,8 @@ void editPage::newGroupBox(QString title, Qt::Alignment alignment)
     this->groupBoxes.append(this->groupBox);
 
     this->groupBoxLayout = new QGridLayout;
-    this->groupBoxLayout->setMargin(5);
-    this->groupBoxLayout->setSpacing(5);
+    this->groupBoxLayout->setMargin(5*ratio);
+    this->groupBoxLayout->setSpacing(5*ratio);
     this->groupBoxLayout->setRowStretch(0, 0);
     this->groupBoxLayout->setRowStretch(1, 1);
     this->groupBoxLayout->setRowStretch(2, 2);
@@ -400,6 +418,7 @@ void editPage::newGroupBox(QString title, Qt::Alignment alignment)
 
     this->groupBox->setTitle(title);
     this->groupBox->setObjectName("groupbox");
+    this->groupBox->setFont(Sfont);
     this->groupBoxMode = true;
 }
 
@@ -491,6 +510,9 @@ void editPage::insertStackField(int id,
 
 void editPage::newStackField(int id, Qt::Alignment alignment)
 {
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
     this->fieldIndexes.clear();
     this->stackFieldMode = true;
     this->stackFieldId = id;
@@ -500,7 +522,7 @@ void editPage::newStackField(int id, Qt::Alignment alignment)
     this->stackField->setRowStretch(2, 2);
     this->stackField->setRowStretch(3, 3);
     this->stackField->setMargin(0);
-    this->stackField->setSpacing(5);
+    this->stackField->setSpacing(5*ratio);
     this->stackField->setAlignment(alignment);
 }
 

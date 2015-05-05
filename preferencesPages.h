@@ -48,8 +48,7 @@ public:
     QComboBox* midiInCombo;
     QComboBox* midiOutCombo;
     QCheckBox* dBugCheckBox;
-    QSpinBox* midiTimeSpinBox;
-    QSpinBox* midiDelaySpinBox;
+    QSpinBox* midiTxChSpinBox;
 };
 
 class WindowPage : public QWidget
@@ -59,9 +58,9 @@ public:
     QCheckBox* windowCheckBox;
     QCheckBox* sidepanelCheckBox;
     QCheckBox* singleWindowCheckBox;
-    QCheckBox* widgetsCheckBox;
+    QCheckBox* autoRatioCheckBox;
     QCheckBox* splashCheckBox;
-    QSpinBox* scaleSpinBox;
+    QDoubleSpinBox* ratioSpinBox;
 };
 
 class LanguagePage : public QWidget

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2014 Colin Willcocks.
+** Copyright (C) 2007~2015 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag. 
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -24,34 +24,46 @@
 #include <QtWidgets>
 #include "statusBarSymbol.h"
 #include "globalVariables.h"
+#include "Preferences.h"
 
 statusBarSymbol::statusBarSymbol(QWidget *parent, QString imagePath)
     : QWidget(parent)
 {
-    this->imagePath = imagePath;
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+	this->imagePath = imagePath;
     QSize imageSize = QPixmap(imagePath).size();
-    this->symbolSize =  QSize(imageSize.width()/4, imageSize.height());
-    this->setFixedSize(symbolSize);
-    setOffset(0);
+    this->symbolSize =  QSize((imageSize.width()/4), imageSize.height());
+    this->setFixedSize(symbolSize*ratio);
+
+	setOffset(0);
 }
 
 void statusBarSymbol::paintEvent(QPaintEvent *)
 {
-    QRectF target(0.0 , 0.0, symbolSize.width(), symbolSize.height());
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+    QRectF target(0.0 , 0.0, symbolSize.width()*ratio, symbolSize.height()*ratio);
     QRectF source(xOffset, 0.0, symbolSize.width(), symbolSize.height());
-    QPixmap image(imagePath);
-    QPainter painter(this);
-    painter.drawPixmap(target, image, source);
+	QPixmap image(imagePath);
+
+	QPainter painter(this);
+	painter.drawPixmap(target, image, source);
 }
 
 void statusBarSymbol::setOffset(int imageNr)
 {
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
     this->xOffset = imageNr*symbolSize.width();
-    this->update();
+	this->update();
 }
 
 void statusBarSymbol::setValue(int value)
 {
-    setOffset(value);
+	setOffset(value);
 }
 

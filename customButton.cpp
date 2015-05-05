@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2014 Colin Willcocks.
+** Copyright (C) 2007~2015 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag. 
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -24,182 +24,197 @@
 #include <QtWidgets>
 #include "customButton.h"
 #include "globalVariables.h"
+#include "Preferences.h"
 
 customButton::customButton(bool active, QPoint buttonPos, QWidget *parent, QString hex1, QString hex2, QString hex3, 
-						   QString imagePath)
+                           QString imagePath)
     : QWidget(parent)
 {
-	this->hex1 = hex1;
-	this->hex2 = hex2;
-	this->hex3 = hex3;
-	this->active = active;
-	this->imagePath = imagePath;
-	QSize imageSize = QPixmap(imagePath).size();
-	this->buttonSize =  QSize(imageSize.width(), imageSize.height()/4);
-	this->buttonPos = buttonPos;
-	setOffset(0);
-    setGeometry(buttonPos.x(), buttonPos.y(), buttonSize.width(), buttonSize.height());
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
 
-	timer = new QTimer(this);
-	QObject::connect(this, SIGNAL( valueChanged(bool, QString, QString, QString) ),
-                this->parent(), SLOT( valueChanged(bool, QString, QString, QString) ));
+    this->hex1 = hex1;
+    this->hex2 = hex2;
+    this->hex3 = hex3;
+    this->active = active;
+    this->imagePath = imagePath;
+    QSize imageSize = QPixmap(imagePath).size();
+    this->buttonSize =  QSize(imageSize.width(), imageSize.height()/4);
+    this->buttonPos = buttonPos;
+    setOffset(0);
+    setGeometry(buttonPos.x(), buttonPos.y(), buttonSize.width()*ratio, buttonSize.height()*ratio);
+
+    timer = new QTimer(this);
+    QObject::connect(this, SIGNAL( valueChanged(bool, QString, QString, QString) ),
+                     this->parent(), SLOT( valueChanged(bool, QString, QString, QString) ));
 }
 
 customButton::customButton(QString text, bool active, QPoint buttonPos, QWidget *parent, 
-						   QString imagePath)
+                           QString imagePath)
     : QWidget(parent)
 {
-	this->active = active;
-	this->text = text;
-	this->imagePath = imagePath;
-	QSize imageSize = QPixmap(imagePath).size();
-	this->buttonSize =  QSize(imageSize.width(), imageSize.height()/4);
-	this->buttonPos = buttonPos;
-	setOffset(0);
-    setGeometry(buttonPos.x(), buttonPos.y(), buttonSize.width(), buttonSize.height());
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
 
-	QLabel *textLabel = new QLabel(this);
-	textLabel->setObjectName("button");
-	textLabel->setText(this->text);
-	textLabel->setAlignment(Qt::AlignCenter);
-	textLabel->setGeometry(0, (buttonSize.height() - textLabel->height())/2, buttonSize.width(), textLabel->height());
+    this->active = active;
+    this->text = text;
+    this->imagePath = imagePath;
+    QSize imageSize = QPixmap(imagePath).size();
+    this->buttonSize =  QSize(imageSize.width(), imageSize.height()/4);
+    this->buttonPos = buttonPos;
+    setOffset(0);
+    setGeometry(buttonPos.x(), buttonPos.y(), buttonSize.width()*ratio, buttonSize.height()*ratio);
 
-	timer = new QTimer(this);
+    QLabel *textLabel = new QLabel(this);
+    textLabel->setObjectName("button");
+    QFont Mfont( "Arial", 9*ratio, QFont::Bold);
+    textLabel->setFont(Mfont);
+    textLabel->setText(this->text);
+    textLabel->setAlignment(Qt::AlignCenter);
+    textLabel->setGeometry(0, (buttonSize.height() - textLabel->height())/2, buttonSize.width()*ratio, textLabel->height()*ratio);
+
+    timer = new QTimer(this);
     QObject::connect(timer, SIGNAL(timeout()), this, SLOT(blink()) );
 
-	QObject::connect(this, SIGNAL( valueChanged(bool, QString, QString, QString) ),
-                this->parent(), SLOT( valueChanged(bool, QString, QString, QString) ));
+    QObject::connect(this, SIGNAL( valueChanged(bool, QString, QString, QString) ),
+                     this->parent(), SLOT( valueChanged(bool, QString, QString, QString) ));
 }
 
 void customButton::paintEvent(QPaintEvent *)
 {
-	QRectF target(0.0 , 0.0, buttonSize.width(), buttonSize.height());
-	QRectF source(0.0, yOffset, buttonSize.width(), buttonSize.height());
-	QPixmap image(imagePath);
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
 
-	QPainter painter(this);
-	painter.drawPixmap(target, image, source);
+    QRectF target(0.0 , 0.0, buttonSize.width()*ratio, buttonSize.height()*ratio);
+    QRectF source(0.0, yOffset, buttonSize.width(), buttonSize.height());
+    QPixmap image(imagePath);
+
+    QPainter painter(this);
+    painter.drawPixmap(target, image, source);
 }
 
 void customButton::setOffset(signed int imageNr)
 {
-	this->yOffset = imageNr*buttonSize.height();
-	this->update();
+    this->yOffset = imageNr*buttonSize.height();
+    this->update();
 }
 
 void customButton::mousePressEvent(QMouseEvent *event)
 {
-	if ( event->button() == Qt::LeftButton )
-	{	
-		this->dragStartPosition = event->pos();
-		if(active)
-		{
-			setOffset(3);
-		}
-		else
-		{
-			setOffset(1);
-		};
-		setFocus();
-	};
+    if ( event->button() == Qt::LeftButton )
+    {
+        this->dragStartPosition = event->pos();
+        if(active)
+        {
+            setOffset(3);
+        }
+        else
+        {
+            setOffset(1);
+        };
+        setFocus();
+    };
 }
 
 void customButton::mouseReleaseEvent(QMouseEvent *event)
 {
-	if ( event->button() == Qt::LeftButton )
-	{	
-		if(active)
-		{
-			setOffset(0);
-			setBlink(false);
-			emitValue(false);
-		}
-		else
-		{
-			setOffset(2);
-			emitValue(true);
-		};
-		clearFocus();
-	};
+    if ( event->button() == Qt::LeftButton )
+    {
+        if(active)
+        {
+            setOffset(0);
+            setBlink(false);
+            emitValue(false);
+        }
+        else
+        {
+            setOffset(2);
+            emitValue(true);
+        };
+        clearFocus();
+    };
 }
 
 void customButton::emitValue(bool value)
 {
     this->active = value;
-	//if (value != m_value) {
+    //if (value != m_value) {
     //    this->m_value = value;
-		if(this->hex1.isEmpty() && this->hex2.isEmpty() && this->hex3.isEmpty())
-		{
-			emit valueChanged((bool)value);
-		}
-		else
-		{
-			emit valueChanged((bool)value, this->hex1, this->hex2, this->hex3);
-		};
+    if(this->hex1.isEmpty() && this->hex2.isEmpty() && this->hex3.isEmpty())
+    {
+        emit valueChanged((bool)value);
+    }
+    else
+    {
+        emit valueChanged((bool)value, this->hex1, this->hex2, this->hex3);
+    };
     //};
 }
 
 void customButton::mouseMoveEvent(QMouseEvent *event)
 {
     if (!(event->buttons() == Qt::LeftButton) && (event->pos() - dragStartPosition).manhattanLength() < QApplication::startDragDistance())
-	{
+    {
         return;
-	};
-	/*if(active)
-	{
-		setOffset(2);
-	}
-	else
-	{
-		setOffset(0);
-	};*/
+    };
+    /*if(active)
+    {
+        setOffset(2);
+    }
+    else
+    {
+        setOffset(0);
+    };*/
 }
 
 void customButton::setValue(bool value)
 {
-	this->active = value;
-	if(active)
-	{
-		setOffset(2);
-	}
-	else
-	{
-		setOffset(0);
-	};
-	clearFocus();
+    this->active = value;
+    if(active)
+    {
+        setOffset(2);
+    }
+    else
+    {
+        setOffset(0);
+    };
+    clearFocus();
 }
 
 void customButton::setBlink(bool value)
 {
-	 if(value)
-	 {
-		timer->start(buttonBlinkInterval);
-	 }
-	 else
-	 {
-		timer->stop();
-		if(active)
-		{
-			setOffset(2);
-		}
-		else
-		{
-			setOffset(0);
-		};
-	 };
+    if(value)
+    {
+        timer->start(buttonBlinkInterval);
+    }
+    else
+    {
+        timer->stop();
+        if(active)
+        {
+            setOffset(2);
+        }
+        else
+        {
+            setOffset(0);
+        };
+    };
 }
 
 void customButton::blink()
 {
-	if(on)
-	{
-		on = false;
-		setOffset(0);
-	}
-	else
-	{
-		on = true;
-		setOffset(2);
-	};
-	clearFocus();
+    if(on)
+    {
+        on = false;
+        setOffset(0);
+    }
+    else
+    {
+        on = true;
+        setOffset(2);
+    };
+    clearFocus();
 }

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2014 Colin Willcocks.
+** Copyright (C) 2007~2015 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag.
 ** All rights reserved.
 ** This file is part of "GT-10 Fx FloorBoard".
@@ -25,6 +25,7 @@
 #include <QPainter>
 #include <QMouseEvent>
 #include <QGraphicsPathItem>
+#include "Preferences.h"
 
 customMasterEQGraph::customMasterEQGraph (QWidget *parent)
 {
@@ -134,6 +135,10 @@ unsigned short customMasterEQGraph::Level (void) const
 
 void customMasterEQGraph::paintEvent ( QPaintEvent *pPaintEvent )
 {
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+
     QPixmap image = QPixmap(":images/EQ_graph.png");
     QRectF target(0.0, 0.0, image.width()*85/100, image.height()*43/100);
     QRectF source(0.0, 0.0, image.width(), image.height());
@@ -220,7 +225,8 @@ void customMasterEQGraph::paintEvent ( QPaintEvent *pPaintEvent )
     };
 
     graph.lineTo(w, h);
-
+    painter.scale(ratio, ratio);
+    painter.setOpacity(0.6);
     painter.setBrush(grad);
     painter.drawPath(graph);
     painter.end();

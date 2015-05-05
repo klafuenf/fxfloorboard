@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2014 Colin Willcocks.
+** Copyright (C) 2007~2015 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag. 
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -223,8 +223,8 @@ bulkLoadDialog::bulkLoadDialog()
                 msgText.append(QObject::tr("Patch file not within allowable parameters or<br>"));
                 msgText.append(QObject::tr("file format unknown, please try another file."));
                 msgBox->setText(msgText);
-                msgBox->setStandardButtons(QMessageBox::Ok);
-                msgBox->exec();
+                msgBox->show();
+                QTimer::singleShot(3000, msgBox, SLOT(deleteLater()));
             };
         };
     };

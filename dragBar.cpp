@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2014 Colin Willcocks.
+** Copyright (C) 2007~2015 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag. 
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -22,6 +22,7 @@
 ****************************************************************************/
 
 #include "dragBar.h"
+#include "Preferences.h"
 
 dragBar::dragBar(QWidget *parent, QString imagePath)
     : QWidget(parent)
@@ -40,7 +41,11 @@ dragBar::dragBar(QWidget *parent, QString imagePath)
 
 void dragBar::paintEvent(QPaintEvent *)
 {
-    QRectF target(0.0, 0.0, barSize.width(), barSize.height());
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+
+    QRectF target(0.0, 0.0, barSize.width()*ratio, (barSize.height())*ratio);
     QRectF source(0.0, 0.0, image.width(), image.height());
 
     QPainter painter(this);
@@ -49,20 +54,24 @@ void dragBar::paintEvent(QPaintEvent *)
 
 void dragBar::showDragBar(QPoint newpos)
 {
-    if(newpos.x() < offsetMin)
-    {
-        this->barPos = QPoint(offsetMin - (barSize.width()/2), newpos.y());
-    }
-    else if(newpos.x() > offsetMax)
-    {
-        this->barPos = QPoint(offsetMax - (barSize.width()/2), newpos.y());
-    }
-    else
-    {
-        this->barPos = QPoint(newpos.x() - (barSize.width()/2), newpos.y());
-    };
-    this->setGeometry(barPos.x(), barPos.y(), barSize.width(), barSize.height());
-    this->show();
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+
+	if(newpos.x() < offsetMin)
+	{
+        this->barPos = QPoint(offsetMin - (barSize.width()/2*ratio), newpos.y()*ratio);
+	}
+	else if(newpos.x() > offsetMax)
+	{
+        this->barPos = QPoint(offsetMax - (barSize.width()/2*ratio), newpos.y()*ratio);
+	}
+	else
+	{
+        this->barPos = QPoint(newpos.x() - (barSize.width()/2*ratio), newpos.y()*ratio);
+	};
+    this->setGeometry(barPos.x(), barPos.y(), barSize.width()*ratio, barSize.height()*ratio);
+	this->show();
 }
 
 void dragBar::hideDragBar()

@@ -38,7 +38,8 @@
 
 mainWindow::mainWindow()
 {
-  /*  reg = false;
+    Preferences *preferences = Preferences::Instance();
+    /*  reg = false;
     if(QFile("registare.bin").exists())
     {
         QFile file("registare.bin");
@@ -46,14 +47,12 @@ mainWindow::mainWindow()
         QString registry = QLatin1String(file.readAll());
         if(registry.contains("registered"))
         {*/
-            reg = true;
-        //};
+    reg = true;
     //};
-    createActions();
-    createMenus();
+    //};
 
     floorBoard *fxsBoard = new floorBoard(this);
-    Preferences *preferences = Preferences::Instance();
+
     QString setting = preferences->getPreferences("Scheme", "Style", "select");
     bool ok;
     int choice = setting.toInt(&ok, 16);
@@ -80,14 +79,17 @@ mainWindow::mainWindow()
         QString styleSheet = QLatin1String(file.readAll());
         fxsBoard->setStyleSheet(styleSheet);
     };
+    
     setWindowTitle(deviceType + tr(" Fx FloorBoard"));
+    createActions();
+    createMenus();
     createStatusBar();
     setCentralWidget(fxsBoard);
     statusBar()->setWhatsThis("StatusBar<br>midi activity is displayed here<br>and some status messages are displayed.");
 
     QObject::connect(fxsBoard, SIGNAL( sizeChanged(QSize, QSize) ),
                      this, SLOT( updateSize(QSize, QSize) ) );
-                     
+
     int count = (preferences->getPreferences("General", "Start", "count").toInt(&ok, 10));
     if(count == 0 && preferences->getPreferences("General", "Donate", "url")!="true")
     { donate(); };
@@ -100,25 +102,29 @@ mainWindow::mainWindow()
 mainWindow::~mainWindow()
 {
     Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
     if(preferences->getPreferences("Window", "Restore", "window")=="true")
     {
         QString posx, width;
         if(preferences->getPreferences("Window", "Restore", "sidepanel")=="true" &&
                 preferences->getPreferences("Window", "Collapsed", "bool")=="true")
         {
-            width = QString::number(this->geometry().width(), 10);
+            int Wcalc = this->geometry().width()/ratio;
+            width = QString::number(Wcalc, 10);
             posx = QString::number(this->geometry().x()-8, 10);
         }
         else
         {
-            bool ok;
+
             width = preferences->getPreferences("Window", "Size", "minwidth");
             posx = QString::number(this->geometry().x()+((this->geometry().width()-width.toInt(&ok,10))/2), 10);
         };
         preferences->setPreferences("Window", "Position", "x", posx);
         preferences->setPreferences("Window", "Position", "y", QString::number(this->geometry().y()-30, 10));
         preferences->setPreferences("Window", "Size", "width", width);
-        preferences->setPreferences("Window", "Size", "height", QString::number(this->geometry().height(), 10));
+        int Hcalc = this->geometry().height()/ratio;
+        preferences->setPreferences("Window", "Size", "height", QString::number(Hcalc, 10));
     }
     else
     {
@@ -132,7 +138,11 @@ mainWindow::~mainWindow()
 
 void mainWindow::updateSize(QSize floorSize, QSize oldFloorSize)
 {
-    this->setFixedWidth(floorSize.width());
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+
+    this->setFixedWidth(floorSize.width()*ratio);
     int x = this->geometry().x() - ((floorSize.width() - oldFloorSize.width()) / 2);
     int y = this->geometry().y();
     this->setGeometry(x, y, floorSize.width(), this->geometry().height());
@@ -277,9 +287,7 @@ void mainWindow::createActions()
 
 void mainWindow::createMenus()
 {
-    //menuBar = new QMenuBar();
     fileMenu = menuBar()->addMenu(tr("&File"));
-    //QMenu *fileMenu = new QMenu(tr("&File"));
     fileMenu->addAction(openAct);
     fileMenu->addSeparator();
     fileMenu->addAction(saveAct);
@@ -299,7 +307,7 @@ void mainWindow::createMenus()
 
     toolsMenu = menuBar()->addMenu(tr("&Tools"));
     toolsMenu->addAction(uploadAct);
-    fileMenu->addSeparator();
+    toolsMenu->addSeparator();
     toolsMenu->addAction(summaryAct);
     toolsMenu->addAction(summarySystemAct);
     toolsMenu->addAction(summaryPatchListAct);
@@ -617,8 +625,6 @@ void mainWindow::systemLoad()
                 QString area = "System";
                 sysxIO->setFileSource(area, file.getSystemSource());
                 sysxIO->setFileName(fileName);
-                //sysxIO->setSyncStatus(false);
-                //sysxIO->setDevice(false);
                 emit updateSignal();
                 QMessageBox *msgBox = new QMessageBox();
                 msgBox->setWindowTitle(deviceType + tr(" Fx FloorBoard"));
@@ -632,7 +638,6 @@ void mainWindow::systemLoad()
                 msgText.append(tr ("<br> and can't be undone.<br>"));
                 msgText.append(tr("Select 'NO' to only update the Editor - Select 'YES' to update the GT System<br>"));
 
-
                 msgBox->setInformativeText(tr("Are you sure you want to write to the ")+ deviceType);
                 msgBox->setText(msgText);
                 msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
@@ -641,6 +646,7 @@ void mainWindow::systemLoad()
                 {	// Accepted to overwrite system data.
                     sysxIO->systemWrite();
                 };
+                msgBox->deleteLater();
             };
         };
     }
@@ -651,8 +657,8 @@ void mainWindow::systemLoad()
         msgBox->setWindowTitle(deviceType + tr(" not connected !!"));
         msgBox->setIcon(QMessageBox::Information);
         msgBox->setText(snork);
-        msgBox->setStandardButtons(QMessageBox::Ok);
-        msgBox->exec();
+        msgBox->show();
+        QTimer::singleShot(3000, msgBox, SLOT(deleteLater()));
     };
 }
 
@@ -699,8 +705,8 @@ void mainWindow::systemSave()
             msgBox->setWindowTitle(deviceType + tr(" not connected !!"));
             msgBox->setIcon(QMessageBox::Information);
             msgBox->setText(snork);
-            msgBox->setStandardButtons(QMessageBox::Ok);
-            msgBox->exec();
+            msgBox->show();
+            QTimer::singleShot(3000, msgBox, SLOT(deleteLater()));
         };
     };
 }
@@ -712,6 +718,7 @@ void mainWindow::bulkLoad()
     {
         bulkLoadDialog *loadDialog = new bulkLoadDialog();
         loadDialog->exec();
+        loadDialog->deleteLater();
     }
     else
     {
@@ -720,8 +727,8 @@ void mainWindow::bulkLoad()
         msgBox->setWindowTitle(deviceType + tr(" not connected !!"));
         msgBox->setIcon(QMessageBox::Information);
         msgBox->setText(snork);
-        msgBox->setStandardButtons(QMessageBox::Ok);
-        msgBox->exec();
+        msgBox->show();
+        QTimer::singleShot(3000, msgBox, SLOT(deleteLater()));
     };
 }
 
@@ -733,6 +740,7 @@ void mainWindow::bulkSave()
     {
         bulkSaveDialog *bulkDialog = new bulkSaveDialog();
         bulkDialog->exec();
+        bulkDialog->deleteLater();
     }
     else
     {
@@ -741,8 +749,8 @@ void mainWindow::bulkSave()
         msgBox->setWindowTitle(deviceType + tr(" not connected !!"));
         msgBox->setIcon(QMessageBox::Information);
         msgBox->setText(snork);
-        msgBox->setStandardButtons(QMessageBox::Ok);
-        msgBox->exec();
+        msgBox->show();
+        QTimer::singleShot(3000, msgBox, SLOT(deleteLater()));
     };
 }
 
@@ -758,14 +766,14 @@ void mainWindow::settings()
         QString sidepanel = (dialog->windowSettings->sidepanelCheckBox->checkState())?QString("true"):QString("false");
         QString window = (dialog->windowSettings->windowCheckBox->checkState())?QString("true"):QString("false");
         QString singleWindow = (dialog->windowSettings->singleWindowCheckBox->checkState())?QString("true"):QString("false");
-        QString scale =QString::number(dialog->windowSettings->scaleSpinBox->value());
-        //QString widgetHelp = (dialog->windowSettings->widgetsCheckBox->checkState())?QString("true"):QString("false");
+        QString autoScale = (dialog->windowSettings->autoRatioCheckBox->checkState())?QString("true"):QString("false");
+        QString scaleRatio =QString::number(dialog->windowSettings->ratioSpinBox->value());
         QString splash = (dialog->windowSettings->splashCheckBox->checkState())?QString("true"):QString("false");
         QString dBug = (dialog->midiSettings->dBugCheckBox->checkState())?QString("true"):QString("false");
         QString midiIn = QString::number(dialog->midiSettings->midiInCombo->currentIndex() - 1, 10); // -1 because there is a default entry at index 0
         QString midiOut = QString::number(dialog->midiSettings->midiOutCombo->currentIndex() - 1, 10);
-        QString midiTimeSet =QString::number(dialog->midiSettings->midiTimeSpinBox->value());
-        QString receiveTimeout =QString::number(dialog->midiSettings->midiDelaySpinBox->value());
+        QString midiTxChSet =QString::number(dialog->midiSettings->midiTxChSpinBox->value());
+        //QString receiveTimeout =QString::number(dialog->midiSettings->midiDelaySpinBox->value());
         QString lang;
         if (dialog->languageSettings->chineseButton->isChecked() ) {lang="6"; }
         else if (dialog->languageSettings->japaneseButton->isChecked() ) {lang="5"; }
@@ -795,16 +803,16 @@ void mainWindow::settings()
         preferences->setPreferences("Midi", "MidiIn", "device", midiIn);
         preferences->setPreferences("Midi", "MidiOut", "device", midiOut);
         preferences->setPreferences("Midi", "DBug", "bool", dBug);
-        preferences->setPreferences("Midi", "Time", "set", midiTimeSet);
-        preferences->setPreferences("Midi", "Delay", "set", receiveTimeout);
+        preferences->setPreferences("Midi", "TxCh", "set", midiTxChSet);
+        preferences->setPreferences("Window", "AutoScale", "bool", autoScale);
         preferences->setPreferences("Window", "Restore", "sidepanel", sidepanel);
         preferences->setPreferences("Window", "Restore", "window", window);
-        preferences->setPreferences("Window", "Scale", "ratio", scale);
+        preferences->setPreferences("Window", "Scale", "ratio", scaleRatio);
         preferences->setPreferences("Window", "Single", "bool", singleWindow);
-        //preferences->setPreferences("Window", "Widgets", "bool", widgetHelp);
         preferences->setPreferences("Window", "Splash", "bool", splash);
         preferences->savePreferences();
     };
+    dialog->deleteLater();
 }
 
 /* HELP MENU */
@@ -827,25 +835,35 @@ void mainWindow::upload()
 
 void mainWindow::summaryPage()
 {
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+
     summaryDialog *summary = new summaryDialog();
-    summary->setMinimumWidth(800);
-    summary->setMinimumHeight(650);
+    summary->setMinimumWidth(800*ratio);
+    summary->setMinimumHeight(650*ratio);
     summary->show();
 }
 
 void mainWindow::summarySystemPage()
 {
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
     summaryDialogSystem *summarySystem = new summaryDialogSystem();
-    summarySystem->setMinimumWidth(800);
-    summarySystem->setMinimumHeight(650);
+    summarySystem->setMinimumWidth(800*ratio);
+    summarySystem->setMinimumHeight(650*ratio);
     summarySystem->show();
 }
 
 void mainWindow::summaryPatchList()
 {
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
     summaryDialogPatchList *summaryPatchList = new summaryDialogPatchList();
-    summaryPatchList->setMinimumWidth(800);
-    summaryPatchList->setMinimumHeight(650);
+    summaryPatchList->setMinimumWidth(800*ratio);
+    summaryPatchList->setMinimumHeight(650*ratio);
     summaryPatchList->show();
 }
 
@@ -876,12 +894,16 @@ void mainWindow::about()
 {
     Preferences *preferences = Preferences::Instance();
     QString version = preferences->getPreferences("General", "Application", "version");
+    QDate date = QDate::currentDate();
+    QString dateText = date.toString("yyyy");
 
     QFile file(":about");
     if(file.open(QIODevice::ReadOnly))
     {
-        QMessageBox::about(this, deviceType + tr(" Fx FloorBoard - About"),
-                           deviceType + tr(" Fx FloorBoard - ") + tr("version") + " " + version + "<br>" + file.readAll());
+        QMessageBox::about(this, deviceType + tr(" FxFloorBoard - About"),
+                           deviceType + tr(" FxFloorBoard - ") + tr("version") + " " + version + "<br>"
+                           + tr("© Copyright ") + dateText + "<br>"
+                           + file.readAll());
     };
 }
 

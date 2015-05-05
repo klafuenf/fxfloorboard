@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2014 Colin Willcocks.
+** Copyright (C) 2007~2015 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag.
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -31,12 +31,15 @@
 editWindow::editWindow(QWidget *parent)
     : QDialog(parent)
 {
-    this->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+    this->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
     if(preferences->getPreferences("Window", "Single", "bool")=="true")
     {
         this->image = QPixmap(":images/editwindow.png");
-        this->setFixedSize(image.width(), image.height());
+        this->setFixedSize(image.width()*ratio, image.height()*ratio);
 
         this->setWindowFlags(Qt::WindowStaysOnTopHint);
     } else { this->image = QPixmap(":images/meshWindow.png"); };
@@ -188,14 +191,14 @@ editWindow::editWindow(QWidget *parent)
     pastebuttonLayout->addWidget(this->temp5_Button);
 
     QHBoxLayout *top4buttonLayout = new QHBoxLayout;
-    top4buttonLayout->addSpacing(170);
+    top4buttonLayout->addSpacing(170*ratio);
     top4buttonLayout->addWidget(this->assign1_Button);
     top4buttonLayout->addWidget(this->assign2_Button);
     top4buttonLayout->addWidget(this->assign3_Button);
     top4buttonLayout->addWidget(this->assign4_Button);
 
     QHBoxLayout *bottom4buttonLayout = new QHBoxLayout;
-    bottom4buttonLayout->addSpacing(170);
+    bottom4buttonLayout->addSpacing(170*ratio);
     bottom4buttonLayout->addWidget(this->assign5_Button);
     bottom4buttonLayout->addWidget(this->assign6_Button);
     bottom4buttonLayout->addWidget(this->assign7_Button);
@@ -203,7 +206,7 @@ editWindow::editWindow(QWidget *parent)
 
     QVBoxLayout *buttonLayout = new QVBoxLayout;
     buttonLayout->addLayout(pastebuttonLayout);
-    buttonLayout->addSpacing(10);
+    buttonLayout->addSpacing(10*ratio);
     buttonLayout->addLayout(top4buttonLayout);
     buttonLayout->addLayout(bottom4buttonLayout);
 
@@ -263,20 +266,17 @@ editWindow::editWindow(QWidget *parent)
     //QObject::connect(this, SIGNAL( updateSignal() ), this, SLOT( pageUpdateSignal() ));
 
     QObject::connect(this->pageComboBox, SIGNAL(activated(int)), this, SLOT(valueChanged(int)));
-
-    /*SysxIO *sysxIO = SysxIO::Instance();
-    sysxIO->eztone_page = 0;
-    sysxIO->system_page = 0;
-    sysxIO->midi_page =0;
-
-    emit pageUpdateSignal();    */
     
     this->pageIndex = 0;
 }
 
 void editWindow::paintEvent(QPaintEvent *)
 {
-    QRectF target(0.0, 0.0, image.width(), image.height());
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+
+    QRectF target(0.0, 0.0, image.width()*ratio, image.height()*ratio);
     QRectF source(0.0, 0.0, image.width(), image.height());
 
     QPainter painter(this);
@@ -394,7 +394,6 @@ void editWindow::addPage(QString hex1, QString hex2, QString hex3, QString hex4,
         this->tempPage = new editPage;
 
         this->pageComboBox->setMaxVisibleItems(this->pages);
-        //this->pageComboBox->view()->setMinimumWidth(50);
 
         if(this->pages > 1)
         {
@@ -408,12 +407,6 @@ void editWindow::valueChanged(int index)
 {
     if(hex1 != "void" && hex2 != "void")
     {
-      /*  QString valueHex = QString::number(index, 16).toUpper();
-        if(valueHex.length() < 2) valueHex.prepend("0");
-        SysxIO *sysxIO = SysxIO::Instance();
-        if (this->hex3 == "30") {sysxIO->eztone_page = index; }
-        else if (this->hex3 == "75") {sysxIO->system_page = index; }
-        else if (this->hex3 == "74"){sysxIO->midi_page = index; };*/
        this->pageIndex = index;
     };
 }
@@ -423,16 +416,8 @@ void editWindow::pageUpdateSignal()
         if(this->pages > 1 && hex1 != "void" && hex2 != "void")
         {
                 int index = this->pageIndex;
-               /* SysxIO *sysxIO = SysxIO::Instance();
-                int index;
-                if (this->hex3 == "30") {index = sysxIO->eztone_page; }
-                else if (this->hex3 == "75") {index = sysxIO->system_page; }
-                else if (this->hex3 == "74"){index = sysxIO->midi_page; };   */
-                //int index = sysxIO->getSourceValue("Structure", this->hex1, this->hex2, this->hex3);
                 this->pageComboBox->setCurrentIndex(index);
                 this->pagesWidget->setCurrentIndex(index);
-                //this->valueChanged(index);
-
         };
     emit updateSignal();
 }
@@ -458,9 +443,9 @@ void editWindow::bulkEdit()
     SysxIO *sysxIO = SysxIO::Instance();
     if (sysxIO->isConnected())
     {
-
         bulkEditDialog *editDialog = new bulkEditDialog(this->position, this->length, this->temp_hex1, this->temp_hex3);
         editDialog->exec();
+        editDialog->deleteLater();
     }
     else
     {
@@ -469,20 +454,17 @@ void editWindow::bulkEdit()
         msgBox->setWindowTitle(deviceType + tr(" not connected !!"));
         msgBox->setIcon(QMessageBox::Information);
         msgBox->setText(snork);
-        msgBox->setStandardButtons(QMessageBox::Ok);
-        msgBox->exec();
+        msgBox->show();
+        QTimer::singleShot(3000, msgBox, SLOT(deleteLater()));
     };
 }
 
 void editWindow::temp1()
 {
-
     SysxIO *sysxIO = SysxIO::Instance();
     if (!sysxIO->temp1_sysxMsg.isEmpty() && !temp_hex1.isEmpty() && !temp_hex1.contains("void") )
     {
         QString temp = sysxIO->temp1_sysxMsg.mid(this->position, this->length);
-
-
         QList< QList<QString> > patchData = sysxIO->getFileSource().hex; // Get the loaded patch data.
         QString addr1 = tempBulkWrite;  // temp address
         QString addr2 = QString::number(0, 16).toUpper();
@@ -517,12 +499,10 @@ void editWindow::temp1()
 
 void editWindow::temp2()
 {
-
     SysxIO *sysxIO = SysxIO::Instance();
     if (!sysxIO->temp2_sysxMsg.isEmpty() && !temp_hex1.isEmpty() && !temp_hex1.contains("void")  )
     {
         QString temp = sysxIO->temp2_sysxMsg.mid(this->position, this->length);
-
         QList< QList<QString> > patchData = sysxIO->getFileSource().hex; // Get the loaded patch data.
         QString addr1 = tempBulkWrite;  // temp address
         QString addr2 = QString::number(0, 16).toUpper();
@@ -557,12 +537,10 @@ void editWindow::temp2()
 
 void editWindow::temp3()
 {
-
     SysxIO *sysxIO = SysxIO::Instance();
     if (!sysxIO->temp3_sysxMsg.isEmpty() && !temp_hex1.isEmpty() && !temp_hex1.contains("void")  )
     {
         QString temp = sysxIO->temp3_sysxMsg.mid(this->position, this->length);
-
         QList< QList<QString> > patchData = sysxIO->getFileSource().hex; // Get the loaded patch data.
         QString addr1 = tempBulkWrite;  // temp address
         QString addr2 = QString::number(0, 16).toUpper();
@@ -597,12 +575,10 @@ void editWindow::temp3()
 
 void editWindow::temp4()
 {
-
     SysxIO *sysxIO = SysxIO::Instance();
     if (!sysxIO->temp4_sysxMsg.isEmpty() && !temp_hex1.isEmpty() && !temp_hex1.contains("void")  )
     {
         QString temp = sysxIO->temp4_sysxMsg.mid(this->position, this->length);
-
         QList< QList<QString> > patchData = sysxIO->getFileSource().hex; // Get the loaded patch data.
         QString addr1 = tempBulkWrite;  // temp address
         QString addr2 = QString::number(0, 16).toUpper();
@@ -637,12 +613,10 @@ void editWindow::temp4()
 
 void editWindow::temp5()
 {
-
     SysxIO *sysxIO = SysxIO::Instance();
     if (!sysxIO->temp5_sysxMsg.isEmpty() && !temp_hex1.isEmpty() && !temp_hex1.contains("void")  )
     {
         QString temp = sysxIO->temp5_sysxMsg.mid(this->position, this->length);
-
         QList< QList<QString> > patchData = sysxIO->getFileSource().hex; // Get the loaded patch data.
         QString addr1 = tempBulkWrite;  // temp address
         QString addr2 = QString::number(0, 16).toUpper();
@@ -707,11 +681,6 @@ void editWindow::swap_pre()
     sysxIO->setFileSource("Structure", "00", "00", "50", Msg);
     sysxIO->setFileSource("Structure", sysxMsg );
     emit dialogUpdateSignal();
-    /*QString fxName = "FX-name";
-    QString valueName = "value-name";
-    QString valueStr = "value";
-    emit valueUpdate(fxName, valueName, valueStr);
-    QApplication::beep();*/
 }
 void editWindow::patchPos(int pos, int len, QString t_hex1, QString t_hex3)
 {

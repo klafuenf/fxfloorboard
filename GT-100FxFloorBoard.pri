@@ -1,6 +1,6 @@
 #############################################################################
 ##
-## Copyright (C) 2007~2014 Colin Willcocks.
+## Copyright (C) 2007~2015 Colin Willcocks.
 ## Copyright (C) 2005~2007 Uco Mesdag. 
 ## All rights reserved.
 ##
@@ -47,7 +47,6 @@ HEADERS += ./editPage.h \
     ./customControlTarget.h \
     ./customDial.h \
     ./customDisplay.h \
-    ./customDisplayButton.h \
     ./customParaEQGraph.h \
     ./customEZ_amp.h \
     ./customEZ_Patch.h \
@@ -156,7 +155,6 @@ SOURCES += ./editPage.cpp \
     ./customControlTarget.cpp \
     ./customDial.cpp \
     ./customDisplay.cpp \
-    ./customDisplayButton.cpp \
     ./customParaEQGraph.cpp \
     ./customEZ_amp.cpp \
     ./customEZ_Patch.cpp \

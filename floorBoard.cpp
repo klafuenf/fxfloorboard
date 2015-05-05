@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2014 Colin Willcocks.
+** Copyright (C) 2007~2015 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag.
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
@@ -82,10 +82,19 @@ floorBoard::floorBoard(QWidget *parent,
                        QPoint pos)
     : QWidget(parent)
 {
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
 
     this->imagePathFloor = imagePathFloor;
     this->imagePathStompBG = imagePathStompBG;
     this->imagePathInfoBar = imagePathInfoBar;
+    
+    marginStompBoxesTop = 185*ratio;
+    marginStompBoxesBottom = 105*ratio;
+    marginStompBoxesWidth = 35*ratio;
+    panelBarOffset = 5*ratio;
+    borderWidth = 3*ratio;
 
     this->marginStompBoxesTop = marginStompBoxesTop;
     this->marginStompBoxesBottom = marginStompBoxesBottom;
@@ -105,9 +114,9 @@ floorBoard::floorBoard(QWidget *parent,
     panelBar->setPos(panelBarPos);
 
     dragBar *bar = new dragBar(this);
-    bar->setDragBarSize(QSize(4, panelBar->height() ));
-    bar->setDragBarMinOffset(2, 8);
-    bar->setDragBarMaxOffset(offset - panelBarOffset + 5);
+    bar->setDragBarSize(QSize(4*ratio, panelBar->height()*ratio ));
+    bar->setDragBarMinOffset(2*ratio, 8*ratio);
+    bar->setDragBarMaxOffset(offset - panelBarOffset + (5*ratio));
 
     initStomps();
     initMenuPages();
@@ -134,9 +143,6 @@ floorBoard::floorBoard(QWidget *parent,
     QObject::connect(panelBar, SIGNAL(showDragBar(QPoint)), this, SIGNAL(showDragBar(QPoint)));
     QObject::connect(panelBar, SIGNAL(hideDragBar()), this, SIGNAL(hideDragBar()));
 
-
-    bool ok;
-    Preferences *preferences = Preferences::Instance();
     QString collapseState = preferences->getPreferences("Window", "Collapsed", "bool");
     QString width = preferences->getPreferences("Window", "Collapsed", "width");
     QString defaultwidth = preferences->getPreferences("Window", "Collapsed", "defaultwidth");
@@ -161,7 +167,6 @@ floorBoard::floorBoard(QWidget *parent,
     }
     else
     {
-        //this->l_floorSize = QSize(defaultwidth.toInt(&ok, 10), floorSize.height());
         this->setSize(minSize);
         this->colapseState = false;
         emit setCollapseState(false);
@@ -172,6 +177,7 @@ floorBoard::floorBoard(QWidget *parent,
 
 floorBoard::~floorBoard()
 {
+    //emit notConnected();
     Preferences *preferences = Preferences::Instance();
     if(preferences->getPreferences("Window", "Restore", "sidepanel")=="true")
     {
@@ -187,7 +193,11 @@ floorBoard::~floorBoard()
 
 void floorBoard::paintEvent(QPaintEvent *)
 {
-    QRectF target(pos.x(), pos.y(), floorSize.width(), floorSize.height());
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+
+    QRectF target(pos.x(), pos.y(), floorSize.width()*ratio, floorSize.height()*ratio);
     QRectF source(0.0, 0.0, floorSize.width(), floorSize.height());
 
     QPainter painter(this);
@@ -195,17 +205,22 @@ void floorBoard::paintEvent(QPaintEvent *)
     this->setAcceptDrops(true);
 }
 
-void floorBoard::setFloorBoard() {
+void floorBoard::setFloorBoard() 
+{
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+
     QPixmap imageFloor(imagePathFloor);
     QPixmap imagestompBG(imagePathStompBG);
     QPixmap imageInfoBar(imagePathInfoBar);
     QPixmap buffer = imageFloor;
     QPainter painter(&buffer);
 
-    this->offset = imageFloor.width() - imageInfoBar.width();
+    this->offset = imageFloor.width()*ratio - imageInfoBar.width()*ratio;
     this->infoBarWidth = imageInfoBar.width();
-    this->stompSize = imagestompBG.size();
-    this->infoBarHeight = imageInfoBar.height();
+    this->stompSize = imagestompBG.size()*ratio;
+    this->infoBarHeight = imageInfoBar.height()*ratio;
 
     initSize(imageFloor.size());
     this->maxSize = floorSize;
@@ -222,8 +237,8 @@ void floorBoard::setFloorBoard() {
 
     // Draw LiberianBar
     QRectF sourceLiberianBar(0.0, 0.0, imageInfoBar.width(), imageInfoBar.height());
-    QRectF targetLiberianBar(offset, (imageFloor.height() - imageInfoBar.height()) - 2, imageInfoBar.width(), imageInfoBar.height());
-    QRectF targetLiberianBar2(offset, (imageFloor.height() - (imageInfoBar.height()*2)+2), imageInfoBar.width(), imageInfoBar.height());
+    QRectF targetLiberianBar(offset, (imageFloor.height()*ratio - imageInfoBar.height()*ratio) - (2*ratio), imageInfoBar.width()*ratio, imageInfoBar.height()*ratio);
+    QRectF targetLiberianBar2(offset, (imageFloor.height()*ratio - (imageInfoBar.height()*2*ratio)+(2*ratio)), imageInfoBar.width()*ratio, imageInfoBar.height()*ratio);
     painter.drawPixmap(targetLiberianBar, imageInfoBar, sourceLiberianBar);
     painter.drawPixmap(targetLiberianBar2, imageInfoBar, sourceLiberianBar);
 
@@ -231,14 +246,14 @@ void floorBoard::setFloorBoard() {
     QRectF source(0.0, 0.0, imagestompBG.width(), imagestompBG.height());
     for(int i=0;i<fxPos.size();i++)
     {
-        QRectF target(fxPos.at(i).x(), fxPos.at(i).y(), imagestompBG.width(), imagestompBG.height());
+        QRectF target(fxPos.at(i).x()/ratio, fxPos.at(i).y()/ratio, imagestompBG.width(), imagestompBG.height());
         painter.drawPixmap(target, imagestompBG, source);
     };
     painter.end();
 
     this->baseImage = buffer;
     this->image = buffer;
-    this->floorHeight = imageFloor.height();
+    this->floorHeight = imageFloor.height()*ratio;
 
     QPoint newPanelBarPos = QPoint(offset - panelBarOffset, borderWidth);
     this->panelBarPos = newPanelBarPos;
@@ -297,6 +312,10 @@ void floorBoard::dragMoveEvent(QDragMoveEvent *event)
 
 void floorBoard::dropEvent(QDropEvent *event)
 {
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+
     if (event->mimeData()->hasFormat("application/x-stompbox"))
     {
         QByteArray itemData = event->mimeData()->data("application/x-stompbox");
@@ -304,7 +323,7 @@ void floorBoard::dropEvent(QDropEvent *event)
 
         int stompId;
         QPoint stompPos;
-        QSize stompSize;
+        //QSize stompSize;
         QPoint topLeftOffset;
         dataStream >> stompId >> stompPos >> stompSize >> topLeftOffset;
         QPoint dragPoint = (event->pos() - topLeftOffset) + QPoint(stompSize.width()/2, stompSize.height()/2);
@@ -417,12 +436,16 @@ void floorBoard::dropEvent(QDropEvent *event)
 
 void floorBoard::initSize(QSize floorSize)
 {
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+    
     this->floorSize = floorSize;
     this->l_floorSize = floorSize;
     QList<QPoint> fxPos;
 
-    unsigned int spacingV = (floorSize.height() - (marginStompBoxesTop + marginStompBoxesBottom)) - (stompSize.height() * 2);
-    unsigned int spacingH = ( (floorSize.width() - offset - (marginStompBoxesWidth * 2)) - (stompSize.width() * 9) ) / 15;
+    unsigned int spacingV = (floorSize.height()*ratio - (marginStompBoxesTop + marginStompBoxesBottom)) - (stompSize.height()*2);
+    unsigned int spacingH = ( (floorSize.width()*ratio - offset - (marginStompBoxesWidth*2)) - (stompSize.width()*9) ) / 15;
     for(unsigned int i=0;i<20;i++)
     {
         unsigned int y = marginStompBoxesTop;
@@ -436,7 +459,7 @@ void floorBoard::initSize(QSize floorSize)
     };
 
     this->fxPos = fxPos;
-    this->setFixedSize(floorSize);
+    //this->setFixedSize(floorSize);
 }
 
 QPoint floorBoard::getStompPos(int id)
@@ -463,8 +486,12 @@ void floorBoard::setCollapse()
 
 void floorBoard::setSize(QSize newSize)
 {
+    Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+
     unsigned int oldOffset = offset;
-    this->offset = newSize.width() - infoBarWidth;
+    this->offset = newSize.width()*ratio - infoBarWidth*ratio;
     QSize oldFloorSize = this->floorSize;
     this->floorSize = newSize;
 
@@ -498,7 +525,7 @@ void floorBoard::setSize(QSize newSize)
     painter.end();
 
     this->image = buffer;
-    this->setFixedSize(floorSize);
+    //this->setFixedSize(floorSize);
 
     QRect newBankListRect = QRect(borderWidth, borderWidth, offset - panelBarOffset - (borderWidth*2), floorHeight - (borderWidth*2));
     emit resizeSignal(newBankListRect);
@@ -755,10 +782,15 @@ void floorBoard::setEditDialog(editWindow* editDialog)
 void floorBoard::centerEditDialog()
 {
     Preferences *preferences = Preferences::Instance();
+    bool ok;
+    const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
+
     if(preferences->getPreferences("Window", "Single", "bool")=="true")
     {
-        int x = this->displayPos.x() + (((this->floorSize.width() - this->displayPos.x()) - this->editDialog->width()) / 2);
-        int y = this->pos.y() + (((this->floorSize.height() + this->infoBarHeight/2) - this->editDialog->height()) / 2);
+        //int x = this->displayPos.x() + (((this->floorSize.width() - this->displayPos.x()) - this->editDialog->width()) / 2);
+        //int y = this->pos.y() + (((this->floorSize.height() + this->infoBarHeight/2) - this->editDialog->height()) / 2);
+        int x = this->displayPos.x() + (((this->floorSize.width()*ratio - this->displayPos.x()) - this->editDialog->width()) / 2);
+        int y = this->pos.y() + ((((this->floorSize.height()*ratio) + (40*ratio)) - this->editDialog->height()) / 2);
         this->editDialog->move(x, y);
     };
 }
