@@ -48,7 +48,7 @@ customControlListMenu::customControlListMenu(QWidget *parent,
     else
     {
         this->controlListComboBox->setObjectName("smallcombo");
-        QFont Cfont( "Arial", 10*ratio, QFont::Bold);
+        QFont Cfont( "Arial", 9*ratio, QFont::Normal);
         this->controlListComboBox->setFont(Cfont);
     };
     this->hex1 = hex1;

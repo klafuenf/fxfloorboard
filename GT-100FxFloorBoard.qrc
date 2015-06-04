@@ -103,5 +103,6 @@
         <file>images/EZ_Patch.png</file>
         <file>EZ-Tone.syx</file>
         <file>default.tsl</file>
+        <file>images/override.png</file>
     </qresource>
 </RCC>

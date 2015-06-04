@@ -29,6 +29,8 @@
 #include "bulkSaveDialog.h"
 #include "Preferences.h"
 #include "globalVariables.h"
+#include "MidiTable.h"
+#include "SysxIO.h"
 
 
 // Platform-dependent sleep routines.
@@ -429,8 +431,10 @@ void bulkSaveDialog::writeGCL()         // ************************************ 
                 GCL_default.replace(a+1664, 128, temp);    //address "0D"
                 temp = out.mid(b+1985, 128);
                 GCL_default.replace(a+1792, 128, temp);    //address "0E"
-                temp = out.mid(b+2126, 24);
-                GCL_default.replace(a+1920, 24, temp);    //address "0F"
+                temp = out.mid(b+2126, 128);
+                GCL_default.replace(a+1920, 128, temp);    //address "0F"
+                temp = out.mid(b+2267, 60);
+                GCL_default.replace(a+2048, 60, temp);     //address "10"
                 temp.clear();
 
                 b=b+patchSize;
@@ -564,8 +568,9 @@ void bulkSaveDialog::writeSMF()    // **************************** SMF FILE FORM
                 temp.append(patches.mid(a+2126,16));
                 GT100_default.replace(1849, 242, temp);       // replace SMF address "0D1E"#
 
-                temp = patches.mid(a+2142,8);
-                GT100_default.replace(2107, 8, temp);         // replace SMF address "0F10"#
+                temp = patches.mid(a+2142,112);
+                temp.append(patches.mid(a+2267,60));
+                GT100_default.replace(2107, 172, temp);         // replace SMF address "0F10"#
 
                 GT100_default.replace(39, 2, patch_address); // replace patch addresses
                 GT100_default.replace(297, 2, patch_address);
@@ -665,7 +670,7 @@ void bulkSaveDialog::writeTSL()        //********************************* TSL F
             bool ok;
             QByteArray bulk_syx;
             int size = this->bulk.size()/2;
-            int patchCount = size/(patchSize-2);
+            int patchCount = size/(patchSize);
             for (int x=0;x<size*2;x++)
             {
                 QString hexStr = bulk.mid(x, 2);
@@ -683,7 +688,7 @@ void bulkSaveDialog::writeTSL()        //********************************* TSL F
             TSL_FILE.remove(TSL_FILE.lastIndexOf("],"), 94);
             for(int x=0; x<patchCount; ++x)
             {
-                QByteArray temp(bulk_syx.mid(x*(patchSize-2), (patchSize-2)));
+                QByteArray temp(bulk_syx.mid(x*(patchSize), (patchSize)));
                 TSL_default = TSL_FILE;//.mid(TSL_FILE.indexOf("[")+1, TSL_FILE.lastIndexOf("],"));
                 AppendTSL(temp.mid(11, 1), "patch_name1");  //copy patch name
                 AppendTSL(temp.mid(12, 1), "patch_name2");  //copy patch name
@@ -1692,6 +1697,16 @@ void bulkSaveDialog::writeTSL()        //********************************* TSL F
                    v.setNum(value);
                    posList.append(v);
                    if(xt<list.size()-1) {posList.append(","); };
+
+                   MidiTable *midiTable = MidiTable::Instance();
+                   SysxIO *sysxIO = SysxIO::Instance();
+                   QString hex = QString::number(sysxIO->getSourceValue("Structure", "07", "00", "0F"), 16).toUpper();
+                   Midi items = midiTable->getMidiMap("Structure", "07", "00", "0F", "0"+hex);
+                   QByteArray txt;
+                   for(int x=0; x<items.desc.size(); x++ )
+                   { txt.append(items.desc.at(x));   };
+                   TextTSL(txt, "category");
+
                };
                TSL_default.replace(start_index, 49, posList);
 
@@ -1733,7 +1748,10 @@ void bulkSaveDialog::AppendTSL(QByteArray hex, const char* Json_name)
     QString val = QString::number(a, 16).toUpper();
     int value = val.toInt(&ok, 16);
     QByteArray name(Json_name);
+    QByteArray spare_TSL(TSL_default); spare_TSL.truncate(spare_TSL.lastIndexOf(name)); // copy default and trim last "name" off
+    QByteArray n("name");
     int start_index = TSL_default.indexOf(name)+(name.size()+2); //find pointer to start of Json value.//removed +2 from end
+    if(name==n){ start_index = spare_TSL.lastIndexOf(name)+name.size()+3; };   //look for last index of "name"
     QByteArray b(":");
     unsigned int incr = 5;
 LOOP:
@@ -1741,6 +1759,7 @@ LOOP:
     if((TSL_default.mid(start_index-1, 1).contains(b)) && (TSL_default.mid(start_index-name.size()-3, 1 ).contains((char)34)))
     {
         int end_index = TSL_default.indexOf(",", start_index)-start_index;                  //find pointer to end of value to get the size of the value.
+        if(name==n) {end_index = TSL_default.indexOf("}", start_index)-start_index-2; };
         QByteArray v;
         v.setNum(value);
         TSL_default.replace(start_index, end_index, v);
@@ -1750,8 +1769,11 @@ LOOP:
 
 void bulkSaveDialog::TextTSL(QByteArray hex, const char* Json_name)
 {
-    QByteArray name(Json_name);                                  // name of function to be searched for
+    QByteArray name(Json_name);   // name of function to be searched for
+    QByteArray spare_TSL(TSL_default); spare_TSL.truncate(spare_TSL.lastIndexOf(name)); // copy default and trim last "name" off
     int start_index = TSL_default.indexOf(name)+name.size()+3;   //find pointer to start of Json value after :".
+    if(name=="category") { start_index = TSL_default.lastIndexOf(name)+name.size()+3; };
+    if(name=="name"){ start_index = spare_TSL.lastIndexOf(name)+name.size()+3; };   //look for last index of "name"
     QByteArray b(":");
     int incr = 20;
     QByteArray null("null");
@@ -1763,13 +1785,15 @@ LOOP2:
     };
     if(TSL_default.mid(start_index-2, 1) == b)    // if name": is a match - find end of string field ",
     {
-        int end_index = TSL_default.indexOf(",", start_index)-start_index-2;  //find pointer to end of value to get the size of the value.
+        int end_index = TSL_default.indexOf(",", start_index)-start_index-2; //find pointer to end of value to get the size of the value.
+        if(name=="name") {end_index = TSL_default.indexOf("}", start_index)-start_index-2; };
         if(TSL_default.mid(start_index-1, 4).contains(null) && !hex.isEmpty())
         {
             TSL_default.replace(start_index-1, end_index+3, ((char)34+hex+(char)34));   //replace the old string with the new string
         } else
         {
-            TSL_default.replace(start_index, end_index, hex);   //replace the old string with the new string
+            if(name=="category" || name=="name" || name.contains("gt100Name")) { TSL_default.replace(start_index, end_index+1, hex); } else
+            { TSL_default.replace(start_index, end_index, hex); };  //replace the old string with the new string
         };
         incr=0;
     };

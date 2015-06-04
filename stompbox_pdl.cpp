@@ -57,6 +57,7 @@ void stompbox_pdl::setEditPages()
     editDetails()->page()->newStackControl(0);
     editDetails()->page()->addComboBox(1, 0, 1, 1, "08", "00", "10", "large");
     editDetails()->page()->addStackControl();
+    editDetails()->page()->addSystemOverride(0, 0, 2, 2, "00", "00", "43", "00");
     editDetails()->page()->addGroupBox(1, 0, 1, 1);
 
     editDetails()->page()->insertStackField(0, 0, 1, 2, 1);
@@ -66,6 +67,7 @@ void stompbox_pdl::setEditPages()
     editDetails()->page()->addComboBox(0, 0, 1, 1, "07", "00", "50");
     editDetails()->page()->addStackControl();
     editDetails()->page()->insertStackField(1, 1, 0, 1, 1);
+    editDetails()->page()->addSystemOverride(0, 0, 2, 2, "00", "00", "42", "00");
     editDetails()->page()->addGroupBox(0, 2, 2, 1);
 
     editDetails()->page()->newGroupBox("EXP Sw Func");
@@ -73,6 +75,7 @@ void stompbox_pdl::setEditPages()
     editDetails()->page()->addComboBox(0, 0, 1, 1, "07", "00", "60");
     editDetails()->page()->addStackControl();
     editDetails()->page()->insertStackField(2, 1, 0, 1, 1);
+    editDetails()->page()->addSystemOverride(0, 0, 2, 2, "00", "00", "44", "00");
     editDetails()->page()->addGroupBox(0, 3, 2, 1);
 
     editDetails()->page()->newGroupBox("Sub CTRL1 Func");
@@ -80,6 +83,7 @@ void stompbox_pdl::setEditPages()
     editDetails()->page()->addComboBox(0, 0, 1, 1, "07", "00", "70");
     editDetails()->page()->addStackControl();
     editDetails()->page()->insertStackField(3, 1, 0, 1, 1);
+    editDetails()->page()->addSystemOverride(0, 0, 2, 2, "00", "00", "45", "00");
     editDetails()->page()->addGroupBox(0, 4, 1, 1);
 
     editDetails()->page()->newGroupBox("Sub CTRL2 Func");
@@ -87,10 +91,12 @@ void stompbox_pdl::setEditPages()
     editDetails()->page()->addComboBox(0, 0, 1, 1, "08", "00", "00");
     editDetails()->page()->addStackControl();
     editDetails()->page()->insertStackField(4, 1, 0, 1, 1);
+    editDetails()->page()->addSystemOverride(0, 0, 2, 2, "00", "00", "46", "00");
     editDetails()->page()->addGroupBox(0, 5, 1, 1);
 
     editDetails()->page()->newGroupBox("Sub EXP Func");
     editDetails()->page()->addComboBox(0, 0, 1, 1, "08", "00", "20");
+    editDetails()->page()->addSystemOverride(0, 0, 2, 2, "00", "00", "47", "00");
     editDetails()->page()->addGroupBox(1, 4, 1, 2);
 
 

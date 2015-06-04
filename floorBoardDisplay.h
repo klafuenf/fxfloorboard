@@ -77,9 +77,9 @@ public slots:
     void patchChangeFailed();
     void writeToBuffer();
     void writeToMemory();
-    void valueChanged(bool value, QString hex1, QString hex2, QString hex3); // Not used.
+    void valueUpdate();
     void autosync();
-
+    void valueChanged(bool, QString , QString, QString);
 
 signals:
     void updateSignal();

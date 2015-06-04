@@ -400,61 +400,61 @@ void bulkLoadDialog::sendSequence()
 void bulkLoadDialog::updatePatch()
 {
     patchCount = sysxPatches.size()/(patchSize);
-        QString msgText;
-        QString patchText;
-        QString patchNumber;
-        unsigned char r;
-        this->patchList.clear();
-        unsigned int a = sysxNameOffset;             // locate patch text start position from the start of the file
-        for (int h=0;h<patchCount;h++)
+    QString msgText;
+    QString patchText;
+    QString patchNumber;
+    unsigned char r;
+    this->patchList.clear();
+    unsigned int a = sysxNameOffset;             // locate patch text start position from the start of the file
+    for (int h=0;h<patchCount;h++)
+    {
+        for (int b=0;b<nameLength;b++)
         {
-            for (int b=0;b<nameLength;b++)
-            {
-                r = (char)sysxPatches[a+b];
-                patchText.append(r);
-            };
-            patchNumber = QString::number(h+1, 10).toUpper();
-            msgText.append(patchNumber + " : ");
-            msgText.append(patchText + "   ");
-            this->patchList.append(msgText);
-            patchText.clear();
-            msgText.clear();
-            a=a+patchSize;                                // advance to the next patch in the bulk file.
+            r = (char)sysxPatches[a+b];
+            patchText.append(r);
         };
-        this->startPatchCombo->addItems(patchList);            // add patch names to the combobox lists.
-        this->finishPatchCombo->addItems(patchList);
-        this->finishPatchCombo->setCurrentIndex(patchCount-1);     // set the finish combobox index to the end of the list.
-        this->startPatchCombo->setCurrentIndex(0);
-        QString text = tr("Finish at U");
-        if (patchCount<patchPerBank) {patchCount=patchPerBank; };
-        text.append(QString::number(patchCount/patchPerBank, 10).toUpper() );
-        text.append("-x");
-        this->finishRange->setText(text);
-        QString bnk;
-        QString U = "U";
-        for (int x=0; x<bankTotalUser; x++)
-        {
-            bnk = "U" + QString::number(x+1, 10).toUpper() + "-1";
-            this->startRangeComboBox->addItem(bnk);
-            bnk = "U" + QString::number(x+1, 10).toUpper() + "-2";
-            this->startRangeComboBox->addItem(bnk);
-            bnk = "U" + QString::number(x+1, 10).toUpper() + "-3";
-            this->startRangeComboBox->addItem(bnk);
-            bnk = "U" + QString::number(x+1, 10).toUpper() + "-4";
-            this->startRangeComboBox->addItem(bnk);
-        };
-        this->startRangeComboBox->setCurrentIndex(0);
+        patchNumber = QString::number(h+1, 10).toUpper();
+        msgText.append(patchNumber + " : ");
+        msgText.append(patchText + "   ");
+        this->patchList.append(msgText);
+        patchText.clear();
+        msgText.clear();
+        a=a+patchSize;                                // advance to the next patch in the bulk file.
+    };
+    this->startPatchCombo->addItems(patchList);            // add patch names to the combobox lists.
+    this->finishPatchCombo->addItems(patchList);
+    this->finishPatchCombo->setCurrentIndex(patchCount-1);     // set the finish combobox index to the end of the list.
+    this->startPatchCombo->setCurrentIndex(0);
+    QString text = tr("Finish at U");
+    if (patchCount<patchPerBank) {patchCount=patchPerBank; };
+    text.append(QString::number(patchCount/patchPerBank, 10).toUpper() );
+    text.append("-x");
+    this->finishRange->setText(text);
+    QString bnk;
+    QString U = "U";
+    for (int x=0; x<bankTotalUser; x++)
+    {
+        bnk = "U" + QString::number(x+1, 10).toUpper() + "-1";
+        this->startRangeComboBox->addItem(bnk);
+        bnk = "U" + QString::number(x+1, 10).toUpper() + "-2";
+        this->startRangeComboBox->addItem(bnk);
+        bnk = "U" + QString::number(x+1, 10).toUpper() + "-3";
+        this->startRangeComboBox->addItem(bnk);
+        bnk = "U" + QString::number(x+1, 10).toUpper() + "-4";
+        this->startRangeComboBox->addItem(bnk);
+    };
+    this->startRangeComboBox->setCurrentIndex(0);
 
-        QString sysxBuffer;
-        for(int i=0;i<sysxPatches.size();i++)
-        {
-            unsigned char byte = (char)sysxPatches[i];
-            unsigned int n = (int)byte;
-            QString hex = QString::number(n, 16).toUpper();     // convert QByteArray to QString
-            if (hex.length() < 2) hex.prepend("0");
-            sysxBuffer.append(hex);
-        };
-        bulk.append(sysxBuffer);
+    QString sysxBuffer;
+    for(int i=0;i<sysxPatches.size();i++)
+    {
+        unsigned char byte = (char)sysxPatches[i];
+        unsigned int n = (int)byte;
+        QString hex = QString::number(n, 16).toUpper();     // convert QByteArray to QString
+        if (hex.length() < 2) hex.prepend("0");
+        sysxBuffer.append(hex);
+    };
+    bulk.append(sysxBuffer);
 }
 
 void bulkLoadDialog::bulkStatusProgress(int value)
@@ -509,8 +509,10 @@ void bulkLoadDialog::loadGCL()         // ************************************ G
         default_data.replace(1844, 128, temp);     //address "0D" +
         temp = data.mid(a+1792, 128);
         default_data.replace(1985, 128, temp);     //address "0E" +
-        temp = data.mid(a+1920, 24);
-        default_data.replace(2126, 24, temp);     //address "0F" +
+        temp = data.mid(a+1920, 128);
+        default_data.replace(2126, 128, temp);     //address "0F" +
+        temp = data.mid(a+2048, 60);
+        default_data.replace(2267, 60, temp);     //address "10" +
         a = data.indexOf(marker, a); // locate patch start position from the start of the file
         a=a+2;                      // offset is set in front of marker
         temp = default_data;
@@ -585,8 +587,10 @@ void bulkLoadDialog::loadSMF()    // **************************** SMF FILE FORMA
         temp = data.mid(a+1947, 128);           // copy SMF part1#
         default_data.replace(1985, 128, temp);           // replace gt100 address "0E"#
         temp = data.mid(a+2075, 16);           // copy SMF part1#
-        temp.append(data.mid(a+2107,8));      // copy SMF part2
-        default_data.replace(2126, 24, temp);           // replace gt100 address "0F"
+        temp.append(data.mid(a+2107,112));      // copy SMF part2
+        default_data.replace(2126, 128, temp);           // replace gt100 address "0F"
+        temp = data.mid(a+2219, 60);           // copy SMF part1#
+        GT100_default.replace(2267, 60, temp);           // replace gt100 address "10"
         a=a+2322;                      // offset is set in front of marker
         temp = default_data;
         this->sysxPatches.append(temp.mid(0, patchSize));
@@ -596,6 +600,7 @@ void bulkLoadDialog::loadSMF()    // **************************** SMF FILE FORMA
 
 void bulkLoadDialog::loadTSL()         // ************************************ TSL File Format***************************
 {
+    QByteArray temp;
     bool skip = false;
     unsigned int pnum = data.count("name2");
     int pindex = data.size()/(pnum);
@@ -604,27 +609,27 @@ void bulkLoadDialog::loadTSL()         // ************************************ T
     unsigned int a = 0; // locate patch text start position from the start of the file
     for (int h=0;h<patchCount;h++)
     {
-        QByteArray temp;
         GT100_default=default_data;
         if(device.contains("GT"))
         {
-            temp.append((char)GetJsonValue("patch_name1", a).toInt() );  //copy patch name
-            temp.append((char)GetJsonValue("patch_name2", a).toInt() );  //copy patch name
-            temp.append((char)GetJsonValue("patch_name3", a).toInt() );  //copy patch name
-            temp.append((char)GetJsonValue("patch_name4", a).toInt() );  //copy patch name
-            temp.append((char)GetJsonValue("patch_name5", a).toInt() );  //copy patch name
-            temp.append((char)GetJsonValue("patch_name6", a).toInt() );  //copy patch name
-            temp.append((char)GetJsonValue("patch_name7", a).toInt() );  //copy patch name
-            temp.append((char)GetJsonValue("patch_name8", a).toInt() );  //copy patch name
-            temp.append((char)GetJsonValue("patch_name9", a).toInt() );  //copy patch name
-            temp.append((char)GetJsonValue("patch_name10", a).toInt() ); //copy patch name
-            temp.append((char)GetJsonValue("patch_name11", a).toInt() ); //copy patch name
-            temp.append((char)GetJsonValue("patch_name12", a).toInt() ); //copy patch name
-            temp.append((char)GetJsonValue("patch_name13", a).toInt() ); //copy patch name
-            temp.append((char)GetJsonValue("patch_name14", a).toInt() ); //copy patch name
-            temp.append((char)GetJsonValue("patch_name15", a).toInt() ); //copy patch name
-            temp.append((char)GetJsonValue("patch_name16", a).toInt() ); //copy patch name
-            GT100_default_replace(11, 16, temp );                        //copy patch name
+            QByteArray name_temp;
+            name_temp.append((char)GetJsonValue("patch_name1", a).toInt() );  //copy patch name
+            name_temp.append((char)GetJsonValue("patch_name2", a).toInt() );  //copy patch name
+            name_temp.append((char)GetJsonValue("patch_name3", a).toInt() );  //copy patch name
+            name_temp.append((char)GetJsonValue("patch_name4", a).toInt() );  //copy patch name
+            name_temp.append((char)GetJsonValue("patch_name5", a).toInt() );  //copy patch name
+            name_temp.append((char)GetJsonValue("patch_name6", a).toInt() );  //copy patch name
+            name_temp.append((char)GetJsonValue("patch_name7", a).toInt() );  //copy patch name
+            name_temp.append((char)GetJsonValue("patch_name8", a).toInt() );  //copy patch name
+            name_temp.append((char)GetJsonValue("patch_name9", a).toInt() );  //copy patch name
+            name_temp.append((char)GetJsonValue("patch_name10", a).toInt() ); //copy patch name
+            name_temp.append((char)GetJsonValue("patch_name11", a).toInt() ); //copy patch name
+            name_temp.append((char)GetJsonValue("patch_name12", a).toInt() ); //copy patch name
+            name_temp.append((char)GetJsonValue("patch_name13", a).toInt() ); //copy patch name
+            name_temp.append((char)GetJsonValue("patch_name14", a).toInt() ); //copy patch name
+            name_temp.append((char)GetJsonValue("patch_name15", a).toInt() ); //copy patch name
+            name_temp.append((char)GetJsonValue("patch_name16", a).toInt() ); //copy patch name
+            GT100_default_replace(11, 16, name_temp );                        //copy patch name
             GT100_default_replace(27, 1, GetJsonHex("output_select", a));   //copy output select
             GT100_default_replace(43, 1, GetJsonHex("comp_on_off", a));     //copy comp
             GT100_default_replace(44, 1, GetJsonHex("comp_type", a));       //copy comp
@@ -1534,7 +1539,74 @@ void bulkLoadDialog::loadTSL()         // ************************************ T
             GT100_default_replace(2324, 1, GetJsonHex("prm_fx2_overtone_upper_level", a));   //copy FX2
             GT100_default_replace(2325, 1, GetJsonHex("prm_fx2_overtone_lower_level", a));   //copy FX2
             GT100_default_replace(2326, 1, GetJsonHex("prm_fx2_overtone_direct_level", a));  //copy FX2
-            this->sysxPatches.append(GT100_default.mid(0, patchSize));
+            this->sysxPatches.append(GT100_default);
+
+
+/*          //to fix broken bulk saves
+            temp.append(GT100_default.mid(11, 128));       //address "00"
+            temp.append(GT100_default.mid(152, 128));      //address "01"
+            temp.append(GT100_default.mid(293, 128));      //address "02"
+            temp.append(GT100_default.mid(434, 128));      //address "03"
+            temp.append(GT100_default.mid(575, 128));      //address "04"
+            temp.append(GT100_default.mid(716, 128));      //address "05" +
+            temp.append(GT100_default.mid(857, 128));      //address "06" +
+            temp.append(GT100_default.mid(998, 128));      //address "07" +
+            temp.append(GT100_default.mid(1139, 128));     //address "08" +
+            temp.append(GT100_default.mid(1280, 128));     //address "09" +
+            temp.append(GT100_default.mid(1421, 128));     //address "0A" +
+            temp.append(GT100_default.mid(1562, 128));     //address "0B" +
+            temp.append(GT100_default.mid(1703, 128));     //address "0C" +
+            temp.append(GT100_default.mid(1844, 128));     //address "0D" +
+            temp.append(GT100_default.mid(1985, 128));     //address "0E" +
+            temp.append(GT100_default.mid(2126, 128));     //address "0F" +
+            temp.append(GT100_default.mid(2267, 60));      //address "10" +
+
+            if(h==patchCount-1)
+            {
+                QFile xfile("test.txt");
+                if (xfile.open(QIODevice::WriteOnly)){  xfile.write(temp); };
+                for (int t=0;t<patchCount;t++)
+                {
+                    QByteArray temp_2;
+                    temp_2 = temp.mid(0, 128);
+                    GT100_default.replace(11, 128, temp_2);       //address "00" +
+                    temp_2 = temp.mid(128, 128);
+                    GT100_default.replace(152, 128, temp_2);      //address "01" +
+                    temp_2 = temp.mid(256, 128);
+                    GT100_default.replace(293, 128, temp_2);      //address "02" +
+                    temp_2 = temp.mid(384, 128);
+                    GT100_default.replace(434, 128, temp_2);      //address "03" +
+                    temp_2 = temp.mid(512, 128);
+                    GT100_default.replace(575, 128, temp_2);      //address "04" +
+                    temp_2 = temp.mid(640, 128);
+                    GT100_default.replace(716, 128, temp_2);      //address "05" +
+                    temp_2 = temp.mid(768, 128);
+                    GT100_default.replace(857, 128, temp_2);      //address "06" +
+                    temp_2 = temp.mid(896, 128);
+                    GT100_default.replace(998, 128, temp_2);      //address "07" +
+                    temp_2 = temp.mid(1024, 128);
+                    GT100_default.replace(1139, 128, temp_2);     //address "08" +
+                    temp_2 = temp.mid(1152, 128);
+                    GT100_default.replace(1280, 128, temp_2);     //address "09" +
+                    temp_2 = temp.mid(1280, 128);
+                    GT100_default.replace(1421, 128, temp_2);     //address "0A" +
+                    temp_2 = temp.mid(1408, 128);
+                    GT100_default.replace(1562, 128, temp_2);     //address "0B" +
+                    temp_2 = temp.mid(1536, 128);
+                    GT100_default.replace(1703, 128, temp_2);     //address "0C" +
+                    temp_2 = temp.mid(1664, 128);
+                    GT100_default.replace(1844, 128, temp_2);     //address "0D" +
+                    temp_2 = temp.mid(1792, 128);
+                    GT100_default.replace(1985, 128, temp_2);     //address "0E" +
+                    temp_2 = temp.mid(1920, 128);
+                    GT100_default.replace(2126, 128, temp_2);     //address "0F" +
+                    temp_2 = temp.mid(2048, 60);
+                    GT100_default.replace(2267, 60, temp_2);      //address "10" +
+                    this->sysxPatches.append(GT100_default);
+                    temp.remove(0,2110);
+                };
+            }; */
+
         }
         else if(device.contains("ME-80"))
         {

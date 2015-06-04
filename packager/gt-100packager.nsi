@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "GT-100FxFloorBoard"
-!define PRODUCT_VERSION "20140724"
+!define PRODUCT_VERSION "20141028"
 !define PRODUCT_PUBLISHER "Colin Willcocks (gumtown)"
 !define PRODUCT_WEB_SITE "http://sourceforge.net/projects/fxfloorboard"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\GT-100FxFloorBoard.exe"
@@ -66,7 +66,6 @@ Section "MainSection" SEC01
   File "libwinpthread-1.dll"
   File "libstdc++-6.dll"
   File "libgcc_s_dw2-1.dll"
-  File "ksuser.dll"
   File "icuuc51.dll"
   File "icuin51.dll"
   File "icudt51.dll"

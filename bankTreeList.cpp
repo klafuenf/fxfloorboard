@@ -33,6 +33,15 @@
 #include "SysxIO.h"
 #include "globalVariables.h"
 
+// Platform-dependent sleep routines.
+#ifdef Q_OS_WIN
+#include <windows.h>
+#define SLEEP( milliseconds ) Sleep( (DWORD) milliseconds )
+#else // Unix variants
+#include <unistd.h>
+#define SLEEP( milliseconds ) usleep( (unsigned long) (milliseconds * 1000.0) )
+#endif
+
 bankTreeList::bankTreeList(QWidget *parent)
     : QWidget(parent)
 {
@@ -773,7 +782,6 @@ void bankTreeList::updatePatch(QString replyMsg)
 *********************************************************************************/
 void bankTreeList::connectedSignal()
 {
-    //requestPatch(); //load the current temp buffer
     SysxIO *sysxIO = SysxIO::Instance();
     if(this->openPatchTreeItems.size() != 0 && sysxIO->deviceReady() && sysxIO->isConnected())
     {
@@ -791,8 +799,9 @@ void bankTreeList::connectedSignal()
         this->currentPatchTreeItems = this->openPatchTreeItems;
         this->updatePatchNames("");
     }else if (sysxIO->deviceReady() && sysxIO->isConnected())
-    { requestPatch(); };
-    //requestPatch();
+    {
+        requestSystem();
+    };
 }
 
 /********************************** updateTree() ********************************
@@ -886,3 +895,130 @@ void bankTreeList::updatePatchNames(QString name)
             };
 }
 
+void bankTreeList::requestSystem()
+{
+    SysxIO *sysxIO = SysxIO::Instance();
+    emit setStatusMessage(tr("Reading System Data..."));
+    emit setStatusSymbol(3);
+    if (sysxIO->isConnected())
+    {
+        sysxIO->setDeviceReady(false); // Reserve the device for interaction.
+        QObject::disconnect(sysxIO, SIGNAL(sysxReply(QString)));
+        QObject::connect(sysxIO, SIGNAL(sysxReply(QString)), this, SLOT(systemReply(QString)));
+        emit setStatusProgress(100);
+        emit setStatusSymbol(2);
+        emit setStatusMessage(tr("Request System data"));
+        sysxIO->sendSysx(systemRequest); // GR-55 System area data Request.
+    };
+}
+
+void bankTreeList::systemReply(QString replyMsg)
+{
+    SysxIO *sysxIO = SysxIO::Instance();
+    QObject::disconnect(sysxIO, SIGNAL(sysxReply(QString)), this, SLOT(systemReply(QString)));
+    sysxIO->setDeviceReady(true); // Free the device after finishing interaction.
+
+    if(sysxIO->noError())
+    {
+        if(replyMsg.size()/2 == systemSize)
+        {
+            /* TRANSLATE SYSX MESSAGE FORMAT to 128 byte data blocks */
+            QString header = "F0410000006012";
+            QString footer ="00F7";
+
+            QString part1 = replyMsg.mid(22, 256); //from 11, copy 128 bits (values are doubled for QString)
+            part1.prepend("00000000").prepend(header).append(footer);
+
+            QString part2 = replyMsg.mid(278, 228);
+            QString part2B = replyMsg.mid(532, 28);
+            part2.prepend("00000100").prepend(header).append(part2B).append(footer);
+
+            QString part3 = replyMsg.mid(560, 256);  //was 236
+            part3.prepend("00000200").prepend(header).append(footer);
+
+            QString part3A = replyMsg.mid(816, 80);  //added ver 2
+            part3A.prepend("00000300").prepend(header).append(footer);
+
+            QString part4 = replyMsg.mid(922, 256);
+            part4.prepend("00020000").prepend(header).append(footer);
+
+            QString part5 = replyMsg.mid(1178, 228);
+            QString part5B = replyMsg.mid(1432, 28);
+            part5.prepend("00020100").prepend(header).append(part5B).append(footer);
+
+            QString part6 = replyMsg.mid(1460, 256);
+            part6.prepend("00020200").prepend(header).append(footer);
+
+            QString part7 = replyMsg.mid(1716, 200);
+            QString part7B = replyMsg.mid(1942, 56);
+            part7.prepend("00020300").prepend(header).append(part7B).append(footer);
+
+            QString part8 = replyMsg.mid(1998,256);
+            part8.prepend("00020400").prepend(header).append(footer);
+
+            QString part10 = replyMsg.mid(2254, 172);
+            QString part10B = replyMsg.mid(2452, 84);
+            part10.prepend("00020500").prepend(header).append(part10B).append(footer);
+
+            QString part11 = replyMsg.mid(2536, 256);
+            part11.prepend("00020600").prepend(header).append(footer);
+
+            QString part12 = replyMsg.mid(2792, 144);
+            QString part12B = replyMsg.mid(2962, 112);
+            part12.prepend("00020700").prepend(header).append(part12B).append(footer);
+
+            QString part13 = replyMsg.mid(3074, 256);
+            part13.prepend("00020800").prepend(header).append(footer);
+
+            replyMsg = "";
+            replyMsg.append(part1).append(part2).append(part3).append(part3A).append(part4).append(part5)
+                    .append(part6).append(part7).append(part8).append(part10).append(part11)
+                    .append(part12).append(part13);
+
+            QString reBuild = "";       /* Add correct checksum to patch strings */
+            QString sysxEOF = "";
+            QString hex = "";
+            int msgLength = replyMsg.length()/2;
+            for(int i=0;i<msgLength*2;++i)
+            {
+                hex.append(replyMsg.mid(i*2, 2));
+                sysxEOF = (replyMsg.mid((i*2)+4, 2));
+                if (sysxEOF == "F7")
+                {
+                    int dataSize = 0; bool ok;
+                    for(int h=checksumOffset;h<hex.size()-1;++h)
+                    { dataSize += hex.mid(h*2, 2).toInt(&ok, 16); };
+                    QString base = "80";                       // checksum calculate.
+                    unsigned int sum = dataSize % base.toInt(&ok, 16);
+                    if(sum!=0) { sum = base.toInt(&ok, 16) - sum; };
+                    QString checksum = QString::number(sum, 16).toUpper();
+                    if(checksum.length()<2) {checksum.prepend("0");};
+                    hex.append(checksum);
+                    hex.append("F7");
+                    reBuild.append(hex);
+                    hex = "";
+                    sysxEOF = "";
+                    i=i+2;
+                };
+            };
+            replyMsg = reBuild.simplified().toUpper();
+            sysxIO->setFileSource("System", replyMsg);
+            requestPatch();
+        }
+        else
+        {
+            QMessageBox *msgBox = new QMessageBox();
+            msgBox->setWindowTitle(deviceType + tr(" Fx FloorBoard connection Error !!"));
+            msgBox->setIcon(QMessageBox::Warning);
+            msgBox->setTextFormat(Qt::RichText);
+            QString msgText;
+            msgText.append("<font size='+1'><b>");
+            msgText.append(tr("The Boss ") + deviceType + tr(" System data was not transfered !!."));
+            msgText.append("<b></font><br>");
+            msgBox->setText(msgText);
+            msgBox->show();
+            QTimer::singleShot(3000, msgBox, SLOT(deleteLater()));
+        };
+    };
+    emit setStatusMessage(tr("Ready"));
+}

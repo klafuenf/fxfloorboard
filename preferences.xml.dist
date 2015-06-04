@@ -2,11 +2,11 @@
 <!-- Preferences of the GT-100 Fx FloorBoard application. -->
 <Preferences>
 	<General>
-		<Application version="20150504"/>
+		<Application version="20150604"/>
 		<Donate url="false"/>
 		<Files dir=""/>
-    <Help url="help/help.html"/>
-		<Start count="6"/>
+		<Help url="help/help.html"/>
+		<Start count="1"/>
 	</General>
 	<Language>
 		<Locale select="0"/>
@@ -25,15 +25,13 @@
 		<Colour select="0"/>
 	</Scheme>
 	<Window>
-    <AutoScale bool="true"/>
+		<AutoScale bool="true"/>
 		<Collapsed width="1330" bool="true"/>
 		<Position x="10" y="10"/>
-    <Restore sidepanel="true" window="true"/>
-    <Scale ratio="1.0"/>
+		<Restore sidepanel="true" window="true"/>
+		<Scale ratio="1.00"/>
 		<Single bool="true"/>
 		<Size width="1330" height="720"/>
-    <Scale ratio="10"/>
 		<Splash bool="true"/>
-		<Widgets bool="false"/>
 	</Window>
 </Preferences>

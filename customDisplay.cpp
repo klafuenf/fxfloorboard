@@ -28,15 +28,15 @@
 customDisplay::customDisplay(QRect geometry, QWidget *parent)
     : QWidget(parent)
 {
-	this->geometry = geometry;
-	this->font.setFamily("void");
-	this->setGeometry(geometry);
-	this->setLabelPosition();
+    this->geometry = geometry;
+    this->font.setFamily("void");
+    this->setGeometry(geometry);
+    this->setLabelPosition();
 }
 
 void customDisplay::paintEvent(QPaintEvent *)
 {
-	  Preferences *preferences = Preferences::Instance();
+    Preferences *preferences = Preferences::Instance();
     bool ok;
     const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
 
@@ -52,7 +52,7 @@ void customDisplay::paintEvent(QPaintEvent *)
     }
     else
     {
-        //this->mainLabel->setFont(Sfont);
+        this->mainLabel->setFont(Sfont);
         this->mainLabel->font();
     };
 
@@ -69,10 +69,10 @@ void customDisplay::paintEvent(QPaintEvent *)
 
         if (fontSize <= 1)
         {
-            break;
             fontSize = 1;
+            break;
         };
-        tmpfont.setPixelSize(fontSize - 1);
+        tmpfont.setPixelSize(fontSize);
         this->mainLabel->setFont(tmpfont);
     };
 
@@ -86,25 +86,25 @@ void customDisplay::paintEvent(QPaintEvent *)
     painter.setPen(border);
     painter.setBrush(QColor(34,24,25));
 
-	/* Draw a custom path. This to have a constant border 
-	   radius independant of the rectangle size. */
-	int radius = 5; // Set the border radius.
-	QPainterPath roundRectPath;
-	roundRectPath.moveTo(geometry.width()-1, radius);
-	roundRectPath.arcTo((geometry.width()-1) - radius*2, 0.0, radius*2, radius*2, 0.0, 90.0);
-	roundRectPath.lineTo(radius, 0.0);
-	roundRectPath.arcTo(0.0, 0.0, radius*2, radius*2, 90.0, 90.0);
-	roundRectPath.lineTo(0.0, (geometry.height()-1) - radius);
-	roundRectPath.arcTo(0.0, (geometry.height()-1) - (radius*2), radius*2, radius*2, 180.0, 90.0);
-	roundRectPath.lineTo((geometry.width()-1) - radius, geometry.height()-1);
-	roundRectPath.arcTo((geometry.width()-1) - (radius*2), (geometry.height()-1) - (radius*2), radius*2, radius*2, 270.0, 90.0);
-	roundRectPath.closeSubpath();
-	painter.drawPath(roundRectPath);
+    /* Draw a custom path. This to have a constant border
+       radius independant of the rectangle size. */
+    int radius = 5; // Set the border radius.
+    QPainterPath roundRectPath;
+    roundRectPath.moveTo(geometry.width()-1, radius);
+    roundRectPath.arcTo((geometry.width()-1) - radius*2, 0.0, radius*2, radius*2, 0.0, 90.0);
+    roundRectPath.lineTo(radius, 0.0);
+    roundRectPath.arcTo(0.0, 0.0, radius*2, radius*2, 90.0, 90.0);
+    roundRectPath.lineTo(0.0, (geometry.height()-1) - radius);
+    roundRectPath.arcTo(0.0, (geometry.height()-1) - (radius*2), radius*2, radius*2, 180.0, 90.0);
+    roundRectPath.lineTo((geometry.width()-1) - radius, geometry.height()-1);
+    roundRectPath.arcTo((geometry.width()-1) - (radius*2), (geometry.height()-1) - (radius*2), radius*2, radius*2, 270.0, 90.0);
+    roundRectPath.closeSubpath();
+    painter.drawPath(roundRectPath);
 }
 
 void customDisplay::setLabelPosition(bool invert)
 {
-	Preferences *preferences = Preferences::Instance();
+    Preferences *preferences = Preferences::Instance();
     bool ok;
     const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
 
@@ -130,21 +130,21 @@ void customDisplay::setLabelPosition(bool invert)
 
     this->mainLabel = new QLabel(this);
     this->mainLabel->setObjectName("displayLarge");
-    QFont Mfont( "Arial", 10*ratio, QFont::Bold);
+    QFont Mfont( "Arial", 12*ratio, QFont::Bold);
     this->mainLabel->setFont(Mfont);
     this->mainLabel->setAlignment(Qt::AlignLeft);
     this->mainLabel->setGeometry(mainGeometry);
 
     this->subLabelLeft = new QLabel(this);
     this->subLabelLeft->setObjectName("displaySmall");
-    QFont SLfont( "Arial", 9*ratio, QFont::Bold);
+    QFont SLfont( "Arial", 10*ratio, QFont::Bold);
     this->subLabelLeft->setFont(SLfont);
     this->subLabelLeft->setAlignment(Qt::AlignLeft);
     this->subLabelLeft->setGeometry(subGeometry);
 
     this->subLabelRight = new QLabel(this);
     this->subLabelRight->setObjectName("displaySmall");
-    QFont SRfont( "Arial", 9*ratio, QFont::Bold);
+    QFont SRfont( "Arial", 10*ratio, QFont::Bold);
     this->subLabelRight->setFont(SRfont);
     this->subLabelRight->setAlignment(Qt::AlignRight);
     this->subLabelRight->setGeometry(subGeometry);
@@ -153,7 +153,7 @@ void customDisplay::setLabelPosition(bool invert)
 
 void customDisplay::setMainText(QString mainText, Qt::Alignment alignment)
 {
-	  Preferences *preferences = Preferences::Instance();
+    Preferences *preferences = Preferences::Instance();
     bool ok;
     const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
 
@@ -164,7 +164,7 @@ void customDisplay::setMainText(QString mainText, Qt::Alignment alignment)
         QFont splashFont;
         splashFont.setFamily("Arial");
         splashFont.setBold(true);
-        splashFont.setPixelSize(13*ratio);
+        splashFont.setPixelSize(12*ratio);
         splashFont.setStretch(90);
         this->mainLabel->setFont(splashFont);
     };
@@ -172,34 +172,34 @@ void customDisplay::setMainText(QString mainText, Qt::Alignment alignment)
 
 void customDisplay::setSubText(QString subTextLeft, QString subTextRight)
 {
-	this->subLabelLeft->setText(subTextLeft);
-	this->subLabelRight->setText(subTextRight);
+    this->subLabelLeft->setText(subTextLeft);
+    this->subLabelRight->setText(subTextRight);
 }
 
 void customDisplay::clearAll()
 {
-	this->mainLabel->clear();
-	this->subLabelLeft->clear();
-	this->subLabelRight->clear();
+    this->mainLabel->clear();
+    this->subLabelLeft->clear();
+    this->subLabelRight->clear();
 }
 
 void customDisplay::setMainObjectName(QString name)
 {
-	this->mainLabel->setObjectName(name);
+    this->mainLabel->setObjectName(name);
 }
 
 void customDisplay::setSubObjectName(QString name)
 {
-	this->subLabelLeft->setObjectName(name);
-	this->subLabelRight->setObjectName(name);
+    this->subLabelLeft->setObjectName(name);
+    this->subLabelRight->setObjectName(name);
 }
 
 void customDisplay::setAllColor(QColor color)
 {
-	QString red, green, blue;;
-	red = QString::number(color.red(), 10);
-	green = QString::number(color.green(), 10);
-	blue = QString::number(color.blue(), 10);
+    QString red, green, blue;;
+    red = QString::number(color.red(), 10);
+    green = QString::number(color.green(), 10);
+    blue = QString::number(color.blue(), 10);
     this->mainLabel->setStyleSheet("color: rgb("+ red +","+ green +","+ blue +");");
     this->subLabelLeft->setStyleSheet("color: rgb("+ red +","+ green +","+ blue +");");
     this->subLabelRight->setStyleSheet("color: rgb("+ red +","+ green +","+ blue +");");
@@ -207,7 +207,7 @@ void customDisplay::setAllColor(QColor color)
 
 void customDisplay::resetAllColor()
 {
-    QColor color = this->mainPal.color(QPalette::Normal, QPalette::WindowText);
+    QColor color(255, 255, 255);// = this->mainPal.color(QPalette::Normal, QPalette::WindowText);
     QString red, green, blue;;
     red = QString::number(color.red(), 10);
     green = QString::number(color.green(), 10);
