@@ -47,7 +47,7 @@
 floorBoardDisplay::floorBoardDisplay(QWidget *parent, QPoint pos)
     : QWidget(parent)
 {
- Preferences *preferences = Preferences::Instance();
+    Preferences *preferences = Preferences::Instance();
     bool ok;
     const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
     QFont Lfont( "Arial", 11*ratio, QFont::Bold);
@@ -68,12 +68,14 @@ floorBoardDisplay::floorBoardDisplay(QWidget *parent, QPoint pos)
     int bottomOffset = 635*ratio;
     int horizontalOffset = 3*ratio;
     this->patchNumDisplay = new customDisplay(QRect(10*ratio, patchDisplayRowOffset, 50*ratio, 34*ratio), this);
-    this->patchNumDisplay->setObjectName("banklist");
+    this->patchNumDisplay->setObjectName("display");
     this->patchNumDisplay->setLabelPosition(true);
     this->patchNumDisplay->setMainObjectName("bankMain");
     this->patchNumDisplay->setSubObjectName("bankSub");
     this->patchNumDisplay->setWhatsThis(tr("Patch Number Display.<br>displays the currently selected patch<br>and patch write memory location."));
     this->patchDisplay = new customDisplay(QRect(70*ratio, patchDisplayRowOffset, 150*ratio, 34*ratio), this);
+    this->patchDisplay->setObjectName("display");
+    this->patchDisplay->setLabelPosition(false);
     this->patchDisplay->setMainObjectName("nameMain");
     this->patchDisplay->setSubObjectName("nameSub");
     this->valueDisplay = new customDisplay(QRect(230*ratio, patchDisplayRowOffset, 150*ratio, 34*ratio), this);
@@ -132,6 +134,8 @@ floorBoardDisplay::floorBoardDisplay(QWidget *parent, QPoint pos)
     output->setWhatsThis(tr("This is the Patch Mode setting of Output Select<br>this is only active if the SYSTEM setting<br>is set to Patch Mode."));
     this->catagory = new customControlListMenu(this, "07", "00", "0F", "right");
     catagory->setGeometry(935*ratio, patchDisplayRowOffset+(19*ratio), 190*ratio, 30*ratio);
+    catagory->setWhatsThis(tr("This is the tone style Category grouping that the current patch is associated with."));
+
 
     this->autoButton = new customButton(tr("Auto Sync"), false, QPoint(570*ratio, patchDisplayRowOffset), this, ":/images/greenledbutton.png");
     this->autoButton->setWhatsThis(tr("Auto refresh<br>used to automatically update editor settings changes made on the GR-55"));
@@ -329,6 +333,8 @@ floorBoardDisplay::floorBoardDisplay(QWidget *parent, QPoint pos)
     QObject::connect(this->temp5_copy_Button, SIGNAL(valueChanged(bool)),  this, SLOT(temp5_copy(bool)));
     QObject::connect(this->temp5_paste_Button, SIGNAL(valueChanged(bool)), this, SLOT(temp5_paste(bool)));
 
+    QObject::connect(this->parent(), SIGNAL(valueChanged(QString, QString, QString)), this, SLOT(valueUpdate()));
+
     set_temp();
 
     QString midiIn = preferences->getPreferences("Midi", "MidiIn", "device");
@@ -461,6 +467,7 @@ void floorBoardDisplay::setPatchNumDisplay(int bank, int patch)
     }
     else
     {
+        this->patchNumDisplay->resetAllColor();
         this->patchNumDisplay->setSubText(tr("Temp"));
         QString str = tr("Buffer");
         this->patchNumDisplay->setMainText(str, Qt::AlignCenter);
@@ -539,10 +546,6 @@ void floorBoardDisplay::updateDisplay()
         this->writeButton->setBlink(false);
         this->writeButton->setValue(false);
     };
-    int index = sysxIO->getSourceValue("Structure", "00", "00", "10");
-    this->output->controlListComboBox->setCurrentIndex(index);
-    // index = sysxIO->getSourceValue("Structure", "00", "00", "10");
-    //this->catagory->controlListComboBox->setCurrentIndex(index);
 }
 
 void floorBoardDisplay::autoconnect()
@@ -1117,6 +1120,7 @@ void floorBoardDisplay::connectionResult(QString sysxMsg)
             sysxIO->setConnected(true);
             emit connectedSignal();
 
+
             if(sysxIO->getBank() != 0)
             {
                 this->writeButton->setBlink(false);
@@ -1511,10 +1515,10 @@ void floorBoardDisplay::autosyncResult(QString sysxMsg)
         };
         //if(sysxMsg != current_data)
         //{
-            sysxIO->setFileSource("Structure", sysxMsg);		// Set the source to the data received.
-            sysxIO->setDevice(true);				// Patch received from the device so this is set to true.
-            sysxIO->setSyncStatus(true);			// We can't be more in sync than right now! :)
-            emit updateSignal();
+        sysxIO->setFileSource("Structure", sysxMsg);		// Set the source to the data received.
+        sysxIO->setDevice(true);				// Patch received from the device so this is set to true.
+        sysxIO->setSyncStatus(true);			// We can't be more in sync than right now! :)
+        emit updateSignal();
         //};
     };
 }
@@ -1651,10 +1655,18 @@ void floorBoardDisplay::notConnected()
     emit setStatusMessage(tr("Not connected"));
 }
 
-void floorBoardDisplay::valueChanged(bool value, QString hex1, QString hex2, QString hex3)
+void floorBoardDisplay::valueUpdate()
+{
+    SysxIO *sysxIO = SysxIO::Instance();
+    int index = sysxIO->getSourceValue("Structure", "00", "00", "10");
+    this->output->controlListComboBox->setCurrentIndex(index);
+    index = sysxIO->getSourceValue("Structure", "07", "00", "0F");
+    this->catagory->controlListComboBox->setCurrentIndex(index);
+    index = sysxIO->getSourceValue("System", "00", "00", "40");
+    if(index>0) { this->output->controlListComboBox->hide(); } else { this->output->controlListComboBox->show(); };
+}
+
+void floorBoardDisplay::valueChanged(bool, QString , QString, QString)
 {
 
 }
-
-
-

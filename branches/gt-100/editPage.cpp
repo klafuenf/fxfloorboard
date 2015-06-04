@@ -22,7 +22,6 @@
 ****************************************************************************/
 
 #include "editPage.h"
-#include <QLabel>
 #include "customSwitch.h"
 #include "customControlParaEQ.h"
 #include "customControlEZ_amp.h"
@@ -37,6 +36,8 @@
 #include "customControlListMenu.h"
 #include "customMultiComboBox.h"
 #include "customRenameWidget.h"
+#include "customSystemOverride.h"
+#include <QTimer>
 #include "Preferences.h"
 
 editPage::editPage(QWidget *parent)
@@ -54,6 +55,11 @@ editPage::editPage(QWidget *parent)
     this->groupBoxMode = false;
     this->stackControlMode = false;
     this->stackFieldMode = false;
+
+    this->timer = new QTimer(this);
+
+    QObject::connect(timer, SIGNAL(timeout()), this, SIGNAL(timerUpdateSignal()) );
+    timer->start(3000);
 
     /*QObject::connect(this->parent(), SIGNAL( dialogUpdateSignal() ),
                 this, SIGNAL( dialogUpdateSignal() ));
@@ -369,6 +375,25 @@ void editPage::addLabel(int row, int column, int rowSpan, int columnSpan, QStrin
     {
         this->layout->addWidget(label, row, column, rowSpan, columnSpan, alignment);
     };
+}
+
+void editPage::addSystemOverride(int row, int column, int rowSpan, int columnSpan,
+                                           QString hex1, QString hex2, QString hex3,
+                                           QString index)
+{
+        customSystemOverride *SystemOverride = new customSystemOverride(this, hex1, hex2, hex3, index, rowSpan, columnSpan);
+        if(this->groupBoxMode)
+        {
+                this->groupBoxLayout->addWidget(SystemOverride, row, column, rowSpan, columnSpan);
+        }
+        else if(this->stackFieldMode)
+        {
+                this->stackField->addWidget(SystemOverride, row, column, rowSpan, columnSpan);
+        }
+        else
+        {
+                this->layout->addWidget(SystemOverride, row, column, rowSpan, columnSpan);
+        };
 }
 
 void editPage::valueChanged(bool value, QString hex1, QString hex2, QString hex3)

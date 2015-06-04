@@ -35,7 +35,6 @@ stompbox_ch_b::stompbox_ch_b(QWidget *parent)
     setKnob2("01", "00", "08");
     editDetails()->patchPos(304, 64, "01", "00");
     setEditPages();
-
 }
 
 void stompbox_ch_b::updateSignal()
@@ -50,6 +49,9 @@ void stompbox_ch_b::updateSignal()
 
 void stompbox_ch_b::setEditPages()
 {
+    // CHANNEL B
+    editDetails()->page()->newGroupBox(tr("Channel B"));
+
     editDetails()->page()->newGroupBox("Effect");
     editDetails()->page()->addSwitch(0, 0, 1, 1, "01", "00", "00");   // off/on effect
     editDetails()->page()->addGroupBox(0, 0, 2, 1);
@@ -58,9 +60,6 @@ void stompbox_ch_b::setEditPages()
     editDetails()->page()->addSwitch(0, 0, 1, 1, "01", "00", "0B");
     editDetails()->page()->addKnob(1, 0, 2, 1, "01", "00", "0C");
     editDetails()->page()->addGroupBox(2, 0, 2, 1);
-
-    // CHANNEL B
-    editDetails()->page()->newGroupBox(tr("Channel B"));
 
     editDetails()->page()->newGroupBox(tr("Pre Amp"));
     editDetails()->page()->newStackControl(0);
@@ -74,11 +73,11 @@ void stompbox_ch_b::setEditPages()
     editDetails()->page()->addKnob(0, 5, 2, 1, "01", "00", "06");           // treble
     editDetails()->page()->addKnob(0, 6, 2, 1, "01", "00", "07");           //presence
     editDetails()->page()->insertStackField(0, 0, 7, 2, 1);                 // bright switch
-    editDetails()->page()->addGroupBox(0, 0, 2, 1);
+    editDetails()->page()->addGroupBox(0, 1, 2, 1);
 
     editDetails()->page()->newGroupBox(tr("Pre Amp"));
     editDetails()->page()->addKnob(1, 0, 3, 1, "01", "00", "08");          //effect level
-    editDetails()->page()->addGroupBox(0, 2, 4, 1);
+    editDetails()->page()->addGroupBox(0, 3, 4, 1);
 
     editDetails()->page()->newGroupBox(tr("Speaker - only active while Output-Select set to Line/Phones"));
     editDetails()->page()->newStackControl(1);
@@ -90,8 +89,10 @@ void stompbox_ch_b::setEditPages()
     editDetails()->page()->addKnob(0, 4, 1, 1, "01", "00", "11");    // mic level
     editDetails()->page()->addKnob(0, 5, 1, 1, "01", "00", "12");   // direct level
     editDetails()->page()->insertStackField(1, 1, 0, 1, 7);
-    editDetails()->page()->addGroupBox(2, 0, 2, 1);
+    editDetails()->page()->addSystemOverride(0, 0, 2, 6, "00", "00", "70", "00");
+    editDetails()->page()->addGroupBox(2, 1, 2, 1);
 
+    editDetails()->page()->addSystemOverride(0, 0, 4, 7, "00", "00", "41", "00");
     editDetails()->page()->addGroupBox(0, 1, 4, 1);
 
 

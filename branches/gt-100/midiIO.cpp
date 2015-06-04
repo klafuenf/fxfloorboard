@@ -43,24 +43,11 @@ midiIODestroyer midiIO::_destroyer;
 
 midiIO::midiIO()
 {
-if (!midiin || !midiout){
-#ifdef Q_OS_WIN
-midiout = new RtMidiOut();
-midiin = new RtMidiIn();
-#endif
-#ifdef Q_OS_MAC
-midiout = new RtMidiOut();
-midiin = new RtMidiIn();
-#endif
-#ifdef Q_OS_LINUX
-midiout = new RtMidiOut();
-midiin = new RtMidiIn();
-#endif
-#if defined(Q_OS_LINUX) && !defined(Q_PROCESSOR_ARM)
-midiout = new RtMidiOut();
-midiin = new RtMidiIn();
-#endif
-};
+    if (!midiin || !midiout)
+    {
+        midiout = new RtMidiOut();
+        midiin = new RtMidiIn();
+    };
     this->midi = false; // Set this to false until required;
     /* Connect signals */
     SysxIO *sysxIO = SysxIO::Instance();
@@ -179,21 +166,21 @@ void midiIO::sendSyxMsg(QString sysxOutMsg, int midiOutPort)
     if ( nPorts < 1 ) { goto cleanup; };
 RETRY:
     try {
-            if(!midiout->isPortOpen()) { midiout->openPort(midiOutPort, clientName); };	// Open selected port.
-            for(int i=0;i<msgLength*2;++i)
-            {
-                unsigned int n;
-                hex = sysxOutMsg.mid(i, 2);
-                bool ok;
-                n = hex.toInt(&ok, 16);
-                *ptr = (char)n;
-                message.push_back(*ptr);		// insert the char* string into a std::vector
-                wait = wait + 1;
-                p=p+s;
-                emit setStatusProgress(wait);
-                ptr++; i++;
-            };
-            midiout->sendMessage(&message);
+        if(!midiout->isPortOpen()) { midiout->openPort(midiOutPort, clientName); };	// Open selected port.
+        for(int i=0;i<msgLength*2;++i)
+        {
+            unsigned int n;
+            hex = sysxOutMsg.mid(i, 2);
+            bool ok;
+            n = hex.toInt(&ok, 16);
+            *ptr = (char)n;
+            message.push_back(*ptr);		// insert the char* string into a std::vector
+            wait = wait + 1;
+            p=p+s;
+            emit setStatusProgress(wait);
+            ptr++; i++;
+        };
+        midiout->sendMessage(&message);
         goto cleanup;
     }
     catch (RtMidiError &error)
@@ -290,7 +277,7 @@ REC_RETRY:
     else if (msgType == "identity") { loopCount = x*100; count = 15; }
     else  { loopCount = x*10; count = 0; };
 
-     unsigned int nPorts = midiin->getPortCount();	   // check we have a midiIn port
+    unsigned int nPorts = midiin->getPortCount();	   // check we have a midiIn port
     if ( nPorts < 1 || QString::fromStdString(midiin->getPortName(midiInPort))=="") { goto cleanup; };
     try {
         midiin->ignoreTypes(false, true, true);  //don,t ignore sysex messages, but ignore other crap like active-sensing
@@ -324,10 +311,10 @@ cleanup:
     emit setStatusProgress(100);
     if(midiin->isPortOpen())
     {  midiin->cancelCallback();
-    this->sysxInMsg = this->sysxBuffer;		   //get the returning data string
-    dataReceive = true;
-    midiin->closePort();             // close the midi in port
-    msleep(25);
+        this->sysxInMsg = this->sysxBuffer;		   //get the returning data string
+        dataReceive = true;
+        midiin->closePort();             // close the midi in port
+        msleep(25);
     } else {dataReceive = false; };
 }
 

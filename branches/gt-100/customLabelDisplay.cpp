@@ -59,7 +59,7 @@ void customLabelDisplay::paintEvent(QPaintEvent *)
     {
         /* Change the font size to make it fit... */
         QFont tmpfont = this->mainLabel->font();
-        int fontSize = tmpfont.pixelSize();
+        int fontSize = (tmpfont.pixelSize()*ratio)-1;
 
 
          if (fontSize <= 1)
@@ -67,7 +67,7 @@ void customLabelDisplay::paintEvent(QPaintEvent *)
             break;
             fontSize = 1;
         };
-        tmpfont.setPixelSize(fontSize - 1);
+        tmpfont.setPixelSize(fontSize);
         this->mainLabel->setFont(tmpfont);
     };
 	

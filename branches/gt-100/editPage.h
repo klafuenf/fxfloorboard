@@ -119,6 +119,11 @@ public:
                      QString area = "System",
                      QString length = "10",
                      Qt::Alignment alignment = 0);
+    void addSystemOverride(int row, int column, int rowSpan, int columnSpan,
+                   QString hex1 = "void",
+                   QString hex2 = "void",
+                   QString hex3 = "void",
+                   QString index = "01");
     void addLabel(int row, int column, int rowSpan, int columnSpan, QString text, Qt::Alignment alignment = 0);
     void newGroupBox(QString title, Qt::Alignment alignment = Qt::AlignCenter);
     void addGroupBox(int row, int column, int rowSpan, int columnSpan);
@@ -141,6 +146,7 @@ public slots:
 signals:
     void dialogUpdateSignal();
     void updateSignal();
+    void timerUpdateSignal();
 
 private:
     int currentIndex;
@@ -162,6 +168,7 @@ private:
     int stackControlId;
     QList<int> fieldIndexes;
     int fieldItems;
+    QTimer* timer;
 };
 
 #endif // EDITPAGE_H

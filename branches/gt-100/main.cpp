@@ -29,7 +29,8 @@
 #include "sysxWriter.h"
 #include "customSplashScreen.h"
 
-int main(int argc, char *argv[])
+//int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
     app.setOrganizationName("Gumtown");
@@ -73,7 +74,7 @@ int main(int argc, char *argv[])
         int screenWidth = screen.width();                    // returns available screen width
         int screenHeight = screen.height();                  // returns available screen height
         double resolution = screenWidth;
-        if(screenHeight>screenWidth) {resolution = screenHeight; };   // if is a tablet on it's side initially
+        if(screenHeight>screenWidth) { resolution = screenHeight; };   // if is a tablet on it's side initially
         resolution = resolution/(windowWidth+15);
         QString scaleRatio = QString::number(resolution,'f',2);
         preferences->setPreferences("Window", "Scale", "ratio", scaleRatio);
@@ -116,6 +117,7 @@ int main(int argc, char *argv[])
     app.processEvents();
 
     mainWindow window;// = new mainWindow;
+    window.setLayoutDirection(Qt::LayoutDirection(Qt::LayoutDirectionAuto));
 
     QObject::connect( &window, SIGNAL(closed()), &app, SLOT(quit()) );
 
@@ -144,6 +146,7 @@ int main(int argc, char *argv[])
     /*window.setWindowFlags( Qt::WindowTitleHint
                            | Qt::WindowMinimizeButtonHint
                            | Qt::MSWindowsFixedSizeDialogHint );*/
+
     window.setWindowIcon(QIcon(":/images/windowicon.png"));
 
     //app.processEvents();
@@ -236,7 +239,7 @@ int main(int argc, char *argv[])
     };*/
 
     int count = (preferences->getPreferences("General", "Start", "count").toInt(&ok, 10));
-    if((count == 1 || count == 4) && preferences->getPreferences("General", "Donate", "url")!="true")
+    if((count == 1 || count == 8) && preferences->getPreferences("General", "Donate", "url")!="true")
     {
         //PREVIEW WARNING
         QMessageBox *msgBox = new QMessageBox();

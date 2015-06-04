@@ -1,4 +1,4 @@
-/****************************************************************************
+﻿/****************************************************************************
 **
 ** Copyright (C) 2007~2015 Colin Willcocks.
 ** Copyright (C) 2005~2007 Uco Mesdag.
@@ -212,8 +212,10 @@ bool sysxWriter::readFile()
             temp = data.mid(a+1947, 128);           // copy SMF part1#
             GT100_default.replace(1985, 128, temp);           // replace gt100 address "0E"#
             temp = data.mid(a+2075, 16);           // copy SMF part1#
-            temp.append(data.mid(a+2107,8));      // copy SMF part2
-            GT100_default.replace(2126, 24, temp);           // replace gt100 address "0F"
+            temp.append(data.mid(a+2107,112));      // copy SMF part2  - ver1 was 8
+            GT100_default.replace(2126, 128, temp);           // replace gt100 address "0F"  - ver1 was 24
+            temp = data.mid(a+2219, 60);           // copy SMF part1#
+            GT100_default.replace(2267, 60, temp);           // replace gt100 address "10"
             if (index>0)
             {
                 SysxIO *sysxIO = SysxIO::Instance();
@@ -310,8 +312,10 @@ bool sysxWriter::readFile()
             GT10_default.replace(1844, 128, temp);     //address "0D" +
             temp = data.mid(a+1792, 128);
             GT10_default.replace(1985, 128, temp);     //address "0E" +
-            temp = data.mid(a+1920, 24);
-            GT10_default.replace(2126, 24, temp);     //address "0F" +
+            temp = data.mid(a+1920, 128);
+            GT10_default.replace(2126, 128, temp);     //address "0F" +
+            temp = data.mid(a+2048, 60);
+            GT10_default.replace(2267, 60, temp);     //address "10" +
             /*
             // copy user text, first two sections only, sections seperated/terminated by "00"
             temp = data.mid(32, 1);                    //copy "00"
@@ -577,8 +581,9 @@ void sysxWriter::writeSMF(QString fileName)
         temp.append(out.mid(2126,16));
         GT100_default.replace(a+1849, 242, temp);       // replace SMF address "0D1E"#
 
-        temp = out.mid(2142,8);
-        GT100_default.replace(a+2107, 8, temp);         // replace SMF address "0F10"#
+        temp = out.mid(2142,112);
+        temp.append(out.mid(2267,60));
+        GT100_default.replace(a+2107, 172, temp);         // replace SMF address "0F10"#
 
         QByteArray header(GT100_default.mid(0,29));
         QByteArray footer(GT100_default.mid(2351,4));
@@ -710,8 +715,10 @@ void sysxWriter::writeGCL(QString fileName)
         GCL_default.replace(a+1664, 128, temp);    //address "0D"
         temp = out.mid(1985, 128);
         GCL_default.replace(a+1792, 128, temp);    //address "0E"
-        temp = out.mid(2126, 24);
-        GCL_default.replace(a+1920, 24, temp);    //address "0F"
+        temp = out.mid(2126, 128);
+        GCL_default.replace(a+1920, 128, temp);    //address "0F"
+        temp = out.mid(2267, 60);
+        GCL_default.replace(a+2048, 60, temp);    //address "10"
 
         file.write(GCL_default);
     };
@@ -1760,15 +1767,21 @@ void sysxWriter::writeTSL(QString fileName)
         if(!note2.contains("enter your patch comment text here to describe the effects and settings used - text is saved into GT-100 patch data and files")){note.append(note2); };
         if(!note.isEmpty()) { TextTSL(note, "note"); };  //copy text notes.
 
+        MidiTable *midiTable = MidiTable::Instance();
+        QString hex = QString::number(sysxIO->getSourceValue("Structure", "07", "00", "0F"), 16).toUpper();
+        Midi items = midiTable->getMidiMap("Structure", "07", "00", "0F", "0"+hex);
+        QByteArray txt;
+        for(int x=0; x<items.desc.size(); x++ )
+        { txt.append(items.desc.at(x));   };
+        TextTSL(txt, "category");
+
         /*
-        AppendTSL(temp.mid(27, 1), "output_select");   //copy output select
         "orderNumber"
         "patchNo":"U01-1",
         "patchID":null,
         "logPatchName":null,
         "tcPatch":false,
         "liveSetId":"5657668243",
-        "category":"USER1",
         "patchCategoryName":null,
         "currentPatchNo":0,
         "prevCurrentPatchNo":0,*/
@@ -1802,8 +1815,11 @@ LOOP:
 
 void sysxWriter::TextTSL(QByteArray hex, const char* Json_name)
 {
-    QByteArray name(Json_name);                                  // name of function to be searched for
+    QByteArray name(Json_name);   // name of function to be searched for
+    QByteArray spare_TSL(TSL_default); spare_TSL.truncate(spare_TSL.lastIndexOf(name)); // copy default and trim last "name" off
     int start_index = TSL_default.indexOf(name)+name.size()+3;   //find pointer to start of Json value after :".
+    if(name=="category") { start_index = TSL_default.lastIndexOf(name)+name.size()+3; };
+    if(name=="name"){ start_index = spare_TSL.lastIndexOf(name)+name.size()+3; };   //look for last index of "name"
     QByteArray b(":");
     int incr = 20;
     QByteArray null("null");
@@ -1815,13 +1831,15 @@ LOOP2:
     };
     if(TSL_default.mid(start_index-2, 1) == b)    // if name": is a match - find end of string field ",
     {
-        int end_index = TSL_default.indexOf(",", start_index)-start_index-2;  //find pointer to end of value to get the size of the value.
+        int end_index = TSL_default.indexOf(",", start_index)-start_index-2; //find pointer to end of value to get the size of the value.
+        if(name=="name") {end_index = TSL_default.indexOf("}", start_index)-start_index-2; };
         if(TSL_default.mid(start_index-1, 4).contains(null) && !hex.isEmpty())
         {
             TSL_default.replace(start_index-1, end_index+3, ((char)34+hex+(char)34));   //replace the old string with the new string
         } else
         {
-            TSL_default.replace(start_index, end_index, hex);   //replace the old string with the new string
+            if(name=="category" || name=="name" || name.contains("gt100Name")) { TSL_default.replace(start_index, end_index+1, hex); } else
+            { TSL_default.replace(start_index, end_index, hex); };  //replace the old string with the new string
         };
         incr=0;
     };

@@ -49,17 +49,17 @@ void stompbox_ch_a::updateSignal()
 
 void stompbox_ch_a::setEditPages()
 {
+    // CHANNEL A
+    editDetails()->page()->newGroupBox(tr("Channel A"));
+
     editDetails()->page()->newGroupBox("Effect");
     editDetails()->page()->addSwitch(0, 0, 1, 1, "00", "00", "50");   // off/on effect
     editDetails()->page()->addGroupBox(0, 0, 2, 1);
 
-    editDetails()->page()->newGroupBox(tr("Solo A"));
+    editDetails()->page()->newGroupBox(tr("Solo"));
     editDetails()->page()->addSwitch(0, 0, 1, 1, "00", "00", "5B");
     editDetails()->page()->addKnob(1, 0, 2, 1, "00", "00", "5C");  //solo level
     editDetails()->page()->addGroupBox(2, 0, 2, 1);
-
-    // CHANNEL A
-    editDetails()->page()->newGroupBox(tr("Channel A"));
 
     editDetails()->page()->newGroupBox(tr("Pre Amp"));
     editDetails()->page()->newStackControl(0);
@@ -73,11 +73,11 @@ void stompbox_ch_a::setEditPages()
     editDetails()->page()->addKnob(0, 5, 2, 1, "00", "00", "56");            // treble
     editDetails()->page()->addKnob(0, 6, 2, 1, "00", "00", "57");            // presence
     editDetails()->page()->insertStackField(0, 0, 7, 2, 1);                // bright button
-    editDetails()->page()->addGroupBox(0, 0, 2, 1);
+    editDetails()->page()->addGroupBox(0, 1, 2, 1);
 
     editDetails()->page()->newGroupBox(tr("Pre Amp"));
     editDetails()->page()->addKnob(1, 0, 3, 1, "00", "00", "58");            // effect level
-    editDetails()->page()->addGroupBox(0, 2, 4, 1);
+    editDetails()->page()->addGroupBox(0, 3, 4, 1);
 
 
     editDetails()->page()->newGroupBox(tr("Speaker - only active while Output-Select set to Line/Phones"));
@@ -90,9 +90,11 @@ void stompbox_ch_a::setEditPages()
     editDetails()->page()->addKnob(0, 4, 1, 1, "00", "00", "61");   //mic level
     editDetails()->page()->addKnob(0, 5, 1, 1, "00", "00", "62");   // direct mix
     editDetails()->page()->insertStackField(1, 1, 0, 1, 7);
-    editDetails()->page()->addGroupBox(2, 0, 2, 1);
+    editDetails()->page()->addSystemOverride(0, 0, 2, 6, "00", "00", "70", "00");
+    editDetails()->page()->addGroupBox(2, 1, 2, 1);
 
-    editDetails()->page()->addGroupBox(0, 1, 4, 1);
+    editDetails()->page()->addSystemOverride(0, 0, 4, 7, "00", "00", "41", "00");
+    editDetails()->page()->addGroupBox(0, 0, 4, 1);
 
 
     // Bright Button stack fields

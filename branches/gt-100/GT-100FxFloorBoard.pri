@@ -65,6 +65,7 @@ HEADERS += ./editPage.h \
     ./customSlider.h \
     ./customSplashScreen.h \
     ./customSwitch.h \ 
+    ./customSystemOverride.h \
     ./customTargetDial.h \
     ./customTargetListMenu.h \
     ./dragBar.h \
@@ -173,6 +174,7 @@ SOURCES += ./editPage.cpp \
     ./customSlider.cpp \
     ./customSplashScreen.cpp \
     ./customSwitch.cpp \
+    ./customSystemOverride.cpp \
     ./customTargetDial.cpp \
     ./customTargetListMenu.cpp \
     ./dragBar.cpp \

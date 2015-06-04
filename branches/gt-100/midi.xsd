@@ -1460,7 +1460,6 @@
 						<xs:enumeration value="Ambience"/>
 						<xs:enumeration value="Amp CTL"/>
 						<xs:enumeration value="Amp Control"/>
-						<xs:enumeration value="Amp Customise"/>
 						<xs:enumeration value="Analog"/>
 						<xs:enumeration value="Auto"/>
 						<xs:enumeration value="Auto      "/>
@@ -2244,7 +2243,6 @@
 						<xs:enumeration value="OD-1"/>
 						<xs:enumeration value="OD-2"/>
 						<xs:enumeration value="OD/DS"/>
-						<xs:enumeration value="OD/DS Customise"/>
 						<xs:enumeration value="OD/DS Solo"/>
 						<xs:enumeration value="OD: Bottom Level"/>
 						<xs:enumeration value="OD: Custom Bottom"/>
@@ -2983,10 +2981,10 @@
 						<xs:enumeration value="Y"/>
 						<xs:enumeration value="Z"/>
 						<xs:enumeration value="["/>
-						<xs:enumeration value="[Category] 70&apos;s Hard Rock"/>
 						<xs:enumeration value="[Category] Acoustic"/>
 						<xs:enumeration value="[Category] Blues"/>
 						<xs:enumeration value="[Category] Country"/>
+						<xs:enumeration value="[Category] Hard Rock"/>
 						<xs:enumeration value="[Category] Jazz"/>
 						<xs:enumeration value="[Category] Metal"/>
 						<xs:enumeration value="[Category] Punk Rock"/>
@@ -3279,7 +3277,6 @@
 						<xs:enumeration value="Ambience"/>
 						<xs:enumeration value="Amp CTL"/>
 						<xs:enumeration value="Amp Control"/>
-						<xs:enumeration value="Amp Customise"/>
 						<xs:enumeration value="Analog"/>
 						<xs:enumeration value="Auto"/>
 						<xs:enumeration value="B (G#m)      "/>
@@ -3297,6 +3294,7 @@
 						<xs:enumeration value="Bank Dec"/>
 						<xs:enumeration value="Bank Inc"/>
 						<xs:enumeration value="Bb (Gm)"/>
+						<xs:enumeration value="Blues"/>
 						<xs:enumeration value="Blues OD"/>
 						<xs:enumeration value="Bogner Uber"/>
 						<xs:enumeration value="Boss Comp"/>
@@ -3407,6 +3405,7 @@
 						<xs:enumeration value="HU:"/>
 						<xs:enumeration value="Hall 1"/>
 						<xs:enumeration value="Hall 2"/>
+						<xs:enumeration value="Hard Rock"/>
 						<xs:enumeration value="Hi-BAND"/>
 						<xs:enumeration value="Hi-Band"/>
 						<xs:enumeration value="HiGain Stack"/>
@@ -3457,6 +3456,7 @@
 						<xs:enumeration value="Manual Mode"/>
 						<xs:enumeration value="Manufacturer ID"/>
 						<xs:enumeration value="Match Drive"/>
+						<xs:enumeration value="Metal"/>
 						<xs:enumeration value="Metal DS"/>
 						<xs:enumeration value="Metal Zone"/>
 						<xs:enumeration value="Metronome"/>
@@ -3489,7 +3489,6 @@
 						<xs:enumeration value="OD-1"/>
 						<xs:enumeration value="OD-2"/>
 						<xs:enumeration value="OD/DS"/>
-						<xs:enumeration value="OD/DS Customise"/>
 						<xs:enumeration value="OD/DS Solo"/>
 						<xs:enumeration value="ODDS:"/>
 						<xs:enumeration value="OFF"/>
@@ -3745,6 +3744,7 @@
 						<xs:enumeration value="Programmable"/>
 						<xs:enumeration value="Progressive"/>
 						<xs:enumeration value="Punk Pop"/>
+						<xs:enumeration value="Punk Rock"/>
 						<xs:enumeration value="R-Fier Modern"/>
 						<xs:enumeration value="R-Fier Vintage"/>
 						<xs:enumeration value="RM:"/>
@@ -3760,6 +3760,7 @@
 						<xs:enumeration value="Reverb"/>
 						<xs:enumeration value="Reverse"/>
 						<xs:enumeration value="Ring Mod"/>
+						<xs:enumeration value="Rock"/>
 						<xs:enumeration value="Room"/>
 						<xs:enumeration value="S-&gt;AC"/>
 						<xs:enumeration value="S-&gt;H"/>
@@ -4040,6 +4041,9 @@
 						<xs:enumeration value="USB only"/>
 						<xs:enumeration value="UV:"/>
 						<xs:enumeration value="Up"/>
+						<xs:enumeration value="User1"/>
+						<xs:enumeration value="User2"/>
+						<xs:enumeration value="User3"/>
 						<xs:enumeration value="VB:"/>
 						<xs:enumeration value="VO Drive"/>
 						<xs:enumeration value="VO Lead"/>
@@ -4060,6 +4064,7 @@
 						<xs:enumeration value="Vint-Tweed"/>
 						<xs:enumeration value="Vint-VO Drive"/>
 						<xs:enumeration value="Vint-VO Lead"/>
+						<xs:enumeration value="Vocal"/>
 						<xs:enumeration value="Vtg Rack U"/>
 						<xs:enumeration value="WAH"/>
 						<xs:enumeration value="WAH/FV"/>
@@ -4069,22 +4074,6 @@
 						<xs:enumeration value="Warp"/>
 						<xs:enumeration value="Wave PEDAL"/>
 						<xs:enumeration value="West Coast"/>
-						<xs:enumeration value="[Category] 70&apos;s Hard Rock"/>
-						<xs:enumeration value="[Category] Acoustic"/>
-						<xs:enumeration value="[Category] Blues"/>
-						<xs:enumeration value="[Category] Country"/>
-						<xs:enumeration value="[Category] Jazz"/>
-						<xs:enumeration value="[Category] Metal"/>
-						<xs:enumeration value="[Category] Punk Rock"/>
-						<xs:enumeration value="[Category] Rock"/>
-						<xs:enumeration value="[Category] Soul/Funk"/>
-						<xs:enumeration value="[Category] Studio"/>
-						<xs:enumeration value="[Category] Surf Rock"/>
-						<xs:enumeration value="[Category] User 1"/>
-						<xs:enumeration value="[Category] User 2"/>
-						<xs:enumeration value="[Category] User 3"/>
-						<xs:enumeration value="[Category] Vocal"/>
-						<xs:enumeration value="[Category] West Coast"/>
 						<xs:enumeration value="closed        "/>
 						<xs:enumeration value="dB"/>
 						<xs:enumeration value="ms"/>
@@ -4695,6 +4684,7 @@
 						<xs:enumeration value="PS :Voice1:Pre Delay"/>
 						<xs:enumeration value="PS :Voice2:Pre Delay(LSB)"/>
 						<xs:enumeration value="PS:"/>
+						<xs:enumeration value="Patch Mode Output Select"/>
 						<xs:enumeration value="Patch level"/>
 						<xs:enumeration value="Patch:"/>
 						<xs:enumeration value="Pedal FX"/>
@@ -4901,6 +4891,7 @@
 						<xs:enumeration value="Number Pedal 2"/>
 						<xs:enumeration value="Number Pedal 3"/>
 						<xs:enumeration value="Number Pedal 4"/>
+						<xs:enumeration value="OUTPUT SELECT SET TO SYSTEM"/>
 						<xs:enumeration value="Octave"/>
 						<xs:enumeration value="Octave F.Back Level"/>
 						<xs:enumeration value="Octave Level"/>
@@ -4913,7 +4904,6 @@
 						<xs:enumeration value="Patch Level"/>
 						<xs:enumeration value="Patch Level Max"/>
 						<xs:enumeration value="Patch Level Min"/>
-						<xs:enumeration value="Patch Mode Output Select"/>
 						<xs:enumeration value="Pattern"/>
 						<xs:enumeration value="Peak"/>
 						<xs:enumeration value="Pedal Max"/>
