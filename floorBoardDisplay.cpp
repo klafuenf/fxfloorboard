@@ -114,7 +114,7 @@ floorBoardDisplay::floorBoardDisplay(QWidget *parent, QPoint pos)
     this->temp5Display->setFont(Lfont);
 
     QString version = preferences->getPreferences("General", "Application", "version");
-    this->patchDisplay->setMainText(tr("GT-100FxFloorBoard"));
+    this->patchDisplay->setMainText(tr("GT100FxFloorBoard"));
     this->patchDisplay->setSubText(tr("version"), version);
 
     initPatch = new initPatchListMenu(QRect(390*ratio, patchDisplayRowOffset+(19*ratio), 168*ratio, 15*ratio), this);
@@ -138,7 +138,7 @@ floorBoardDisplay::floorBoardDisplay(QWidget *parent, QPoint pos)
 
 
     this->autoButton = new customButton(tr("Auto Sync"), false, QPoint(570*ratio, patchDisplayRowOffset), this, ":/images/greenledbutton.png");
-    this->autoButton->setWhatsThis(tr("Auto refresh<br>used to automatically update editor settings changes made on the GR-55"));
+    this->autoButton->setWhatsThis(tr("Auto refresh<br>used to automatically update editor settings changes made on the GT-100 Fx"));
 
     this->connectButton = new customButton(tr("Connect"), false, QPoint(387*ratio, patchDisplayRowOffset), this, ":/images/greenledbutton.png");
     this->connectButton->setWhatsThis(tr("Connect Button<br>used to establish a continuous midi connection<br>when lit green, the connection is valid"));
@@ -337,9 +337,14 @@ floorBoardDisplay::floorBoardDisplay(QWidget *parent, QPoint pos)
 
     set_temp();
 
+    QString device = preferences->getPreferences("Midi", "Device", "bool");
     QString midiIn = preferences->getPreferences("Midi", "MidiIn", "device");
     QString midiOut = preferences->getPreferences("Midi", "MidiOut", "device");
-    if(midiIn!="" && midiOut!="")
+     midiIO *midi = new midiIO();
+    QList<QString> midiOutDevices = midi->getMidiOutDevices();
+    if ( midiOutDevices.contains("GT-100 Ver2-1") )
+    { device="true"; } else {device ="false"; };
+    if((midiIn!="" && midiOut!="") || (device=="true"))
     {autoconnect(); } else {
         QMessageBox *msgBox = new QMessageBox();
         msgBox->isTopLevel();
@@ -550,9 +555,7 @@ void floorBoardDisplay::updateDisplay()
 
 void floorBoardDisplay::autoconnect()
 {
-    QString sysxMsg;
     SysxIO *sysxIO = SysxIO::Instance();
-    //this->connectButtonActive = value;
     if(!sysxIO->isConnected() && sysxIO->deviceReady())
     {
         emit setStatusSymbol(2);

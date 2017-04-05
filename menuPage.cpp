@@ -1,7 +1,6 @@
 /****************************************************************************
 **
 ** Copyright (C) 2007~2015 Colin Willcocks.
-** Copyright (C) 2005~2007 Uco Mesdag.
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
 **
@@ -159,7 +158,7 @@ void menuPage::system_ButtonSignal(bool value)
             emit setStatusProgress(100);
             emit setStatusSymbol(2);
             emit setStatusMessage(tr("Request System data"));
-            sysxIO->sendSysx(systemRequest); // GR-55 System area data Request.
+            sysxIO->sendSysx(systemRequest); // GT-100 Fx System area data Request.
         }
         else
         {
@@ -197,7 +196,7 @@ void menuPage::midi_ButtonSignal(bool value)
             emit setStatusProgress(100);
             emit setStatusSymbol(2);
             emit setStatusMessage(tr("Request System data"));
-            sysxIO->sendSysx(systemRequest); // GR-55 System area data Request.
+            sysxIO->sendSysx(systemRequest); // GT-100 Fx System area data Request.
         }
         else
         {
@@ -407,7 +406,7 @@ void menuPage::systemReply(QString replyMsg)
             };
             replyMsg = reBuild.simplified().toUpper();
             sysxIO->setFileSource("System", replyMsg);		// Set the source to the data received.
-            sysxIO->setFileName(tr("System Data from ") + deviceType);	// Set the file name to GT-100B system for the display.
+            sysxIO->setFileName(tr("System Data from ") + deviceType);	// Set the file name to GT-100 system for the display.
             sysxIO->setDevice(true);				// Patch received from the device so this is set to true.
             sysxIO->setSyncStatus(true);			// We can't be more in sync than right now! :)
             emit systemUpdateSignal();

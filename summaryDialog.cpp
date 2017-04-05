@@ -1,7 +1,6 @@
 /****************************************************************************
 **
 ** Copyright (C) 2007~2015 Colin Willcocks.
-** Copyright (C) 2005~2007 Uco Mesdag.
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
 **
@@ -497,6 +496,7 @@ void summaryDialog::makeList()
                 temp.append(midiTable->getValue("Structure", assign_desc, "00", assign_customdesc, valueHex));
             } else {
                 temp.append(midiTable->getValue("Structure", address, "00", pos, valueHex));
+                x=midiTable->getValue("Structure", address, "00", pos, valueHex);
             };
             text2.append(temp);
 
@@ -504,7 +504,7 @@ void summaryDialog::makeList()
             {
                 if (pretxt == this->filter) { text.append(temp); };
             } else if(!pretxt.contains("Custom:")){text.append(temp); };
-            if(i == start && x == "On") { this->effect = "on"; }; // first byte is usually the effect on/off switch
+            if(i==start && x=="On") { this->effect = "on"; }; // first byte is usually the effect on/off switch
             if((pretxt == "FX1:" || pretxt == "FX2:") && (txt == "Type"))
             {this->filter = midiTable->getMidiMap("Structure", address, "00", pos, valueHex).desc;};
         };
@@ -534,6 +534,7 @@ void summaryDialog::view()
 
 void summaryDialog::cancel()
 {
+    this->deleteLater();
     this->close();
 }
 
@@ -583,20 +584,20 @@ void summaryDialog::saveAs()
         QFile file(fileName);
 
         QByteArray out;
-        text.remove("<b>");
-        text.remove("</b>");
-        text.remove("<u>");
-        text.remove("</u>");
+        large_text.remove("<b>");
+        large_text.remove("</b>");
+        large_text.remove("<u>");
+        large_text.remove("</u>");
         QString newLine;
         newLine.append((char)13);
         newLine.append((char)10);
-        text.replace("<br>", newLine);
+        large_text.replace("<br>", newLine);
 
-        unsigned int size = text.size();
+        unsigned int size = large_text.size();
 
         for (unsigned int x=0; x<size; x++)
         {
-            QString str(text.at(x));
+            QString str(large_text.at(x));
             out.append(str);
         };
 

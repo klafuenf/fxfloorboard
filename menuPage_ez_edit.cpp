@@ -1,7 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2015 Colin Willcocks.
-** Copyright (C) 2005~2007 Uco Mesdag. 
+** Copyright (C) 2007~2015 Colin Willcocks. 
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
 **
@@ -61,36 +60,50 @@ void menuPage_ez_edit::setEditPages()
 
     editDetails()->page()->newStackField(0);
     editDetails()->page()->newGroupBox("Amp A Customiser");
-    editDetails()->page()->addComboBox(0, 0, 1, 1, "00", "00", "63", "large");   // custom amp A type
+    editDetails()->page()->addComboBox(0, 0, 1, 1, "00", "00", "63", "left", Qt::AlignCenter);   // custom amp A type
     editDetails()->page()->addEZ_amp(1, 0, 1, 1, "00", "00", "65", "Preamp_A");
     editDetails()->page()->addGroupBox(1, 0, 1, 1);
     editDetails()->page()->newGroupBox("Speaker A Customiser");
-    editDetails()->page()->addComboBox(0, 0, 1, 1, "00", "00", "6F", "large");   // custom spkr A type
+    editDetails()->page()->addComboBox(0, 0, 1, 1, "00", "00", "6F", "left", Qt::AlignCenter);   // custom spkr A type
     editDetails()->page()->addEZ_amp(1, 0, 1, 1, "00", "00", "61", "Speaker_A");
     editDetails()->page()->addGroupBox(1, 1, 1, 1);
     editDetails()->page()->addStackField();
 
     editDetails()->page()->newStackField(0);
     editDetails()->page()->newGroupBox("Amp B Customiser");
-    editDetails()->page()->addComboBox(0, 0, 1, 1, "01", "00", "13", "large");   // custom amp B type
+    editDetails()->page()->addComboBox(0, 0, 1, 1, "01", "00", "13", "left", Qt::AlignCenter);   // custom amp B type
     editDetails()->page()->addEZ_amp(1, 0, 1, 1, "01", "00", "15", "Preamp_B");
     editDetails()->page()->addGroupBox(1, 0, 1, 1);
     editDetails()->page()->newGroupBox("Speaker B Customiser");
-    editDetails()->page()->addComboBox(0, 0, 1, 1, "01", "00", "1F", "large");   // custom spkr B type
+    editDetails()->page()->addComboBox(0, 0, 1, 1, "01", "00", "1F", "left", Qt::AlignCenter);   // custom spkr B type
     editDetails()->page()->addEZ_amp(1, 0, 1, 1, "01", "00", "11", "Speaker_B");
     editDetails()->page()->addGroupBox(1, 1, 1, 1);
     editDetails()->page()->addStackField();
     editDetails()->addPage("00", "00", "30", "01", "Tables");
 
+    editDetails()->page()->newGroupBox("OD/DS Custom Type");
+    editDetails()->page()->addSwitch(0, 0, 1, 1, "00", "00", "30", "middle", Qt::AlignCenter);
+    editDetails()->page()->addComboBox(1, 0, 1, 1, "00", "00", "39", "large");
+    editDetails()->page()->addGroupBox(0, 0, 1, 1);
     editDetails()->page()->newGroupBox("OD/DS Customiser");
-    editDetails()->page()->addComboBox(0, 0, 1, 1, "00", "00", "39", "large");   // custom
-    editDetails()->page()->addEZ_amp(1, 0, 1, 1, "00", "00", "3B", "Distortion");
+    editDetails()->page()->addEZ_amp(0, 0, 1, 1, "00", "00", "3B", "Distortion");
     editDetails()->page()->addGroupBox(0, 1, 1, 1);
     editDetails()->addPage("00", "00", "30", "02", "Tables");
 
-    editDetails()->page()->newGroupBox("Ambience");
-    //editDetails()->page()->addComboBox(0, 0, 1, 1, "00", "00", "39", "large");   // custom
-    editDetails()->page()->addEZ_amp(1, 0, 1, 1, "06", "00", "02", "Ambience");
-    editDetails()->page()->addGroupBox(0, 1, 1, 1);
+    editDetails()->page()->newGroupBox("Chorus Select");
+    editDetails()->page()->addSwitch(0, 0, 1, 1, "06", "00", "00", "middle", Qt::AlignCenter);
+    editDetails()->page()->addComboBox(1, 0, 1, 1, "06", "00", "01", "large");
+    editDetails()->page()->addGroupBox(0, 0, 1, 1);
+    editDetails()->page()->newGroupBox("Reverb Select");
+    editDetails()->page()->addSwitch(0, 0, 1, 1, "06", "00", "10", "middle", Qt::AlignCenter);
+    editDetails()->page()->addComboBox(1, 0, 1, 1, "06", "00", "11", "large");
+    editDetails()->page()->addGroupBox(1, 0, 1, 1);
+    editDetails()->page()->newGroupBox("Delay Select");
+    editDetails()->page()->addSwitch(0, 0, 1, 1, "05", "00", "60", "middle", Qt::AlignCenter);
+    editDetails()->page()->addComboBox(1, 0, 1, 1, "05", "00", "61", "large");
+    editDetails()->page()->addGroupBox(2, 0, 1, 1);
+    editDetails()->page()->newGroupBox("Ambience Customiser");
+    editDetails()->page()->addEZ_amp(0, 0, 1, 1, "06", "00", "02", "Ambience");
+    editDetails()->page()->addGroupBox(0, 1, 3, 1);
     editDetails()->addPage("00", "00", "30", "03", "Tables");
 }

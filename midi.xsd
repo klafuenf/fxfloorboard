@@ -3817,7 +3817,7 @@
 						<xs:enumeration value="System PreAmp 3 Channel A"/>
 						<xs:enumeration value="System PreAmp 3 Channel B"/>
 						<xs:enumeration value="T-Amp Lead"/>
-						<xs:enumeration value="TEC:"/>
+						<xs:enumeration value="TER:"/>
 						<xs:enumeration value="TM:"/>
 						<xs:enumeration value="TR:"/>
 						<xs:enumeration value="TUNER"/>

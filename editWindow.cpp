@@ -53,6 +53,8 @@ editWindow::editWindow(QWidget *parent)
 
     this->pageComboBox = new QComboBox;
     this->pageComboBox->setObjectName("largecombo");
+    QFont Cfont( "Arial", 14*ratio, QFont::Bold);
+    this->pageComboBox->setFont(Cfont);
     this->pageComboBox->setEditable(false);
     this->pageComboBox->setFrame(false);
     this->pageComboBox->setVisible(false);

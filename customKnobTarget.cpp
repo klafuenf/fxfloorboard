@@ -1,9 +1,8 @@
 /****************************************************************************
 **
 ** Copyright (C) 2007~2015 Colin Willcocks.
-** Copyright (C) 2005~2007 Uco Mesdag. 
 ** All rights reserved.
-** This file is part of "GT-100B Fx FloorBoard".
+** This file is part of "GT-100 Fx FloorBoard".
 **
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU General Public License as published by

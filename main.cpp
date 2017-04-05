@@ -41,6 +41,7 @@ int main(int argc, char **argv)
     QDir().setCurrent("../../../");
 #endif
 
+    qputenv("QT_DEVICE_PIXEL_RATIO", QByteArray("2"));
     Preferences *preferences = Preferences::Instance(); // Load the preferences.
     QString lang = preferences->getPreferences("Language", "Locale", "select");
     bool ok;
@@ -117,7 +118,7 @@ int main(int argc, char **argv)
     app.processEvents();
 
     mainWindow window;// = new mainWindow;
-    window.setLayoutDirection(Qt::LayoutDirection(Qt::LayoutDirectionAuto));
+    //window.setLayoutDirection(Qt::LayoutDirection(Qt::LayoutDirectionAuto));
 
     QObject::connect( &window, SIGNAL(closed()), &app, SLOT(quit()) );
 
@@ -241,7 +242,7 @@ int main(int argc, char **argv)
     int count = (preferences->getPreferences("General", "Start", "count").toInt(&ok, 10));
     if((count == 1 || count == 8) && preferences->getPreferences("General", "Donate", "url")!="true")
     {
-        //PREVIEW WARNING
+  /*      //PREVIEW WARNING
         QMessageBox *msgBox = new QMessageBox();
         msgBox->setWindowTitle(QObject::tr("               GT-100FxFloorBoard Donation"));
         msgBox->setIcon(QMessageBox::Warning);
@@ -258,7 +259,7 @@ int main(int argc, char **argv)
         msgBox->setText(msgText);
         msgBox->setStandardButtons(QMessageBox::Ok);
         msgBox->exec();
-        // END WARNING
+        // END WARNING*/
     };
 
     return app.exec();

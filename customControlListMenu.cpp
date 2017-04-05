@@ -72,6 +72,16 @@ customControlListMenu::customControlListMenu(QWidget *parent,
 
     if(direction == "left")
     {
+        this->label->setAlignment(Qt::AlignLeft);
+
+        QHBoxLayout *mainLayout = new QHBoxLayout;
+        mainLayout->setMargin(0);
+        mainLayout->setSpacing(0);
+        mainLayout->addStretch(0);
+        mainLayout->addWidget(this->label, 0, Qt::AlignCenter);
+        mainLayout->addWidget(this->controlListComboBox, 0, Qt::AlignCenter);
+
+        this->setLayout(mainLayout);
 
     }
     else if(direction == "right")

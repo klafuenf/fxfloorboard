@@ -32,7 +32,7 @@ fileDialog::fileDialog(QString fileName, QList<QString> patchList, QByteArray fi
     this->file_format = type;
     this->fileData = fileData;
     this->default_data = default_data;
-    QLabel *patchLabel = new QLabel(tr("Select patch to load"));
+    QLabel *patchLabel = new QLabel("<b>Select "+type+" patch to load</b>");
     QLabel *nameLabel = new QLabel(fileName);
     QComboBox *patchCombo = new QComboBox;
     patchCombo->setMaxVisibleItems(200);

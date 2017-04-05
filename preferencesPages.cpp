@@ -72,8 +72,9 @@ MidiPage::MidiPage(QWidget *parent)
     QString midiInDevice = preferences->getPreferences("Midi", "MidiIn", "device");
     QString midiOutDevice = preferences->getPreferences("Midi", "MidiOut", "device");
     QString dBugScreen = preferences->getPreferences("Midi", "DBug", "bool");
+    QString device = preferences->getPreferences("Midi", "Device", "bool");
     QString midiTxChSet = preferences->getPreferences("Midi", "TxCh", "set");
-    QString midiDelaySet = preferences->getPreferences("Midi", "Delay", "set");
+    //QString midiDelaySet = preferences->getPreferences("Midi", "Delay", "set");
 
     int midiInDeviceID = midiInDevice.toInt(&ok, 10);
     int midiOutDeviceID = midiOutDevice.toInt(&ok, 10);
@@ -100,9 +101,9 @@ MidiPage::MidiPage(QWidget *parent)
     {
         midiInCombo->setCurrentIndex(midiInDeviceID + 1); // +1 because there is a default entry at 0
     };
-    if ( midiInDevices.contains("GT-100") )
+    if ( midiInDevices.contains("GT-100 Ver2-1")  && device=="true")
     {
-        int inputDevice = midiInDevices.indexOf("GT-100") + 1;
+        int inputDevice = midiInDevices.indexOf("GT-100 Ver2-1") + 1;
         midiInCombo->setCurrentIndex(inputDevice);
     };
 
@@ -120,19 +121,29 @@ MidiPage::MidiPage(QWidget *parent)
     {
         midiOutCombo->setCurrentIndex(midiOutDeviceID + 1); // +1 because there is a default entry at 0
     };
-    if ( midiOutDevices.contains("GT-100") )
+    if ( midiOutDevices.contains("GT-100 Ver2-1") && device=="true" )
     {
-        int outputDevice = midiOutDevices.indexOf("GT-100") + 1;
+        int outputDevice = midiOutDevices.indexOf("GT-100 Ver2-1") + 1;
         midiOutCombo->setCurrentIndex(outputDevice);
+    };
+
+    QCheckBox *autoCheckBox = new QCheckBox(QObject::tr("Auto select GT-100 USB"));
+    this->autoCheckBox = autoCheckBox;
+    if(device=="true")
+    {
+        autoCheckBox->setChecked(true);
+
     };
 
     QVBoxLayout *midiLabelLayout = new QVBoxLayout;
     midiLabelLayout->addWidget(midiInLabel);
     midiLabelLayout->addWidget(midiOutLabel);
+    midiLabelLayout->addStretch();
 
     QVBoxLayout *midiComboLayout = new QVBoxLayout;
     midiComboLayout->addWidget(midiInCombo);
     midiComboLayout->addWidget(midiOutCombo);
+    midiComboLayout->addWidget(autoCheckBox);
 
     QHBoxLayout *midiSelectLayout = new QHBoxLayout;
     midiSelectLayout->addLayout(midiLabelLayout);
@@ -147,16 +158,14 @@ MidiPage::MidiPage(QWidget *parent)
     midiLayout->addLayout(midiDevLayout);
     midiGroup->setLayout(midiLayout);
 
+    QGroupBox *advancedSettingsGroup = new QGroupBox(QObject::tr("Advanced settings"));
 
-
-    QGroupBox *dBugScreenGroup = new QGroupBox(QObject::tr("Advanced settings"));
-
-    QLabel *dBugDescriptionLabel = new QLabel(QObject::tr("Debug mode."));
     QLabel *midiTxChDescriptionLabel = new QLabel(tr("Midi Tx Channel:"));
-    QLabel *midiDelayDescriptionLabel = new QLabel(tr("Realtime edit send rate."));
+
 
     QCheckBox *dBugCheckBox = new QCheckBox(QObject::tr("deBug Mode"));
     QSpinBox *midiTxChSpinBox = new QSpinBox;
+    midiTxChSpinBox->setMaximumWidth(100);
 
     this->dBugCheckBox = dBugCheckBox;
     if(dBugScreen=="true")
@@ -164,35 +173,25 @@ MidiPage::MidiPage(QWidget *parent)
         dBugCheckBox->setChecked(true);
     };
 
-this->midiTxChSpinBox = midiTxChSpinBox;
-    const int tempDataWrite = preferences->getPreferences("Midi", "TxCh", "set").toInt(&ok, 10);
-    midiTxChSpinBox->setValue(tempDataWrite);
+    this->midiTxChSpinBox = midiTxChSpinBox;
+    midiTxChSpinBox->setValue(midiTxChSet.toInt(&ok, 10));
     midiTxChSpinBox->setRange(1, 16);
-    midiTxChSpinBox->setPrefix("Channel ");
+    //midiTxChSpinBox->setPrefix("Channel ");
 
-    QVBoxLayout *dBugLabelLayout = new QVBoxLayout;
-    dBugLabelLayout->addWidget(dBugDescriptionLabel);
-    dBugLabelLayout->addWidget(midiTxChDescriptionLabel);
-    dBugLabelLayout->addWidget(midiDelayDescriptionLabel);
+    QVBoxLayout *advancedBoxLayout = new QVBoxLayout;
+    advancedBoxLayout->addWidget(midiTxChDescriptionLabel);
+    advancedBoxLayout->addWidget(midiTxChSpinBox);
+    advancedBoxLayout->addSpacing(20);
+    advancedBoxLayout->addWidget(dBugCheckBox);
 
-    QVBoxLayout *dBugTimeBoxLayout = new QVBoxLayout;
-    dBugTimeBoxLayout->addWidget(dBugCheckBox);
-    dBugTimeBoxLayout->addWidget(midiTxChSpinBox);
+    QHBoxLayout *advancedLayout = new QHBoxLayout;
+    advancedLayout->addLayout(advancedBoxLayout);
 
-    QHBoxLayout *dBugSelectLayout = new QHBoxLayout;
-    dBugSelectLayout->addLayout(dBugLabelLayout);
-    dBugSelectLayout->addLayout(dBugTimeBoxLayout);
-
-    QVBoxLayout *dBugScreenLayout = new QVBoxLayout;
-    dBugScreenLayout->addWidget(dBugDescriptionLabel);
-    dBugScreenLayout->addLayout(dBugSelectLayout);
-
-    dBugScreenGroup->setLayout(dBugScreenLayout);
-
+    advancedSettingsGroup->setLayout(advancedLayout);
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addWidget(midiGroup);
-    mainLayout->addWidget(dBugScreenGroup);
+    mainLayout->addWidget(advancedSettingsGroup);
     mainLayout->addStretch(1);
     setLayout(mainLayout);
 }

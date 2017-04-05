@@ -101,8 +101,8 @@ void customControlLabel::setSize()
     const double ratio = preferences->getPreferences("Window", "Scale", "ratio").toDouble(&ok);
 
     int pixelWidth = QFontMetrics(this->label->font()).width(this->label->text())*ratio;
-	if(pixelWidth<1) {pixelWidth = 1; };
-	this->labelWidth = pixelWidth;
+    if(pixelWidth<1) {pixelWidth = 1; };
+    this->labelWidth = pixelWidth;
 }
 
 int customControlLabel::getLabelWidth()

@@ -127,8 +127,8 @@
     <message>
         <location filename="bulkLoadDialog.cpp" line="503"/>
         <location filename="sysxWriter.cpp" line="411"/>
-        <source>this file is a GT-100B Bass version&lt;br&gt;</source>
-        <translation>diese Akte ist eine GT-100B Baßversion&lt;br&gt;</translation>
+        <source>this file is a GT-100 Bass version&lt;br&gt;</source>
+        <translation>diese Akte ist eine GT-100 Baßversion&lt;br&gt;</translation>
     </message>
     <message>
         <location filename="bulkLoadDialog.cpp" line="504"/>
@@ -1441,7 +1441,7 @@ If correction was inpossible then some settings might have been reset to zero.</
     </message>
     <message>
         <location filename="mainWindow.cpp" line="197"/>
-        <source>Load Bulk Data to GT-100B</source>
+        <source>Load Bulk Data to GT-100</source>
         <translation>Lasts-Massendaten zu GT-8</translation>
     </message>
     <message>
@@ -1599,8 +1599,8 @@ If correction was inpossible then some settings might have been reset to zero.</
     </message>
     <message>
         <location filename="mainWindow.cpp" line="324"/>
-        <source>for GT-100, GT-100B, or GT-8   (*.syx *.mid *.gcl *.gxb)</source>
-        <translation>für GT-100, GT-100B oder GT-8 (*.syx *.mid *.gcl *.gxb)</translation>
+        <source>for GT-100, GT-100, or GT-8   (*.syx *.mid *.gcl *.gxb)</source>
+        <translation>für GT-100, GT-100 oder GT-8 (*.syx *.mid *.gcl *.gxb)</translation>
     </message>
     <message>
         <location filename="mainWindow.cpp" line="356"/>

@@ -3490,7 +3490,7 @@ void sysxWriter::convertFromTSL()
     {GT100_default = file.readAll(); };
 
     QByteArray temp;
-    unsigned int pnum = data.count("name2");
+    unsigned int pnum = data.count("params");//name2");
     int pindex = data.size()/(pnum);
     QString device=GetJsonValue("device", 1);
 
@@ -3506,8 +3506,6 @@ void sysxWriter::convertFromTSL()
         for (int h=0;h<patchCount;h++)
         {
             patchText.append(GetJsonValue("patchname", a).simplified() );
-            //patchText.chop(2);
-            //patchText.remove(0, 1);
             patchNumber = QString::number(h+1, 10).toUpper();
             msgText.append(patchNumber + " : ");
             msgText.append(patchText + "   ");
@@ -3517,7 +3515,7 @@ void sysxWriter::convertFromTSL()
             a=a+pindex;                      // offset is set in front of marker
         };
 
-        QString type = "smf";
+        QString type = device;//"smf";
         fileDialog *dialog = new fileDialog(fileName, patchList, data, GT100_default, type);
         dialog->exec();
         patchIndex(this->index);

@@ -501,7 +501,12 @@ void stompBox::setComboBox(QString hex1, QString hex2, QString hex3, QRect geome
     this->combo_hex1 = hex1;
     this->combo_hex2 = hex2;
     this->combo_hex3 = hex3;
-    geometry = QRect(7*ratio, 79*ratio, 80*ratio, 13*ratio);
+    if(hex3=="41" || hex3=="4D" || hex3=="70")
+    {
+        geometry = QRect(7*ratio, 35*ratio, 80*ratio, 13*ratio);
+    }else{
+        geometry = QRect(7*ratio, 79*ratio, 80*ratio, 13*ratio);
+    };
     MidiTable *midiTable = MidiTable::Instance();
     Midi items = midiTable->getMidiMap("Structure", this->combo_hex1, this->combo_hex2, this->combo_hex3);
 

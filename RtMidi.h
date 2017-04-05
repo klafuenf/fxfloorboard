@@ -572,10 +572,7 @@ inline void RtMidiOut :: setErrorCallback( RtMidiErrorCallback errorCallback ) {
 #ifdef Q_OS_MAC
 #define __MACOSX_CORE__
 #endif
-#ifdef Q_PROCESSOR_ARM
-#define __RTMIDI_DUMMY__
-#endif
-#if defined(Q_OS_LINUX) && !defined(Q_PROCESSOR_ARM)
+#ifdef Q_OS_LINUX
 #define __LINUX_ALSA__
 #endif
 #if !defined(__LINUX_ALSA__) && !defined(__UNIX_JACK__) && !defined(__MACOSX_CORE__) && !defined(__WINDOWS_MM__)
@@ -669,7 +666,7 @@ class MidiInAlsa: public MidiInApi
  public:
   MidiInAlsa( const std::string clientName, unsigned int queueSizeLimit );
   ~MidiInAlsa( void );
-  RtMidi::Api getCurrentApi( void ) { return RtMidi::LINUX_ALSA; };
+  RtMidi::Api getCurrentApi( void ) { return RtMidi::LINUX_ALSA; }
   void openPort( unsigned int portNumber, const std::string portName );
   void openVirtualPort( const std::string portName );
   void closePort( void );
@@ -685,7 +682,7 @@ class MidiOutAlsa: public MidiOutApi
  public:
   MidiOutAlsa( const std::string clientName );
   ~MidiOutAlsa( void );
-  RtMidi::Api getCurrentApi( void ) { return RtMidi::LINUX_ALSA; };
+  RtMidi::Api getCurrentApi( void ) { return RtMidi::LINUX_ALSA; }
   void openPort( unsigned int portNumber, const std::string portName );
   void openVirtualPort( const std::string portName );
   void closePort( void );

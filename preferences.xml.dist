@@ -2,7 +2,7 @@
 <!-- Preferences of the GT-100 Fx FloorBoard application. -->
 <Preferences>
 	<General>
-		<Application version="20150604"/>
+		<Application version="20161217"/>
 		<Donate url="false"/>
 		<Files dir=""/>
 		<Help url="help/help.html"/>
@@ -16,6 +16,7 @@
 		<BulkStart patch="1"/>
 		<DBug bool="false"/>
 		<Delay set="1"/>
+    <Device bool="true"/>
 		<MidiIn device=""/>
 		<MidiOut device=""/>
 		<TxCh set="1"/>
@@ -25,7 +26,7 @@
 		<Colour select="0"/>
 	</Scheme>
 	<Window>
-		<AutoScale bool="true"/>
+		<AutoScale bool="false"/>
 		<Collapsed width="1330" bool="true"/>
 		<Position x="10" y="10"/>
 		<Restore sidepanel="true" window="true"/>
