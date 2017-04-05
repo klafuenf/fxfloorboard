@@ -47,6 +47,7 @@ public:
     MidiPage(QWidget *parent = 0);
     QComboBox* midiInCombo;
     QComboBox* midiOutCombo;
+    QCheckBox* autoCheckBox;
     QCheckBox* dBugCheckBox;
     QSpinBox* midiTxChSpinBox;
 };

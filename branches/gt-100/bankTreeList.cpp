@@ -908,7 +908,7 @@ void bankTreeList::requestSystem()
         emit setStatusProgress(100);
         emit setStatusSymbol(2);
         emit setStatusMessage(tr("Request System data"));
-        sysxIO->sendSysx(systemRequest); // GR-55 System area data Request.
+        sysxIO->sendSysx(systemRequest); // GT-100 Fx System area data Request.
     };
 }
 

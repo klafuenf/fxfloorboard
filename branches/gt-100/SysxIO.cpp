@@ -793,12 +793,16 @@ void SysxIO::sendMidi(QString midiMsg)
     {
         Preferences *preferences = Preferences::Instance(); bool ok;
         int midiOutPort = preferences->getPreferences("Midi", "MidiOut", "device").toInt(&ok, 10);	// Get midi out device from preferences.
+        QString device = preferences->getPreferences("Midi", "Device", "bool");
 
         midiIO *midi = new midiIO();
-        QList<QString> midiOutDevices = midi->getMidiOutDevices();
-        if ( midiOutDevices.contains("BOSS GT-100") )
+        if(device=="true")
         {
-            midiOutPort = midiOutDevices.indexOf("BOSS GT-100");
+            QList<QString> midiOutDevices = midi->getMidiOutDevices();
+            if ( midiOutDevices.contains("GT-100 Ver2-1") )
+            {
+                midiOutPort = midiOutDevices.indexOf("GT-100 Ver2-1")+1;
+            };
         };
 
         midi->sendMidi(midiMsg, midiOutPort);
@@ -915,19 +919,24 @@ void SysxIO::sendSysx(QString sysxMsg)
     Preferences *preferences = Preferences::Instance();  bool ok;
     int midiOutPort = preferences->getPreferences("Midi", "MidiOut", "device").toInt(&ok, 10);	// Get midi out device from preferences.
     int midiInPort = preferences->getPreferences("Midi", "MidiIn", "device").toInt(&ok, 10);	// Get midi in device from preferences.
+    QString device = preferences->getPreferences("Midi", "Device", "bool");
 
     midiIO *midi = new midiIO();
-    QList<QString> midiInDevices = midi->getMidiInDevices();
-    QList<QString> midiOutDevices = midi->getMidiOutDevices();
-    if ( midiInDevices.contains("GT-100") )
+    if(device=="true")
     {
-        midiInPort = midiInDevices.indexOf("GT-100");
-    };
-    if ( midiOutDevices.contains("GT-100") )
-    {
-        midiOutPort = midiOutDevices.indexOf("GT-100");
+        QList<QString> midiInDevices = midi->getMidiInDevices();
+        QList<QString> midiOutDevices = midi->getMidiOutDevices();
+        if ( midiInDevices.contains("GT-100 Ver2-1") )
+        {
+            midiInPort = midiInDevices.indexOf("GT-100 Ver2-1")+1;
+        };
+        if ( midiOutDevices.contains("GT-100 Ver2-1") )
+        {
+            midiOutPort = midiOutDevices.indexOf("GT-100 Ver2-1")+1;
+        };
     };
     midi->sendSysxMsg(sysxMsg, midiOutPort, midiInPort);
+
     /*DeBugGING OUTPUT */
     if(preferences->getPreferences("Midi", "DBug", "bool")=="true")
     {

@@ -1,7 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2015 Colin Willcocks.
-** Copyright (C) 2005~2007 Uco Mesdag.
+** Copyright (C) 2007~2015 Colin Willcocks..
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
 **
@@ -314,7 +313,7 @@ void summaryDialogSystem::systemReply(QString replyMsg)
             QString area = "System";
             sysxIO->setFileSource(area, replyMsg);		// Set the source to the data received.
             //sysxIO->setFileSource(area, sysxMsg.getSystemSource());
-            sysxIO->setFileName(tr("System Data from ") + deviceType);	// Set the file name to GT-100B system for the display.
+            sysxIO->setFileName(tr("System Data from ") + deviceType);	// Set the file name to GT-100 system for the display.
             sysxIO->setDevice(true);				// Patch received from the device so this is set to true.
             sysxIO->setSyncStatus(true);			// We can't be more in sync than right now! :)
         }
@@ -344,6 +343,7 @@ void summaryDialogSystem::cancel()
     sysxIO->setDeviceReady(true);
     emit setStatusSymbol(1);
     emit setStatusMessage(tr("Ready"));
+    this->deleteLater();
     this->close();
 }
 

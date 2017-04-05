@@ -91,8 +91,8 @@ mainWindow::mainWindow()
                      this, SLOT( updateSize(QSize, QSize) ) );
 
     int count = (preferences->getPreferences("General", "Start", "count").toInt(&ok, 10));
-    if(count == 0 && preferences->getPreferences("General", "Donate", "url")!="true")
-    { donate(); };
+  /*  if(count == 0 && preferences->getPreferences("General", "Donate", "url")!="true")
+    { donate(); };*/
     count++;
     if(count >= 15) {count = 0; };
     QString index = QString::number(count, 10).toUpper();
@@ -438,7 +438,7 @@ void mainWindow::saveAs()
                     this,
                     tr("Save As"),
                     dir,
-                    tr("Tone Central (*.tsl)"));
+                    tr("Tone Studio (*.tsl)"));
         if (!fileName.isEmpty())
         {
             if(!fileName.contains(".tsl"))
@@ -770,6 +770,7 @@ void mainWindow::settings()
         QString scaleRatio =QString::number(dialog->windowSettings->ratioSpinBox->value());
         QString splash = (dialog->windowSettings->splashCheckBox->checkState())?QString("true"):QString("false");
         QString dBug = (dialog->midiSettings->dBugCheckBox->checkState())?QString("true"):QString("false");
+        QString auto_device = (dialog->midiSettings->autoCheckBox->checkState())?QString("true"):QString("false");
         QString midiIn = QString::number(dialog->midiSettings->midiInCombo->currentIndex() - 1, 10); // -1 because there is a default entry at index 0
         QString midiOut = QString::number(dialog->midiSettings->midiOutCombo->currentIndex() - 1, 10);
         QString midiTxChSet =QString::number(dialog->midiSettings->midiTxChSpinBox->value());
@@ -803,6 +804,7 @@ void mainWindow::settings()
         preferences->setPreferences("Midi", "MidiIn", "device", midiIn);
         preferences->setPreferences("Midi", "MidiOut", "device", midiOut);
         preferences->setPreferences("Midi", "DBug", "bool", dBug);
+        preferences->setPreferences("Midi", "Device", "bool", auto_device);
         preferences->setPreferences("Midi", "TxCh", "set", midiTxChSet);
         preferences->setPreferences("Window", "AutoScale", "bool", autoScale);
         preferences->setPreferences("Window", "Restore", "sidepanel", sidepanel);

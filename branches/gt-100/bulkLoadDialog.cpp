@@ -1,7 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2007~2015 Colin Willcocks.
-** Copyright (C) 2005~2007 Uco Mesdag. 
+** Copyright (C) 2007~2015 Colin Willcocks. 
 ** All rights reserved.
 ** This file is part of "GT-100 Fx FloorBoard".
 **
@@ -1734,4 +1733,5 @@ void bulkLoadDialog::DialogClose()
     sysxIO->setDeviceReady(true); // Free the device after finishing interaction.
     setStatusMessage(tr("Ready"));
     close();
+    this->deleteLater();
 }

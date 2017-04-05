@@ -130,7 +130,7 @@ void customDisplay::setLabelPosition(bool invert)
 
     this->mainLabel = new QLabel(this);
     this->mainLabel->setObjectName("displayLarge");
-    QFont Mfont( "Arial", 12*ratio, QFont::Bold);
+    QFont Mfont( "Arial", 11*ratio, QFont::Bold);
     this->mainLabel->setFont(Mfont);
     this->mainLabel->setAlignment(Qt::AlignLeft);
     this->mainLabel->setGeometry(mainGeometry);
@@ -164,7 +164,7 @@ void customDisplay::setMainText(QString mainText, Qt::Alignment alignment)
         QFont splashFont;
         splashFont.setFamily("Arial");
         splashFont.setBold(true);
-        splashFont.setPixelSize(12*ratio);
+        splashFont.setPixelSize(11*ratio);
         splashFont.setStretch(90);
         this->mainLabel->setFont(splashFont);
     };
